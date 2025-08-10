@@ -9,7 +9,7 @@ class AuthRepositoryImpl extends AuthRepository {
     String email,
     String password,
   ) async {
-    final credintial = await firebaseAuth.signInWithEmailAndPassword(
+    final credintial = await firebaseAuth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );

@@ -9,10 +9,26 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: MultiBlocProvider(
-        providers: [BlocProvider(create: (context) => getIt<SignUpCubit>())],
-        child: SignUpPage(),
+    return MultiBlocProvider(
+      providers: [BlocProvider(create: (context) => getIt<SignUpCubit>())],
+      child: MaterialApp(
+        theme: ThemeData(
+          scaffoldBackgroundColor: const Color(0xFFFFFFFF),
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color(0xFF8D00DE),
+            primary: const Color(0xFF8D00DE),
+          ),
+          useMaterial3: true,
+          textTheme: ThemeData.light().textTheme.copyWith(
+            displaySmall: const TextStyle(
+              color: Color(0xFF000000),
+              fontFamily: 'Roboto',
+              fontWeight: FontWeight.bold,
+              fontSize: 25,
+            ),
+          ),
+        ),
+        home: SignUpPage(),
       ),
     );
   }
