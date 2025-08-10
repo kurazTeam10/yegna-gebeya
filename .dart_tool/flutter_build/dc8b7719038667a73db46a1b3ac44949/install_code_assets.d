@@ -1,0 +1,1 @@
+ /home/yeab/projects/flutter/yegna_gebeya/.dart_tool/flutter_build/dc8b7719038667a73db46a1b3ac44949/native_assets.json: 
