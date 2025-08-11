@@ -1,7 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' hide Order;
 import 'package:yegna_gebeya/core/shared/models/cart.dart';
 
 import 'package:yegna_gebeya/core/shared/models/product.dart';
+import 'package:yegna_gebeya/core/shared/models/order.dart';
 
 import 'package:yegna_gebeya/core/shared/models/seller.dart';
 
@@ -17,7 +18,7 @@ class BuyerRepositoryImpl extends BuyerRepository {
   }
 
   @override
-  Future<List<Seller>> getSellerById(String id) {
+  Future<Seller> getSellerById(String id) {
     // TODO: implement getSellerById
     throw UnimplementedError();
   }
@@ -29,7 +30,7 @@ class BuyerRepositoryImpl extends BuyerRepository {
   }
 
   @override
-  Future<List<Product>> getProductById(String id) {
+  Future<Product> getProductById(String id) {
     // TODO: implement getProductById
     throw UnimplementedError();
   }
@@ -37,11 +38,11 @@ class BuyerRepositoryImpl extends BuyerRepository {
   @override
   Future<void> addToCart(String id, Product product) async {
     try {
-    await _firestore
-        .collection('users')
-        .doc(id)
-        .collection('cart')
-        .add(product.toMap());
+      await _firestore
+          .collection('users')
+          .doc(id)
+          .collection('cart')
+          .add(product.toMap());
     } on FirebaseException catch (e) {
       throw (Exception('Failed to add item to cart: ${e.message}'));
     }
@@ -50,31 +51,58 @@ class BuyerRepositoryImpl extends BuyerRepository {
   @override
   Future<void> removeFromCart(String id, Product product) async {
     try {
-        final querySnapshot = await _firestore
-        .collection('users')
-        .doc(id)
-        .collection('cart')
-        .where('pid', isEqualTo: product.pid)
-        .limit(1)
-        .get();
+      final querySnapshot = await _firestore
+          .collection('users')
+          .doc(id)
+          .collection('cart')
+          .where('pid', isEqualTo: product.pid)
+          .limit(1)
+          .get();
 
-        for (var doc in querySnapshot.docs) {
-          await doc.reference.delete();
+      for (var doc in querySnapshot.docs) {
+        await doc.reference.delete();
       }
     } on FirebaseException catch (e) {
       throw (Exception('Failed to remove item from cart ${e.message}'));
-        }
+    }
   }
 
   @override
-  Future<Cart> getCartProduct(String id) {
-    // TODO: implement getCartProduct
-    throw UnimplementedError();
+  Stream<Cart> getCartProducts(String id) {
+    try {
+      return _firestore
+          .collection('users')
+          .doc(id)
+          .collection('cart')
+          .snapshots()
+          .map(Cart.fromFirestore);
+    } on FirebaseException catch (e) {
+      throw (Exception('Failed to get cart items ${e.message}'));
+    }
   }
 
   @override
-  Future<void> purchaseProduct(String id) {
-    // TODO: implement purchaseProduct
-    throw UnimplementedError();
+  Future<void> purchaseProduct(String id) async {
+    try {
+
+      final batch = _firestore.batch();
+
+      final querySnapshot = await _firestore
+          .collection('users')
+          .doc(id)
+          .collection('cart')
+          .get();
+
+      final Order order = Order.fromProducts(querySnapshot);
+      _firestore.collection('users').doc(id).collection('orders').add(order.toMap());
+
+      for (var doc in querySnapshot.docs) {
+        batch.delete(doc.reference);
+      }
+
+      await batch.commit();
+    } on FirebaseException catch (e) {
+      throw (Exception('Failed to purchase product ${e.message}'));
+    }
   }
 }
