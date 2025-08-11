@@ -10,6 +10,7 @@ class LandingPage extends StatelessWidget {
     final width = MediaQuery.sizeOf(context).width;
 
     return Scaffold(
+
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16),
@@ -55,7 +56,6 @@ class LandingPage extends StatelessWidget {
               ),
 
               const SizedBox(height: 8),
-
               SizedBox(
                 width: 328,
                 height: 122,
@@ -71,12 +71,14 @@ class LandingPage extends StatelessWidget {
               ),
 
               const SizedBox(height: 40),
-
               SizedBox(
                 width: 329,
                 height: 66,
                 child: ElevatedButton(
-                  onPressed: () {},
+
+                  onPressed: () {
+                
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: purpleColor,
                     shape: RoundedRectangleBorder(
@@ -102,6 +104,7 @@ class LandingPage extends StatelessWidget {
                       color: const Color.fromARGB(255, 246, 245, 247),
                       width: 2,
                     ),
+
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
