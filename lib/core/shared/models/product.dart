@@ -8,4 +8,15 @@ class Product {
 
   Product({this.pid, required this.name, required this.photoUrl, required this.description, required this.cost, required this.uid});
   
+  Map<String, dynamic> toMap() {
+    return {
+      'pid':pid,
+      'name':name,
+      'photoUrl':photoUrl,
+      'description': description,
+      'cost':cost,
+      'uid':uid
+    };
+  }
+
 }
