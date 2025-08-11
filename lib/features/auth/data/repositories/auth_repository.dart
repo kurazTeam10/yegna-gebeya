@@ -20,8 +20,11 @@ class AuthRepositoryImpl extends AuthRepository {
   Future<UserCredential> signInWithEmailAndPassword(
     String email,
     String password,
-  ) {
-    // TODO: implement signInWithEmailAndPassword
-    throw UnimplementedError();
+  ) async {
+    final credential = await firebaseAuth.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    return credential;
   }
 }

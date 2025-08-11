@@ -1,8 +1,13 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yegna_gebeya/features/auth/presentation/cubit/sign_up_cubit.dart';
 import 'package:yegna_gebeya/features/auth/presentation/cubit/sign_up_state.dart';
+import 'package:yegna_gebeya/features/auth/presentation/pages/sign_in_page.dart';
 
+class SignUpPage extends StatefulWidget {
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
 
