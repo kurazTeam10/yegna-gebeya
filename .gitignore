@@ -7,6 +7,8 @@
 # Flutter/Dart build outputs
 build/
 .flutter-plugins
+.dart_tool
+.vscode/
 .flutter-plugins-dependencies
 .packages
 .pub-cache/
