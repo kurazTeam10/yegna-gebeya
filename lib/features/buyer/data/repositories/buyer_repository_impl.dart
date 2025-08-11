@@ -12,27 +12,50 @@ class BuyerRepositoryImpl extends BuyerRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
-  Future<List<Seller>> getSellers() {
-    // TODO: implement getSellers
-    throw UnimplementedError();
+  Future<List<Seller>> getSellers() async {
+    try {
+      final querySnapshot = await _firestore
+          .collection('users')
+          .where('role', isEqualTo: 'seller')
+          .get();
+      return querySnapshot.docs
+          .map((doc) => Seller.fromFirestore(doc))
+          .toList();
+    } on FirebaseException catch (e) {
+      throw (Exception('Failed to get sellers ${e.message}'));
+    }
   }
 
   @override
-  Future<Seller> getSellerById(String id) {
-    // TODO: implement getSellerById
-    throw UnimplementedError();
+  Future<Seller> getSellerById(String id) async {
+    try {
+      final sellerDoc = await _firestore.collection('users').doc(id).get();
+      return Seller.fromFirestore(sellerDoc);
+    } on FirebaseException catch (e) {
+      throw (Exception('Failed to get seller ${e.message}'));
+    }
   }
 
   @override
-  Future<List<Product>> getProducts() {
-    // TODO: implement getProducts
-    throw UnimplementedError();
+  Future<List<Product>> getProducts() async {
+    try {
+      final querySnapshot = await _firestore.collection('products').get();
+      return querySnapshot.docs
+          .map((doc) => Product.fromFirestore(doc))
+          .toList();
+    } on FirebaseException catch (e) {
+      throw (Exception('Failed to get products ${e.message}'));
+    }
   }
 
   @override
-  Future<Product> getProductById(String id) {
-    // TODO: implement getProductById
-    throw UnimplementedError();
+  Future<Product> getProductById(String id) async {
+    try {
+      final productDoc = await _firestore.collection('products').doc(id).get();
+      return Product.fromFirestore(productDoc);
+    } on FirebaseException catch (e) {
+      throw (Exception('Failed to get product ${e.message}'));
+    }
   }
 
   @override
@@ -84,7 +107,6 @@ class BuyerRepositoryImpl extends BuyerRepository {
   @override
   Future<void> purchaseProduct(String id) async {
     try {
-
       final batch = _firestore.batch();
 
       final querySnapshot = await _firestore
@@ -94,7 +116,11 @@ class BuyerRepositoryImpl extends BuyerRepository {
           .get();
 
       final Order order = Order.fromProducts(querySnapshot);
-      _firestore.collection('users').doc(id).collection('orders').add(order.toMap());
+      _firestore
+          .collection('users')
+          .doc(id)
+          .collection('orders')
+          .add(order.toMap());
 
       for (var doc in querySnapshot.docs) {
         batch.delete(doc.reference);
