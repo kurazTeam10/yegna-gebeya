@@ -21,7 +21,7 @@ class AuthRepositoryImpl extends AuthRepository {
     String email,
     String password,
   ) {
-    // TODO: implement signInWithEmailAndPassword
+
     throw UnimplementedError();
   }
 }
