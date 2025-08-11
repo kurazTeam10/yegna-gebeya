@@ -36,15 +36,20 @@ class BuyerRepositoryImpl extends BuyerRepository {
 
   @override
   Future<void> addToCart(String id, Product product) async {
+    try {
     await _firestore
         .collection('users')
         .doc(id)
         .collection('cart')
         .add(product.toMap());
+    } on FirebaseException catch (e) {
+      throw (Exception('Failed to add item to cart: ${e.message}'));
+    }
   }
 
   @override
   Future<void> removeFromCart(String id, Product product) async {
+    try {
         final querySnapshot = await _firestore
         .collection('users')
         .doc(id)
@@ -55,6 +60,9 @@ class BuyerRepositoryImpl extends BuyerRepository {
 
         for (var doc in querySnapshot.docs) {
           await doc.reference.delete();
+      }
+    } on FirebaseException catch (e) {
+      throw (Exception('Failed to remove item from cart ${e.message}'));
         }
   }
 
