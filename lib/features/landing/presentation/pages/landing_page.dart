@@ -6,19 +6,19 @@ class LandingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const purpleColor = Color(0xFF8D00DE);
+    final height = MediaQuery.sizeOf(context).height;
+    final width = MediaQuery.sizeOf(context).width;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-         
               SizedBox(
-                width: 181,
-                height: 177,
+                width: width * 0.4,
                 child: Image.asset(
                   'assets/images/logo.jpg',
                   fit: BoxFit.contain,
@@ -27,39 +27,35 @@ class LandingPage extends StatelessWidget {
 
               const SizedBox(height: 20),
 
-  
               SizedBox(
-                width: 331,
-                height: 81,
+                width: width * 0.5,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
+                  children: [
                     Text(
                       'Welcome to',
                       style: TextStyle(
-                        fontSize: 22,
+                        fontSize: width * 0.06,
                         fontWeight: FontWeight.w500,
                         color: Colors.black,
                       ),
                     ),
-                    SizedBox(height: 16),
-                      Text(
-                        'Yegna Gebeya',
-                        style: TextStyle(
-                          fontFamily: 'Robots',         
-                          fontWeight: FontWeight.w700,  
-                          fontSize: 28,                  
-                          height: 1.0,                   
-                          color: Color(0xFF8D00DE),      
-                        ),
+                    SizedBox(height: height * 0.02),
+                    Text(
+                      'Yegna Gebeya',
+                      style: TextStyle(
+                        fontFamily: 'Roboto',
+                        fontWeight: FontWeight.w700,
+                        fontSize: width * 0.07,
+                        height: height * 0.001,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
+                    ),
                   ],
                 ),
               ),
 
               const SizedBox(height: 8),
-
-      
               SizedBox(
                 width: 328,
                 height: 122,
@@ -75,12 +71,11 @@ class LandingPage extends StatelessWidget {
               ),
 
               const SizedBox(height: 40),
-
-          
               SizedBox(
                 width: 329,
                 height: 66,
                 child: ElevatedButton(
+
                   onPressed: () {
                 
                   },
@@ -103,11 +98,13 @@ class LandingPage extends StatelessWidget {
                 width: 329,
                 height: 66,
                 child: OutlinedButton(
-                  onPressed: () {
-             
-                  },
+                  onPressed: () {},
                   style: OutlinedButton.styleFrom(
-                    side: BorderSide(color: const Color.fromARGB(255, 246, 245, 247), width: 2),
+                    side: BorderSide(
+                      color: const Color.fromARGB(255, 246, 245, 247),
+                      width: 2,
+                    ),
+
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
