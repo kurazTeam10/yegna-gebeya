@@ -1,23 +1,11 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:yegna_gebeya/app.dart';
 import 'package:yegna_gebeya/core/locator.dart';
-import 'package:yegna_gebeya/features/landing/presentation/pages/landing_page.dart';
 
-void main() {
-  setupLocator(); // Initialize dependency injection
-  runApp(const MainApp());
-}
-
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Yegna Gebeya',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const LandingPage(), // Set landing page as home
-    );
-  }
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  setupLocator();
+  runApp(const App());
 }
