@@ -30,13 +30,18 @@ class Product {
 
   factory Product.fromFirestore(DocumentSnapshot doc) {
     final Map<String, dynamic> docMap = doc.data() as Map<String, dynamic>;
+    return Product.fromMap(docMap);
+  }
+
+  factory Product.fromMap(Map<String,dynamic> map){
     return Product(
-      pid: docMap['pid'],
-      name: docMap['name'],
-      photoUrl: docMap['photoUrl'],
-      description: docMap['description'],
-      cost: docMap['cost'],
-      uid: docMap['uid'],
+      pid: map['pid'],
+      name: map['name'],
+      photoUrl: map['photoUrl'],
+      description: map['description'],
+      cost: map['cost'],
+      uid: map['uid'],
     );
   }
+
 }
