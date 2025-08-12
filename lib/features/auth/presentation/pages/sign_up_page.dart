@@ -27,6 +27,7 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _confirmPasswordController =
       TextEditingController();
   bool isVisible = false;
+  String? _sellectedRole;
 
   @override
   void dispose() {
@@ -118,6 +119,49 @@ class _SignUpPageState extends State<SignUpPage> {
                           icon: Icon(Icons.key),
                           focusNode: _confirmPasswordFocusNode,
                         ),
+
+                        DropdownButtonFormField<String>(
+                          value: _sellectedRole,
+                          decoration: InputDecoration(
+                            labelText: 'ROLE',
+                            prefixIcon: Icon(Icons.person_outline),
+                            border: OutlineInputBorder(),
+                          ),
+                          items: [
+                            DropdownMenuItem(
+                              value: 'buyer',
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.shopping_cart_outlined,
+                                    color: Theme.of(context).iconTheme.color,
+                                  ),
+                                  SizedBox(width: 8),
+                                  Text('Buyer'),
+                                ],
+                              ),
+                            ),
+                            DropdownMenuItem(
+                              value: 'seller',
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.storefront_outlined,
+                                    color: Theme.of(context).iconTheme.color,
+                                  ),
+                                  SizedBox(width: 8),
+                                  Text('Seller'),
+                                ],
+                              ),
+                            ),
+                          ],
+                          onChanged: (value) {
+                            setState(() {
+                              _sellectedRole = value;
+                            });
+                          },
+                        ),
+                        SizedBox(height: height * 0.02),
                         Align(
                           alignment: Alignment.centerRight,
                           child: BlocBuilder<SignUpCubit, SignUpState>(
