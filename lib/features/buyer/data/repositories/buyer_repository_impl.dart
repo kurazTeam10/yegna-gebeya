@@ -78,7 +78,7 @@ class BuyerRepositoryImpl extends BuyerRepository {
           .collection('users')
           .doc(id)
           .collection('cart')
-          .where('pid', isEqualTo: product.pid)
+          .where('id', isEqualTo: product.id)
           .limit(1)
           .get();
 

@@ -1,30 +1,30 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Product {
-  final String? pid;
+  final String? id;
   final String name;
   final String photoUrl;
   final String description;
   final double cost;
-  final String uid;
+  final String sellerId;
 
   Product({
-    this.pid,
+    this.id,
     required this.name,
     required this.photoUrl,
     required this.description,
     required this.cost,
-    required this.uid,
+    required this.sellerId,
   });
 
   Map<String, dynamic> toMap() {
     return {
-      'pid': pid,
+      'id': id,
       'name': name,
       'photoUrl': photoUrl,
       'description': description,
       'cost': cost,
-      'uid': uid,
+      'sellerId': sellerId,
     };
   }
 
@@ -35,12 +35,12 @@ class Product {
 
   factory Product.fromMap(Map<String,dynamic> map){
     return Product(
-      pid: map['pid'],
+      id: map['id'],
       name: map['name'],
       photoUrl: map['photoUrl'],
       description: map['description'],
       cost: map['cost'],
-      uid: map['uid'],
+      sellerId: map['sellerId'],
     );
   }
 
