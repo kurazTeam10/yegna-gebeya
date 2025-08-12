@@ -1,200 +1,167 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:yegna_gebeya/core/router/routes.dart';
 import 'package:yegna_gebeya/features/auth/presentation/cubit/sign_in_cubit.dart';
 import 'package:yegna_gebeya/features/auth/presentation/cubit/sign_in_state.dart';
+import 'package:yegna_gebeya/features/auth/presentation/widgets/text_form_widget.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
 
   @override
-  _SignInPageState createState() => _SignInPageState();
+  State<SignInPage> createState() => _SignInPageState();
 }
 
 class _SignInPageState extends State<SignInPage> {
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
-  final FocusNode emailFocus = FocusNode();
-  final FocusNode passwordFocus = FocusNode();
+  final _emailFocusNode = FocusNode();
+  final _passwordFocusNode = FocusNode();
 
-  @override
-  void initState() {
-    super.initState();
-    // Add listeners to rebuild on focus changes
-    emailFocus.addListener(() => setState(() {}));
-    passwordFocus.addListener(() => setState(() {}));
-  }
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-
-    emailFocus.dispose();
-    passwordFocus.dispose();
-
+    _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
-  InputDecoration getInputDecoration({
-    required String label,
-    required IconData icon,
-    required bool isFocused,
-  }) {
-    return InputDecoration(
-      labelText: label,
-      prefixIcon: Icon(icon, color: Colors.grey),
-      labelStyle: TextStyle(color: Colors.grey, fontSize: 14.0),
-      // Gray bottom line when unfocused
-      enabledBorder: UnderlineInputBorder(
-        borderSide: BorderSide(color: Colors.grey),
-      ),
-      // Remove underline when focused (transparent)
-      focusedBorder: UnderlineInputBorder(
-        borderSide: BorderSide(color: Colors.transparent),
-      ),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-    );
-  }
-
-  Widget buildTextField({
-    required TextEditingController controller,
-    required FocusNode focusNode,
-    required String label,
-    required IconData icon,
-    bool obscureText = false,
-  }) {
-    bool isFocused = focusNode.hasFocus;
-
-    return Container(
-      decoration: isFocused
-          ? BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 8,
-                  offset: Offset(0, 3),
-                ),
-              ],
-              borderRadius: BorderRadius.circular(6),
-            )
-          : null,
-      child: TextField(
-        controller: controller,
-        focusNode: focusNode,
-        obscureText: obscureText,
-        decoration: getInputDecoration(
-          label: label,
-          icon: icon,
-          isFocused: isFocused,
-        ),
-      ),
-    );
-  }
-
-  @override
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SignInCubit, SignInState>(
-      listener: (context, state) {
-        if (state is SignInSuccess) {
-          emailController.clear();
-          passwordController.clear();
-
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Sign In successful!")),
-          ); // Go back to login
-        } else if (state is SignInFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.errorMessage ?? "Error")),
-          );
-        }
-      },
-      child: Scaffold(
-        appBar: AppBar(),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 20.0),
-          child: Column(
-            children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Login",
-                  style: TextStyle(fontSize: 32.0, fontWeight: FontWeight.bold),
+    final height = MediaQuery.sizeOf(context).height;
+    final width = MediaQuery.sizeOf(context).width;
+    return Scaffold(
+      body: SafeArea(
+        child: BlocListener<SignInCubit, SignInState>(
+          listener: (context, state) {
+            if (state is SignInSuccess) {
+              _emailController.clear();
+              _passwordController.clear();
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Sign In successful!")),
+              );
+            } else if (state is SignInFailure) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.errorMessage ?? "Error")),
+              );
+            }
+          },
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(
+                    top: height * 0.1,
+                    left: width * 0.05,
+                  ),
+                  child: Text(
+                    'Login',
+                    style: Theme.of(context).textTheme.displaySmall,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              buildTextField(
-                controller: emailController,
-                focusNode: emailFocus,
-                label: 'EMAIL',
-                icon: Icons.email_outlined,
-              ),
-              const SizedBox(height: 20),
-              buildTextField(
-                controller: passwordController,
-                focusNode: passwordFocus,
-                label: 'PASSWORD',
-                icon: Icons.key,
-                obscureText: true,
-              ),
-              const SizedBox(height: 20),
-              BlocBuilder<SignInCubit, SignInState>(
-                builder: (context, state) {
-                  if (state is SignInLoading) {
-                    return const CircularProgressIndicator();
-                  }
-                  return Align(
-                    alignment: Alignment.centerRight,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF8D00DE),
-                      ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: width * 0.05,
+                    vertical: height * 0.02,
+                  ),
+                  child: Form(
+                    key: _formKey,
+                    autovalidateMode: AutovalidateMode.onUnfocus,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        SizedBox(height: height * 0.02),
+                        TextFormWidget(
+                          controller: _emailController,
+                          labelText: 'EMAIL',
+                          icon: Icon(Icons.email_outlined),
+                          focusNode: _emailFocusNode,
+                        ),
+                        TextFormWidget(
+                          controller: _passwordController,
+                          labelText: 'PASSWORD',
+                          icon: Icon(Icons.key),
+                          focusNode: _passwordFocusNode,
+                        ),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: SizedBox(
+                            width: width * 0.32,
+                            height: height * 0.06,
+                            child: BlocBuilder<SignInCubit, SignInState>(
+                              builder: (context, state) {
+                                if (state is SignInLoading) {
+                                  return const Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                }
+                                return ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
+                                    foregroundColor: Theme.of(
+                                      context,
+                                    ).colorScheme.onPrimary,
+                                  ),
+                                  onPressed: () {
+                                    if (_formKey.currentState!.validate()) {
+                                      context.read<SignInCubit>().signIn(
+                                        _emailController.text.trim(),
+                                        _passwordController.text.trim(),
+                                      );
+                                    }
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'LOGIN',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Icon(Icons.arrow_forward, weight: 800),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(height: height * 0.42),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Don't have an account ?",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    TextButton(
                       onPressed: () {
-                        if (!RegExp(
-                          r"^[^@]+@[^@]+\.[^@]+",
-                        ).hasMatch(emailController.text.trim())) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                "Please enter a valid email address",
-                              ),
-                            ),
-                          );
-                          return;
-                        }
-                        context.read<SignInCubit>().signIn(
-                          emailController.text.trim(),
-                          passwordController.text.trim(),
-                        );
+                        context.go(Routes.signUp);
                       },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: const [
-                            Text(
-                              "LOGIN",
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.white,
-                              ),
-                            ),
-                            SizedBox(width: 8),
-                            Icon(
-                              Icons.arrow_forward,
-                              size: 18,
-                              color: Colors.white,
-                            ),
-                          ],
+                      child: Text(
+                        'Sign up',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
-                  );
-                },
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

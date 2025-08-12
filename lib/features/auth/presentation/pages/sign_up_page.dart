@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:yegna_gebeya/core/router/routes.dart';
 import 'package:yegna_gebeya/features/auth/presentation/cubit/sign_up_cubit.dart';
 import 'package:yegna_gebeya/features/auth/presentation/cubit/sign_up_state.dart';
+import 'package:yegna_gebeya/features/auth/presentation/widgets/text_form_widget.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -11,14 +14,19 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  bool _obscurePassword = true;
   final _formKey = GlobalKey<FormState>();
+
+  final _fullNameFocusNode = FocusNode();
+  final _emailFocusNode = FocusNode();
+  final _passwordFocusNode = FocusNode();
+  final _confirmPasswordFocusNode = FocusNode();
 
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
+  bool isVisible = false;
 
   @override
   void dispose() {
@@ -41,27 +49,6 @@ class _SignUpPageState extends State<SignUpPage> {
               ScaffoldMessenger.of(
                 context,
               ).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
-            }
-            if (state is SignUpLoading) {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    content: Row(
-                      children: [
-                        CircularProgressIndicator(),
-                        SizedBox(
-                          width: MediaQuery.sizeOf(context).width * 0.01,
-                        ),
-                        Text('Signing you up'),
-                      ],
-                    ),
-                  );
-                },
-              );
-            }
-            if (state is! SignUpLoading) {
-              Navigator.of(context, rootNavigator: true).pop();
             }
 
             if (state is SignUpSuccess) {
@@ -89,140 +76,107 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   child: Form(
                     key: _formKey,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    autovalidateMode: AutovalidateMode.onUnfocus,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         SizedBox(height: height * 0.02),
-                        TextFormField(
+                        TextFormWidget(
                           controller: _fullNameController,
-                          decoration: const InputDecoration(
-                            labelText: 'Full Name',
-                            icon: Icon(Icons.person_2_outlined),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return 'required';
-                            }
-                            return null;
-                          },
+                          labelText: 'FULL NAME',
+                          icon: Icon(Icons.person_2_outlined),
+                          focusNode: _fullNameFocusNode,
                         ),
-                        TextFormField(
+                        TextFormWidget(
                           controller: _emailController,
-                          decoration: const InputDecoration(
-                            labelText: 'Email',
-                            icon: Icon(Icons.email_outlined),
-                          ),
+                          labelText: 'EMAIL',
+                          icon: Icon(Icons.email_outlined),
+                          focusNode: _emailFocusNode,
                           validator: (value) {
                             if (value == null || value.trim().isEmpty) {
-                              return 'required';
+                              return 'Email is required';
+                            }
+                            // Simple email regex
+                            final emailRegex = RegExp(
+                              r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                            );
+                            if (!emailRegex.hasMatch(value.trim())) {
+                              return 'Enter a valid email';
                             }
                             return null;
                           },
                         ),
-                        TextFormField(
+                        TextFormWidget(
                           controller: _passwordController,
-                          obscureText: _obscurePassword,
-                          decoration: InputDecoration(
-                            labelText: 'Password',
-                            icon: const Icon(Icons.key_outlined),
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _obscurePassword
-                                    ? Icons.visibility_off
-                                    : Icons.visibility,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _obscurePassword = !_obscurePassword;
-                                });
-                              },
-                            ),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return 'required';
-                            }
-                            return null;
-                          },
+                          labelText: 'PASSWORD',
+                          icon: Icon(Icons.key),
+                          focusNode: _passwordFocusNode,
                         ),
-                        TextFormField(
+                        TextFormWidget(
                           controller: _confirmPasswordController,
-                          obscureText: _obscurePassword,
-                          decoration: InputDecoration(
-                            labelText: 'Confirm Password',
-                            icon: const Icon(Icons.key_outlined),
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _obscurePassword
-                                    ? Icons.visibility_off
-                                    : Icons.visibility,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _obscurePassword = !_obscurePassword;
-                                });
-                              },
-                            ),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return 'required';
-                            } else if (_confirmPasswordController.text !=
-                                _passwordController.text) {
-                              return 'don\'t match';
-                            }
-                            return null;
-                          },
+                          labelText: 'CONFIRM PASSWORD',
+                          icon: Icon(Icons.key),
+                          focusNode: _confirmPasswordFocusNode,
                         ),
-                        SizedBox(height: height * 0.03),
                         Align(
                           alignment: Alignment.centerRight,
-                          child: SizedBox(
-                            width: width * 0.32,
-                            height: height * 0.06,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Theme.of(
-                                  context,
-                                ).colorScheme.primary,
-                                foregroundColor: Theme.of(
-                                  context,
-                                ).colorScheme.onPrimary,
-                              ),
-                              onPressed: () {
-                                if (_formKey.currentState!.validate()) {
-                                  context.read<SignUpCubit>().signUp(
-                                    _emailController.text,
-                                    _passwordController.text,
-                                  );
-                                }
-                              },
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'SIGN UP',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                          child: BlocBuilder<SignUpCubit, SignUpState>(
+                            builder: (context, state) {
+                              if (state is SignUpLoading) {
+                                return Container(
+                                  margin: EdgeInsets.only(right: width * 0.05),
+                                  width: width * 0.08,
+                                  height: width * 0.08,
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
+                              return SizedBox(
+                                width: width * 0.32,
+                                height: height * 0.06,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
+                                    foregroundColor: Theme.of(
+                                      context,
+                                    ).colorScheme.onPrimary,
                                   ),
-                                  Icon(
-                                    Icons.arrow_forward,
-                                    weight:
-                                        800, // Makes the icon thicker (Flutter 3.10+)
+                                  onPressed: () {
+                                    if (_formKey.currentState!.validate()) {
+                                      context.read<SignUpCubit>().signUp(
+                                        _emailController.text,
+                                        _passwordController.text,
+                                      );
+                                    }
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'SIGN UP',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Icon(
+                                        Icons.arrow_forward,
+                                        weight:
+                                            800, // Makes the icon thicker (Flutter 3.10+)
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ),
+                                ),
+                              );
+                            },
                           ),
                         ),
                       ],
                     ),
                   ),
                 ),
-                SizedBox(height: height * 0.3),
+                SizedBox(height: height * 0.25),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -231,7 +185,9 @@ class _SignUpPageState extends State<SignUpPage> {
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        context.go(Routes.signIn);
+                      },
                       child: Text(
                         'Sign in',
                         style: TextStyle(

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:yegna_gebeya/core/router/routes.dart';
 
 class LandingPage extends StatelessWidget {
   const LandingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const purpleColor = Color(0xFF8D00DE);
     final height = MediaQuery.sizeOf(context).height;
     final width = MediaQuery.sizeOf(context).width;
 
@@ -54,8 +55,7 @@ class LandingPage extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(height: 8),
-
+              SizedBox(height: height * 0.02),
               SizedBox(
                 width: 328,
                 height: 122,
@@ -71,14 +71,15 @@ class LandingPage extends StatelessWidget {
               ),
 
               const SizedBox(height: 40),
-
               SizedBox(
-                width: 329,
-                height: 66,
+                width: width * 0.8,
+                height: height * 0.075,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    context.go(Routes.signUp);
+                  },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: purpleColor,
+                    backgroundColor: Theme.of(context).colorScheme.primary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -93,22 +94,30 @@ class LandingPage extends StatelessWidget {
               const SizedBox(height: 12),
 
               SizedBox(
-                width: 329,
-                height: 66,
+                width: width * 0.8,
+                height: height * 0.075,
                 child: OutlinedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    context.go(Routes.signIn);
+                  },
                   style: OutlinedButton.styleFrom(
                     side: BorderSide(
-                      color: const Color.fromARGB(255, 246, 245, 247),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withAlpha(13),
                       width: 2,
                     ),
+
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
                   child: Text(
                     'Sign In',
-                    style: TextStyle(fontSize: 18, color: purpleColor),
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
                   ),
                 ),
               ),
