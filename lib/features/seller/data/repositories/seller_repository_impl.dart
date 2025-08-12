@@ -1,36 +1,70 @@
-/*
-import 'package:yegna_gebeya/features/seller/data/datasources/seller_remote_data_source.dart';
-import 'package:yegna_gebeya/features/seller/domain/entities/seller.dart';
-import 'package:yegna_gebeya/features/seller/domain/repositories/seller_repository.dart';
+/*import 'package:yegna_gebeya/features/seller/domain_layer/models/product_model.dart';
+import 'package:yegna_gebeya/features/seller/domain_layer/models/order_model.dart';
+import 'package:yegna_gebeya/features/seller/domain_layer/models/seller_model.dart';
+import 'package:yegna_gebeya/features/seller/domain_layer/repositories/seller_repository.dart';
 
 class SellerRepositoryImpl implements SellerRepository {
-  final SellerRemoteDataSource remoteDataSource;
+  final List<Product> _products = [];
+  final List<Order> _orders = [];
+  Seller? _seller;
 
-  SellerRepositoryImpl({required this.remoteDataSource});
+  SellerRepositoryImpl();
 
   @override
-  Future<Seller> signUp(Seller seller) {
-    return remoteDataSource.signUp(seller);
+  Future<void> addProduct(Product product) async {
+    _products.add(product);
   }
 
   @override
-  Future<Product> createProduct(Product product) {
-    return remoteDataSource.createProduct(product);
+  Future<void> updateProduct(Product product) async {
+    final index = _products.indexWhere((p) => p.id == product.id);
+    if (index != -1) {
+      _products[index] = product;
+    }
   }
 
   @override
-  Future<void> removeProduct(String productId) {
-    return remoteDataSource.removeProduct(productId);
+  Future<void> deleteProduct(String productId) async {
+    _products.removeWhere((p) => p.id == productId);
   }
 
   @override
-  Future<List<Order>> getOrders(String sellerId) {
-    return remoteDataSource.getOrders(sellerId);
+  Future<List<Product>> getSellerProducts(String sellerId) async {
+    return _products.where((p) => p.sellerId == sellerId).toList();
   }
 
   @override
-  Future<void> deliverOrder(String orderId) {
-    return remoteDataSource.deliverOrder(orderId);
+  Future<List<Order>> getSellerOrders(String sellerId) async {
+    return _orders.where((o) => o.sellerId == sellerId).toList();
   }
-}
-*/
+
+  @override
+  Future<void> updateOrderStatus(String orderId, String status) async {
+    final index = _orders.indexWhere((o) => o.id == orderId);
+    if (index != -1) {
+      final oldOrder = _orders[index];
+      _orders[index] = Order(
+        id: oldOrder.id,
+        sellerId: oldOrder.sellerId,
+        productList: oldOrder.productList,
+        buyerId: oldOrder.buyerId,
+        orderDate: oldOrder.orderDate,
+        isDelivered: status.toLowerCase() == 'delivered',
+      );
+    }
+  }
+
+  @override
+  Future<Seller> getSellerProfile(String sellerId) async {
+    if (_seller == null || _seller!.id != sellerId) {
+     
+      _seller = Seller(id: sellerId, fullName: 'Demo Seller', email: 'demo@example.com');
+    }
+    return _seller!;
+  }
+
+  @override
+  Future<void> updateSellerProfile(Seller seller) async {
+    _seller = seller;
+  }
+}*/
