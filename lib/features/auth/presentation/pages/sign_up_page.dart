@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:yegna_gebeya/core/router/routes.dart';
-import 'package:yegna_gebeya/features/auth/presentation/cubit/sign_up_cubit.dart';
-import 'package:yegna_gebeya/features/auth/presentation/cubit/sign_up_state.dart';
+import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_up/sign_up_cubit.dart';
+import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_up/sign_up_state.dart';
 import 'package:yegna_gebeya/features/auth/presentation/widgets/text_form_widget.dart';
 
 class SignUpPage extends StatefulWidget {
