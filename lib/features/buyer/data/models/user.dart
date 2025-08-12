@@ -1,17 +1,17 @@
 abstract class User {
-  final String uid;
+  final String id;
   final String email;
-  final String fullName;
+  final String name;
   final String role;
 
   const User({
-    required this.uid,
+    required this.id,
     required this.email,
-    required this.fullName,
+    required this.name,
     required this.role,
   });
 
   Map<String, dynamic> toMap() {
-    return {'uid': uid, 'email': email, 'fullName': fullName, 'role': role};
+    return {'id': id, 'email': email, 'name': name, 'role': role};
   }
 }
