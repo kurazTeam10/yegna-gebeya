@@ -115,7 +115,7 @@ class BuyerRepositoryImpl extends BuyerRepository {
           .collection('cart')
           .get();
 
-      final Order order = Order.fromProducts(querySnapshot);
+      final Order order = Order.fromProducts(id, querySnapshot);
       _firestore
           .collection('users')
           .doc(id)
