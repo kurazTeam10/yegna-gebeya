@@ -2,38 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:yegna_gebeya/core/router/routes.dart';
-import 'package:yegna_gebeya/features/auth/presentation/cubit/sign_up_cubit.dart';
-import 'package:yegna_gebeya/features/auth/presentation/cubit/sign_up_state.dart';
+import 'package:yegna_gebeya/features/auth/presentation/cubit/sign_in_cubit.dart';
+import 'package:yegna_gebeya/features/auth/presentation/cubit/sign_in_state.dart';
 import 'package:yegna_gebeya/features/auth/presentation/widgets/text_form_widget.dart';
 
-class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key});
+class SignInPage extends StatefulWidget {
+  const SignInPage({super.key});
 
   @override
-  State<SignUpPage> createState() => _SignUpPageState();
+  State<SignInPage> createState() => _SignInPageState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
+class _SignInPageState extends State<SignInPage> {
   final _formKey = GlobalKey<FormState>();
 
-  final _fullNameFocusNode = FocusNode();
   final _emailFocusNode = FocusNode();
   final _passwordFocusNode = FocusNode();
-  final _confirmPasswordFocusNode = FocusNode();
 
-  final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
-  bool isVisible = false;
 
   @override
   void dispose() {
-    _fullNameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
-    _confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -43,16 +35,18 @@ class _SignUpPageState extends State<SignUpPage> {
     final width = MediaQuery.sizeOf(context).width;
     return Scaffold(
       body: SafeArea(
-        child: BlocListener<SignUpCubit, SignUpState>(
+        child: BlocListener<SignInCubit, SignInState>(
           listener: (context, state) {
-            if (state is SignUpFailure) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
-            }
-
-            if (state is SignUpSuccess) {
-              // context.go(Routes.verify);
+            if (state is SignInSuccess) {
+              _emailController.clear();
+              _passwordController.clear();
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Sign In successful!")),
+              );
+            } else if (state is SignInFailure) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.errorMessage ?? "Error")),
+              );
             }
           },
           child: SingleChildScrollView(
@@ -65,7 +59,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     left: width * 0.05,
                   ),
                   child: Text(
-                    'Create Account',
+                    'Login',
                     style: Theme.of(context).textTheme.displaySmall,
                   ),
                 ),
@@ -82,29 +76,10 @@ class _SignUpPageState extends State<SignUpPage> {
                       children: [
                         SizedBox(height: height * 0.02),
                         TextFormWidget(
-                          controller: _fullNameController,
-                          labelText: 'FULL NAME',
-                          icon: Icon(Icons.person_2_outlined),
-                          focusNode: _fullNameFocusNode,
-                        ),
-                        TextFormWidget(
                           controller: _emailController,
                           labelText: 'EMAIL',
                           icon: Icon(Icons.email_outlined),
                           focusNode: _emailFocusNode,
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return 'Email is required';
-                            }
-                            // Simple email regex
-                            final emailRegex = RegExp(
-                              r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-                            );
-                            if (!emailRegex.hasMatch(value.trim())) {
-                              return 'Enter a valid email';
-                            }
-                            return null;
-                          },
                         ),
                         TextFormWidget(
                           controller: _passwordController,
@@ -112,28 +87,19 @@ class _SignUpPageState extends State<SignUpPage> {
                           icon: Icon(Icons.key),
                           focusNode: _passwordFocusNode,
                         ),
-                        TextFormWidget(
-                          controller: _confirmPasswordController,
-                          labelText: 'CONFIRM PASSWORD',
-                          icon: Icon(Icons.key),
-                          focusNode: _confirmPasswordFocusNode,
-                        ),
                         Align(
                           alignment: Alignment.centerRight,
-                          child: BlocBuilder<SignUpCubit, SignUpState>(
-                            builder: (context, state) {
-                              if (state is SignUpLoading) {
-                                return Container(
-                                  margin: EdgeInsets.only(right: width * 0.05),
-                                  width: width * 0.08,
-                                  height: width * 0.08,
-                                  child: CircularProgressIndicator(),
-                                );
-                              }
-                              return SizedBox(
-                                width: width * 0.32,
-                                height: height * 0.06,
-                                child: ElevatedButton(
+                          child: SizedBox(
+                            width: width * 0.32,
+                            height: height * 0.06,
+                            child: BlocBuilder<SignInCubit, SignInState>(
+                              builder: (context, state) {
+                                if (state is SignInLoading) {
+                                  return const Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                }
+                                return ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Theme.of(
                                       context,
@@ -144,9 +110,9 @@ class _SignUpPageState extends State<SignUpPage> {
                                   ),
                                   onPressed: () {
                                     if (_formKey.currentState!.validate()) {
-                                      context.read<SignUpCubit>().signUp(
-                                        _emailController.text,
-                                        _passwordController.text,
+                                      context.read<SignInCubit>().signIn(
+                                        _emailController.text.trim(),
+                                        _passwordController.text.trim(),
                                       );
                                     }
                                   },
@@ -155,41 +121,37 @@ class _SignUpPageState extends State<SignUpPage> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        'SIGN UP',
+                                        'LOGIN',
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      Icon(
-                                        Icons.arrow_forward,
-                                        weight:
-                                            800, // Makes the icon thicker (Flutter 3.10+)
-                                      ),
+                                      Icon(Icons.arrow_forward, weight: 800),
                                     ],
                                   ),
-                                ),
-                              );
-                            },
+                                );
+                              },
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
                 ),
-                SizedBox(height: height * 0.25),
+                SizedBox(height: height * 0.42),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Already have an account ?",
+                      "Don't have an account ?",
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     TextButton(
                       onPressed: () {
-                        context.go(Routes.signIn);
+                        context.go(Routes.signUp);
                       },
                       child: Text(
-                        'Sign in',
+                        'Sign up',
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.primary,
                           fontWeight: FontWeight.bold,

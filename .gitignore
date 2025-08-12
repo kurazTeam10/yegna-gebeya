@@ -6,6 +6,7 @@
 
 # Flutter/Dart build outputs
 build/
+.dart_tool
 .flutter-plugins
 .dart_tool
 .vscode/
