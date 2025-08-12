@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:yegna_gebeya/core/shared/models/product.dart';
+import 'package:yegna_gebeya/features/buyer/data/models/product.dart';
 
 class Order {
   final List<Product> products;
