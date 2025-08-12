@@ -1,15 +1,14 @@
-import 'package:yegna_gebeya/core/models/product.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:yegna_gebeya/core/shared/models/product.dart';
 
 class Cart {
-  final String userId;
-  final List<CartItem> items;
+  List<Product> products;
 
-  const Cart({required this.userId, required this.items});
-}
+  Cart({List<Product>? products}) : products = products ?? <Product>[];
 
-class CartItem {
-  final Product product;
-  final int quantity;
-
-  const CartItem({required this.product, required this.quantity});
+  factory Cart.fromFirestore(QuerySnapshot snapshot) {
+    return Cart(
+      products: snapshot.docs.map((doc) => Product.fromFirestore(doc)).toList(),
+    );
+  }
 }

@@ -1,20 +1,16 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:yegna_gebeya/core/models/product.dart';
-import 'package:yegna_gebeya/core/models/cart.dart';
-import 'package:yegna_gebeya/core/models/seller.dart';
+import 'package:yegna_gebeya/core/shared/models/cart.dart';
+import 'package:yegna_gebeya/core/shared/models/product.dart';
+import 'package:yegna_gebeya/core/shared/models/seller.dart';
 
-abstract class ProductRepository {
+abstract class BuyerRepository {
+  Future<List<Seller>> getSellers();
+  Future<Seller> getSellerById(String id);
+
   Future<List<Product>> getProducts();
-  Future<Product> getProductById(String productId);
-  Future<Seller> getSeller(DocumentReference sellerRef);
-}
+  Future<Product> getProductById(String id);
 
-abstract class CartRepository {
-  Future<Cart> getCart(String userId);
-  Future<void> addProductToCart(String userId, String productId, int quantity);
-  Future<void> removeProductFromCart(String userId, String productId);
-}
-
-abstract class OrderRepository {
-  Future<void> purchaseProducts(String userId, List<CartItem> items);
+  Future<void> addToCart(String id, Product product);
+  Future<void> removeFromCart(String id, Product product);
+  Stream<Cart> getCartProducts(String id);
+  Future<void> purchaseProduct(String id);
 }

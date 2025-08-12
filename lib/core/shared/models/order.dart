@@ -1,29 +1,32 @@
-import 'product.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:yegna_gebeya/core/shared/models/product.dart';
 
 class Order {
-  final String orderId;
-  final String userId;
-  final double totalAmount;
-  final DateTime orderDate;
-  final List<OrderItem> items;
+  final List<Product> products;
+  final Timestamp timestamp;
 
-  const Order({
-    required this.orderId,
-    required this.userId,
-    required this.totalAmount,
-    required this.orderDate,
-    required this.items,
-  });
-}
+  Order({required this.products, required this.timestamp});
 
-class OrderItem {
-  final Product product;
-  final int quantity;
-  final double price; // Price at the time of purchase
+  factory Order.fromProducts(QuerySnapshot snapshot) {
+    return Order(
+      products: snapshot.docs.map((doc) => Product.fromFirestore(doc)).toList(),
+      timestamp: Timestamp.now(),
+    );
+  }
 
-  const OrderItem({
-    required this.product,
-    required this.quantity,
-    required this.price,
-  });
+  factory Order.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    return Order(
+      products:
+          (data['products'] as List).map((p) => Product.fromMap(p)).toList(),
+      timestamp: data['timestamp'] as Timestamp,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'products': products.map((product) => product.toMap()).toList(),
+      'timestamp': timestamp
+    };
+  }
 }

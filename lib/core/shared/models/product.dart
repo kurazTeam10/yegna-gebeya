@@ -1,41 +1,47 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Product {
-  final String id;
+  final String? pid;
   final String name;
+  final String photoUrl;
   final String description;
-  final String imageUrl;
-  final double price;
-  final DocumentReference sellerRef;
+  final double cost;
+  final String uid;
 
-  const Product({
-    required this.id,
+  Product({
+    this.pid,
     required this.name,
+    required this.photoUrl,
     required this.description,
-    required this.imageUrl,
-    required this.price,
-    required this.sellerRef,
+    required this.cost,
+    required this.uid,
   });
 
+  Map<String, dynamic> toMap() {
+    return {
+      'pid': pid,
+      'name': name,
+      'photoUrl': photoUrl,
+      'description': description,
+      'cost': cost,
+      'uid': uid,
+    };
+  }
+
   factory Product.fromFirestore(DocumentSnapshot doc) {
-    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    final Map<String, dynamic> docMap = doc.data() as Map<String, dynamic>;
+    return Product.fromMap(docMap);
+  }
+
+  factory Product.fromMap(Map<String,dynamic> map){
     return Product(
-      id: doc.id,
-      name: data['name'] ?? '',
-      description: data['description'] ?? '',
-      imageUrl: data['imageUrl'] ?? '',
-      price: (data['price'] ?? 0).toDouble(),
-      sellerRef: data['sellerRef'] as DocumentReference,
+      pid: map['pid'],
+      name: map['name'],
+      photoUrl: map['photoUrl'],
+      description: map['description'],
+      cost: map['cost'],
+      uid: map['uid'],
     );
   }
 
-  Map<String, dynamic> toFirestore() {
-    return {
-      'name': name,
-      'description': description,
-      'imageUrl': imageUrl,
-      'price': price,
-      'sellerRef': sellerRef,
-    };
-  }
 }

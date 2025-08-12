@@ -1,29 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:yegna_gebeya/core/shared/models/user.dart';
 
-class Seller {
-  final String id;
-  final String fullName;
-  final String email;
-
-  const Seller({
-    required this.id,
-    required this.fullName,
-    required this.email,
-  });
+class Seller extends User {
+  Seller({required super.uid, required super.email, required super.fullName})
+      : super(role: 'seller');
 
   factory Seller.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>? ?? {};
+    final Map<String, dynamic> docMap = doc.data() as Map<String, dynamic>;
     return Seller(
-      id: doc.id,
-      fullName: data['fullName'] ?? '',
-      email: data['email'] ?? '',
-    );
-  }
-
-  Map<String, dynamic> toFirestore() {
-    return {
-      'fullName': fullName,
-      'email': email,
-    };
+        uid: docMap['uid'],
+        email: docMap['email'],
+        fullName: docMap['fullName']);
   }
 }

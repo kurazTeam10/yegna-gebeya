@@ -1,11 +1,6 @@
-class Buyer {
-  final String id;
-  final String email;
-  final String fullName;
+import 'package:yegna_gebeya/core/shared/models/user.dart';
 
-  const Buyer({
-    required this.id,
-    required this.email,
-    required this.fullName,
-  });
+class Buyer extends User {
+  Buyer({required super.uid, required super.email, required super.fullName})
+      : super(role: 'buyer');
 }
