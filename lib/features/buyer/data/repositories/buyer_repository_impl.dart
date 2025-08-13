@@ -9,7 +9,9 @@ import 'package:yegna_gebeya/features/buyer/data/models/seller.dart';
 import '../../domain/repositories/buyer_repository.dart';
 
 class BuyerRepositoryImpl extends BuyerRepository {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore;
+
+  BuyerRepositoryImpl({required FirebaseFirestore firestore}) : _firestore = firestore;
 
   @override
   Future<List<Seller>> getSellers() async {
