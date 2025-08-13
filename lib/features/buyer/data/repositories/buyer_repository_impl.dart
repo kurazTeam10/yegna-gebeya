@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart' hide Order;
-import 'package:yegna_gebeya/features/buyer/data/models/cart.dart';
+import 'package:yegna_gebeya/features/buyer/domain/models/cart.dart';
 
-import 'package:yegna_gebeya/features/buyer/data/models/product.dart';
-import 'package:yegna_gebeya/features/buyer/data/models/order.dart';
+import 'package:yegna_gebeya/features/buyer/domain/models/product.dart';
+import 'package:yegna_gebeya/features/buyer/domain/models/order.dart';
 
-import 'package:yegna_gebeya/features/buyer/data/models/seller.dart';
+import 'package:yegna_gebeya/features/buyer/domain/models/seller.dart';
 
 import '../../domain/repositories/buyer_repository.dart';
 
