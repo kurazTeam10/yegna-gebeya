@@ -1,17 +1,23 @@
-import '../entities/product_entity.dart';
-import '../entities/order_entity.dart';
-import '../entities/seller_entity.dart';
+import '../models/product.dart';
+import '../models/order.dart';
+import '../models/seller.dart';
 
 abstract class SellerRepository {
-  Future<void> addProduct(ProductEntity product);
-  Future<void> updateProduct(ProductEntity product);
+  // Product operations
+  Future<void> addProduct(Product product);
+  Future<void> updateProduct(Product product);
   Future<void> deleteProduct(String productId);
 
-  Future<List<ProductEntity>> getSellerProducts(String sellerId);
-  Future<List<OrderEntity>> getSellerOrders(String sellerId);
+  // Fetch all products for a seller (sellerId kept for query purposes)
+  Future<List<Product>> getSellerProducts(String sellerId);
 
-  Future<void> updateOrderStatus(String orderId, String status);
+  // Fetch all orders that contain products from this seller
+  Future<List<Order>> getSellerOrders(String sellerId);
 
-  Future<SellerEntity> getSellerProfile(String sellerId);
-  Future<void> updateSellerProfile(SellerEntity seller);
+  
+  Future<void> updateOrderStatus(String orderId, bool isDelivered);
+
+  
+  Future<Seller> getSellerProfile(String sellerId);
+  Future<void> updateSellerProfile(Seller seller);
 }
