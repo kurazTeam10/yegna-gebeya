@@ -2,41 +2,42 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:yegna_gebeya/features/buyer/domain/models/product.dart';
 
 class Order {
-  final String? id;
+  final String? orderId;
   final String buyerId;
-  final List<Product> products;
-  final Timestamp timestamp;
+  final List<Product> productList;
+  final DateTime orderDate;
   bool isDelivered;
 
-  Order({this.id, required this.buyerId,required this.products, required this.timestamp, this.isDelivered = false});
+  Order({this.orderId, required this.buyerId,required this.productList, required this.orderDate, this.isDelivered = false});
 
 
   factory Order.fromProducts(String buyerId, QuerySnapshot snapshot) {
     return Order(
       buyerId: buyerId,
-      products: snapshot.docs.map((doc) => Product.fromFirestore(doc)).toList(), timestamp: Timestamp.now(),
+      productList: snapshot.docs.map((doc) => Product.fromFirestore(doc)).toList(), 
+      orderDate: DateTime.now(),
     );
   }
 
   factory Order.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     return Order(
-      id: doc['id'] as String,
+      orderId: doc['orderId'] as String,
       buyerId: doc['buyerId'] as String,
-      products: (data['products'] as List)
+      productList: (data['productList'] as List)
           .map((p) => Product.fromMap(p))
           .toList(),
-      timestamp: data['timestamp'] as Timestamp,
+      orderDate: data['orderDate'] as DateTime,
       isDelivered: doc['isDelivered'] as bool,
     );
   }
 
   Map<String,dynamic> toMap(){
     return {
-      'id': id,
+      'orderId': orderId,
       'buyerId': buyerId,
-      'products':products.map((product)=>product.toMap()).toList(),
-      'timestamp': timestamp,
+      'productList': productList.map((product)=>product.toMap()).toList(),
+      'orderDate': orderDate,
       'isDelivered': isDelivered,
     };
   }

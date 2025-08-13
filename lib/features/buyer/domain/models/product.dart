@@ -1,30 +1,42 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+enum ProductCategory {
+  clothesForMen,
+  clothesForWomen,
+  furniture,
+  jewellery,
+  technology,
+  others,
+}
+
 class Product {
-  final String? id;
-  final String name;
-  final String photoUrl;
-  final String description;
-  final double cost;
+  final String? productId;
+  final String productName;
+  final String productImageUrl;
+  final String productDescription;
+  final double price;
   final String sellerId;
+  final ProductCategory category;
 
   Product({
-    this.id,
-    required this.name,
-    required this.photoUrl,
-    required this.description,
-    required this.cost,
+    this.productId,
+    required this.productImageUrl,
+    required this.productName,
     required this.sellerId,
+    required this.productDescription,
+    required this.category,
+    required this.price,
   });
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'name': name,
-      'photoUrl': photoUrl,
-      'description': description,
-      'cost': cost,
+      'productId': productId,
+      'productImageUrl': productImageUrl,
+      'productName': productName,
       'sellerId': sellerId,
+      'productDescription': productDescription,
+      'category': category.name,
+      'price': price,
     };
   }
 
@@ -33,15 +45,18 @@ class Product {
     return Product.fromMap(docMap);
   }
 
-  factory Product.fromMap(Map<String,dynamic> map){
+  factory Product.fromMap(Map<String, dynamic> map) {
     return Product(
-      id: map['id'],
-      name: map['name'],
-      photoUrl: map['photoUrl'],
-      description: map['description'],
-      cost: map['cost'],
+      productId: map['productId'],
+      productImageUrl: map['productImageUrl'],
+      productName: map['productName'],
       sellerId: map['sellerId'],
+      productDescription: map['productDescription'],
+      category: ProductCategory.values.firstWhere(
+        (e) => e.name == map['category'],
+        orElse: () => ProductCategory.others,
+      ),
+      price: map['price'],
     );
   }
-
 }

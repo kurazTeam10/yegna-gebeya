@@ -1,17 +1,24 @@
+import 'package:yegna_gebeya/features/buyer/domain/models/order.dart';
+
 abstract class User {
-  final String id;
+  final String userId;
   final String email;
-  final String name;
-  final String role;
+  final String fullName;
+  final String imgUrl;
 
   const User({
-    required this.id,
+    required this.userId,
     required this.email,
-    required this.name,
-    required this.role,
+    required this.fullName,
+    required this.imgUrl,
   });
 
   Map<String, dynamic> toMap() {
-    return {'id': id, 'email': email, 'name': name, 'role': role};
+    return {
+      'userId': userId,
+      'email': email,
+      'fullName': fullName,
+      'imgUrl': imgUrl,
+    };
   }
 }
