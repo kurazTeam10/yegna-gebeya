@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart' hide Order;
-import 'package:yegna_gebeya/core/shared/models/cart.dart';
+import 'package:yegna_gebeya/features/buyer/domain/models/cart.dart';
 
-import 'package:yegna_gebeya/core/shared/models/product.dart';
-import 'package:yegna_gebeya/core/shared/models/order.dart';
+import 'package:yegna_gebeya/features/buyer/domain/models/product.dart';
+import 'package:yegna_gebeya/features/buyer/domain/models/order.dart';
 
-import 'package:yegna_gebeya/core/shared/models/seller.dart';
+import 'package:yegna_gebeya/features/buyer/domain/models/seller.dart';
 
 import '../../domain/repositories/buyer_repository.dart';
 
@@ -15,8 +15,7 @@ class BuyerRepositoryImpl extends BuyerRepository {
   Future<List<Seller>> getSellers() async {
     try {
       final querySnapshot = await _firestore
-          .collection('users')
-          .where('role', isEqualTo: 'seller')
+          .collection('sellers')
           .get();
       return querySnapshot.docs
           .map((doc) => Seller.fromFirestore(doc))
@@ -29,7 +28,7 @@ class BuyerRepositoryImpl extends BuyerRepository {
   @override
   Future<Seller> getSellerById(String id) async {
     try {
-      final sellerDoc = await _firestore.collection('users').doc(id).get();
+      final sellerDoc = await _firestore.collection('sellers').doc(id).get();
       return Seller.fromFirestore(sellerDoc);
     } on FirebaseException catch (e) {
       throw (Exception('Failed to get seller ${e.message}'));
@@ -62,7 +61,7 @@ class BuyerRepositoryImpl extends BuyerRepository {
   Future<void> addToCart(String id, Product product) async {
     try {
       await _firestore
-          .collection('users')
+          .collection('buyers')
           .doc(id)
           .collection('cart')
           .add(product.toMap());
@@ -75,10 +74,10 @@ class BuyerRepositoryImpl extends BuyerRepository {
   Future<void> removeFromCart(String id, Product product) async {
     try {
       final querySnapshot = await _firestore
-          .collection('users')
+          .collection('buyers')
           .doc(id)
           .collection('cart')
-          .where('pid', isEqualTo: product.pid)
+          .where('id', isEqualTo: product.productId)
           .limit(1)
           .get();
 
@@ -94,7 +93,7 @@ class BuyerRepositoryImpl extends BuyerRepository {
   Stream<Cart> getCartProducts(String id) {
     try {
       return _firestore
-          .collection('users')
+          .collection('buyers')
           .doc(id)
           .collection('cart')
           .snapshots()
@@ -110,15 +109,13 @@ class BuyerRepositoryImpl extends BuyerRepository {
       final batch = _firestore.batch();
 
       final querySnapshot = await _firestore
-          .collection('users')
+          .collection('buyers')
           .doc(id)
           .collection('cart')
           .get();
 
-      final Order order = Order.fromProducts(querySnapshot);
+      final Order order = Order.fromProducts(id, querySnapshot);
       _firestore
-          .collection('users')
-          .doc(id)
           .collection('orders')
           .add(order.toMap());
 
