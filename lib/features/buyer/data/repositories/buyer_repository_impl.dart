@@ -11,14 +11,13 @@ import '../../domain/repositories/buyer_repository.dart';
 class BuyerRepositoryImpl extends BuyerRepository {
   final FirebaseFirestore _firestore;
 
-  BuyerRepositoryImpl({required FirebaseFirestore firestore}) : _firestore = firestore;
+  BuyerRepositoryImpl({required FirebaseFirestore firestore})
+    : _firestore = firestore;
 
   @override
   Future<List<Seller>> getSellers() async {
     try {
-      final querySnapshot = await _firestore
-          .collection('sellers')
-          .get();
+      final querySnapshot = await _firestore.collection('sellers').get();
       return querySnapshot.docs
           .map((doc) => Seller.fromFirestore(doc))
           .toList();
@@ -106,6 +105,27 @@ class BuyerRepositoryImpl extends BuyerRepository {
   }
 
   @override
+  Future<void> clearCart(String id) async {
+    try {
+      final batch = _firestore.batch();
+
+      final querySnapshot = await _firestore
+          .collection('buyers')
+          .doc(id)
+          .collection('cart')
+          .get();
+
+      for (var doc in querySnapshot.docs) {
+        batch.delete(doc.reference);
+      }
+
+      await batch.commit();
+    } on FirebaseException catch (e) {
+      throw (Exception('Failed to clear cart ${e.message}'));
+    }
+  }
+
+  @override
   Future<void> purchaseProduct(String id) async {
     try {
       final batch = _firestore.batch();
@@ -117,9 +137,7 @@ class BuyerRepositoryImpl extends BuyerRepository {
           .get();
 
       final Order order = Order.fromProducts(id, querySnapshot);
-      _firestore
-          .collection('orders')
-          .add(order.toMap());
+      _firestore.collection('orders').add(order.toMap());
 
       for (var doc in querySnapshot.docs) {
         batch.delete(doc.reference);
@@ -129,5 +147,20 @@ class BuyerRepositoryImpl extends BuyerRepository {
     } on FirebaseException catch (e) {
       throw (Exception('Failed to purchase product ${e.message}'));
     }
+  }
+
+  @override
+  Future<List<Order>> getOrders(String id) async {
+    final querySnapshot = await _firestore
+        .collection('orders')
+        .where('buyerId', isEqualTo: id)
+        .get();
+
+    return querySnapshot.docs.map((doc) => Order.fromFirestore(doc)).toList();
+  }
+
+  @override
+  Future<void> cancelOrder(String orderId) async {
+    await _firestore.collection('orders').doc(orderId).delete();
   }
 }
