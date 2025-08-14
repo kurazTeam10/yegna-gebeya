@@ -1,7 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:yegna_gebeya/features/buyer/data/models/product.dart';
+
 import 'package:yegna_gebeya/features/buyer/domain/repositories/buyer_repository.dart';
+
+import '../../domain/models/product.dart';
 
 part 'cart_event.dart';
 part 'cart_state.dart';
@@ -20,7 +22,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
                 products: data.products,
                 totalPrice: data.products.isNotEmpty
                     ? data.products
-                          .map((e) => e.cost)
+                          .map((e) => e.price)
                           .toList()
                           .reduce((value, element) => value + element)
                     : 0.0,

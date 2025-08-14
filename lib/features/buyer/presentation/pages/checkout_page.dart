@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yegna_gebeya/core/locator.dart';
-import 'package:yegna_gebeya/features/buyer/data/models/product.dart';
 import 'package:yegna_gebeya/features/buyer/presentation/bloc/cart_bloc.dart';
 
 //TODO: add proper id from an auth cubit/bloc
@@ -49,14 +48,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
               itemBuilder: (context, index) {
                 final product = products[index];
                 final quantity = products
-                    .where((p) => p.id == product.id)
+                    .where((p) => p.productId == product.productId)
                     .length;
 
                 return Row(
                   children: [
-                    Image(image: NetworkImage(product.photoUrl)),
+                    Image(image: NetworkImage(product.productImageUrl)),
                     Column(
-                      children: [Text(product.name), Text('${product.cost}')],
+                      children: [Text(product.productName), Text('${product.price}')],
                     ),
                     Column(
                       children: [
