@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yegna_gebeya/core/locator.dart';
-import 'package:yegna_gebeya/features/buyer/presentation/bloc/cart_bloc.dart';
-import 'package:yegna_gebeya/features/buyer/presentation/pages/checkout_page.dart';
+import 'package:yegna_gebeya/features/buyer/presentation/bloc/cart_bloc/cart_bloc.dart';
 
 //TODO: add proper id from an auth cubit/bloc
 

@@ -6,7 +6,7 @@ import 'package:yegna_gebeya/features/auth/domain/repositories/auth_repository.d
 import 'package:yegna_gebeya/features/auth/presentation/cubit/sign_up_cubit.dart';
 import 'package:yegna_gebeya/features/buyer/data/repositories/buyer_repository_impl.dart';
 import 'package:yegna_gebeya/features/buyer/domain/repositories/buyer_repository.dart';
-import 'package:yegna_gebeya/features/buyer/presentation/bloc/cart_bloc.dart';
+import 'package:yegna_gebeya/features/buyer/presentation/bloc/cart_bloc/cart_bloc.dart';
 
 final GetIt getIt = GetIt.instance;
 

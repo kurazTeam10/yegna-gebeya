@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:yegna_gebeya/features/buyer/domain/models/product.dart';
 
 class Cart {
