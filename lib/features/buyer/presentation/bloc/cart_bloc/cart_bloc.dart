@@ -14,37 +14,45 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   CartBloc({required this.repository}) : super(CartInitial()) {
     on<GetCartEvent>((event, emit) async {
       emit(CartLoading());
-      await emit
-          .forEach(
-            repository.getCartProducts(event.id),
-            onData: (data) {
-              return CartLoaded(
-                products: data.products,
-                totalPrice: data.products.isNotEmpty
-                    ? data.products
-                          .map((e) => e.price)
-                          .toList()
-                          .reduce((value, element) => value + element)
-                    : 0.0,
-              );
-            },
-            onError:
-          (error, stackTrace) => CartError(message: error.toString()),
-        
-          )
-          ;
+      await emit.forEach(
+        repository.getCartProducts(event.id),
+        onData: (data) {
+          return CartLoaded(
+            products: data.products,
+            totalPrice: data.products.isNotEmpty
+                ? data.products
+                      .map((e) => e.price)
+                      .toList()
+                      .reduce((value, element) => value + element)
+                : 0.0,
+          );
+        },
+        onError: (error, stackTrace) => CartError(message: error.toString()),
+      );
     });
 
-    on<AddToCartEvent>((event, emit) {
-      repository.addToCart(event.id, event.product);
+    on<AddToCartEvent>((event, emit) async {
+      try {
+        await repository.addToCart(event.id, event.product);
+      } catch (e) {
+        emit(CartError(message: e.toString()));
+      }
     });
 
-    on<RemoveFromCartEvent>((event, emit) {
-      repository.removeFromCart(event.id, event.product);
+    on<RemoveFromCartEvent>((event, emit) async {
+      try {
+        await repository.removeFromCart(event.id, event.product);
+      } catch (e) {
+        emit(CartError(message: e.toString()));
+      }
     });
 
-    on<PurchaseProducts>((event, emit) {
-      repository.purchaseProduct(event.id);
+    on<PurchaseProducts>((event, emit) async {
+      try {
+        await repository.purchaseProduct(event.id);
+      } catch (e) {
+        emit(CartError(message: e.toString()));
+      }
     });
   }
 }
