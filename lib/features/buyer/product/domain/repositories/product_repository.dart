@@ -1,8 +1,8 @@
-import '../entities/product_entity.dart';
+import '../models/product_model.dart';
 
 abstract class ProductRepository {
-  Future<List<ProductEntity>> getAllProducts();
-  Future<List<ProductEntity>> getProductsByCategory(String category);
-  Future<List<ProductEntity>> searchProducts(String query);
-  Future<ProductEntity?> getProductById(String id);
+  Future<List<ProductModel>> getAllProducts();
+  Future<ProductModel?> getProductById(String id);
+  Future<List<ProductModel>> getProductsByCategory(String category);
+  Future<List<ProductModel>> searchProducts(String query);
 }

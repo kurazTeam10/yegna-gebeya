@@ -1,45 +1,55 @@
-import '../../domain/entities/product_entity.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../domain/models/product_model.dart';
 import '../../domain/repositories/product_repository.dart';
-import '../datasources/product_remote_data_source.dart';
-import '../models/product_model.dart';
 
 class ProductRepositoryImpl implements ProductRepository {
-  final ProductRemoteDataSource remoteDataSource;
+  final FirebaseFirestore _firestore;
 
-  ProductRepositoryImpl(this.remoteDataSource);
+  ProductRepositoryImpl(this._firestore);
 
   @override
-  Future<List<ProductEntity>> getAllProducts() async {
-    final models = await remoteDataSource.getAllProducts();
-    return models.map<ProductEntity>(_convertModelToEntity).toList();
+  Future<List<ProductModel>> getAllProducts() async {
+    try {
+      final snapshot = await _firestore.collection('products').get();
+      return snapshot.docs.map((doc) => ProductModel.fromMap(doc.data(), doc.id)).toList();
+    } catch (e) {
+      throw Exception('Failed to fetch products: $e');
+    }
   }
 
   @override
-  Future<List<ProductEntity>> getProductsByCategory(String category) async {
-    final models = await remoteDataSource.getProductsByCategory(category);
-    return models.map<ProductEntity>(_convertModelToEntity).toList();
+  Future<ProductModel?> getProductById(String id) async {
+    try {
+      final doc = await _firestore.collection('products').doc(id).get();
+      return doc.exists ? ProductModel.fromMap(doc.data()!, doc.id) : null;
+    } catch (e) {
+      throw Exception('Failed to fetch product by ID: $e');
+    }
   }
 
   @override
-  Future<List<ProductEntity>> searchProducts(String query) async {
-    final models = await remoteDataSource.searchProducts(query);
-    return models.map<ProductEntity>(_convertModelToEntity).toList();
+  Future<List<ProductModel>> getProductsByCategory(String category) async {
+    try {
+      final snapshot = await _firestore
+          .collection('products')
+          .where('category', isEqualTo: category)
+          .get();
+      return snapshot.docs.map((doc) => ProductModel.fromMap(doc.data(), doc.id)).toList();
+    } catch (e) {
+      throw Exception('Failed to fetch products by category: $e');
+    }
   }
 
   @override
-  Future<ProductEntity?> getProductById(String id) async {
-    final model = await remoteDataSource.getProductById(id);
-    return model != null ? _convertModelToEntity(model) : null;
-  }
-
-  ProductEntity _convertModelToEntity(ProductModel model) {
-    return ProductEntity(
-      id: model.id,
-      name: model.name,
-      price: model.price,
-      imageUrl: model.imageUrl,
-      category: model.category,
-      description: model.description,
-    );
+  Future<List<ProductModel>> searchProducts(String query) async {
+    try {
+      final snapshot = await _firestore.collection('products').get();
+      final allProducts = snapshot.docs.map((doc) => ProductModel.fromMap(doc.data(), doc.id)).toList();
+      return allProducts
+          .where((product) => product.name.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    } catch (e) {
+      throw Exception('Failed to search products: $e');
+    }
   }
 }
