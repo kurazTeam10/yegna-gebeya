@@ -3,16 +3,28 @@ import 'package:yegna_gebeya/features/auth/domain/repositories/auth_repository.d
 import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_up/sign_up_state.dart';
 
 class SignUpCubit extends Cubit<SignUpState> {
-  final AuthRepository authRepo;
-  SignUpCubit({required this.authRepo}) : super(SignUpInitial());
+  final AuthRepository authRepository;
 
-  Future<void> signUp(String email, String password) async {
-    emit(SignUpLoading());
+  SignUpCubit(this.authRepository) : super(SignUpInitial());
+
+  Future<void> signUp(
+    String email,
+    String password,
+    String role,
+    String fullName,
+  ) async {
     try {
-      final cred = await authRepo.signUpWithEmailAndPassword(email, password);
-      emit(SignUpSuccess(cred: cred));
+      emit(SignUpLoading());
+      await authRepository.signUpWithEmailAndPassword(
+        email,
+        password,
+        role,
+        fullName,
+      );
+      emit(SignUpSuccess()); // only indicate success
     } catch (e) {
       emit(SignUpFailure(errorMessage: e.toString()));
     }
   }
 }
+
