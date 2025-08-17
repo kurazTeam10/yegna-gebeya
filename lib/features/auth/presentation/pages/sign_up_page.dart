@@ -6,7 +6,6 @@ import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_up/sign_up_c
 import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_up/sign_up_state.dart';
 import 'package:yegna_gebeya/features/auth/presentation/widgets/text_form_widget.dart';
 
-
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
 
@@ -27,7 +26,7 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
-  bool isVisible = false;
+
   String? _sellectedRole;
 
   @override
@@ -48,13 +47,14 @@ class _SignUpPageState extends State<SignUpPage> {
         child: BlocListener<SignUpCubit, SignUpState>(
           listener: (context, state) {
             if (state is SignUpFailure) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.errorMessage!)),
+              );
             }
 
             if (state is SignUpSuccess) {
-              // context.go(Routes.verify);
+              // After signup -> go to SignInPage
+              context.go(Routes.signIn);
             }
           },
           child: SingleChildScrollView(
@@ -83,12 +83,22 @@ class _SignUpPageState extends State<SignUpPage> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         SizedBox(height: height * 0.02),
+
+                        /// FULL NAME
                         TextFormWidget(
                           controller: _fullNameController,
                           labelText: 'FULL NAME',
                           icon: Icon(Icons.person_2_outlined),
                           focusNode: _fullNameFocusNode,
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return "Full name is required";
+                            }
+                            return null;
+                          },
                         ),
+
+                        /// EMAIL
                         TextFormWidget(
                           controller: _emailController,
                           labelText: 'EMAIL',
@@ -98,7 +108,6 @@ class _SignUpPageState extends State<SignUpPage> {
                             if (value == null || value.trim().isEmpty) {
                               return 'Email is required';
                             }
-                            // Simple email regex
                             final emailRegex = RegExp(
                               r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
                             );
@@ -108,19 +117,36 @@ class _SignUpPageState extends State<SignUpPage> {
                             return null;
                           },
                         ),
+
+                        /// PASSWORD
                         TextFormWidget(
                           controller: _passwordController,
                           labelText: 'PASSWORD',
                           icon: Icon(Icons.key),
                           focusNode: _passwordFocusNode,
+                          validator: (value) {
+                            if (value == null || value.length < 6) {
+                              return "Password must be at least 6 characters";
+                            }
+                            return null;
+                          },
                         ),
+
+                        /// CONFIRM PASSWORD
                         TextFormWidget(
                           controller: _confirmPasswordController,
                           labelText: 'CONFIRM PASSWORD',
                           icon: Icon(Icons.key),
                           focusNode: _confirmPasswordFocusNode,
+                          validator: (value) {
+                            if (value != _passwordController.text) {
+                              return "Passwords do not match";
+                            }
+                            return null;
+                          },
                         ),
 
+                        /// ROLE DROPDOWN
                         DropdownButtonFormField<String>(
                           value: _sellectedRole,
                           decoration: InputDecoration(
@@ -133,10 +159,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               value: 'buyer',
                               child: Row(
                                 children: [
-                                  Icon(
-                                    Icons.shopping_cart_outlined,
-                                    color: Theme.of(context).iconTheme.color,
-                                  ),
+                                  Icon(Icons.shopping_cart_outlined),
                                   SizedBox(width: 8),
                                   Text('Buyer'),
                                 ],
@@ -146,10 +169,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               value: 'seller',
                               child: Row(
                                 children: [
-                                  Icon(
-                                    Icons.storefront_outlined,
-                                    color: Theme.of(context).iconTheme.color,
-                                  ),
+                                  Icon(Icons.storefront_outlined),
                                   SizedBox(width: 8),
                                   Text('Seller'),
                                 ],
@@ -161,8 +181,17 @@ class _SignUpPageState extends State<SignUpPage> {
                               _sellectedRole = value;
                             });
                           },
+                          validator: (value) {
+                            if (value == null) {
+                              return "Please select a role";
+                            }
+                            return null;
+                          },
                         ),
+
                         SizedBox(height: height * 0.02),
+
+                        /// SIGN UP BUTTON
                         Align(
                           alignment: Alignment.centerRight,
                           child: BlocBuilder<SignUpCubit, SignUpState>(
@@ -180,19 +209,19 @@ class _SignUpPageState extends State<SignUpPage> {
                                 height: height * 0.06,
                                 child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Theme.of(
-                                      context,
-                                    ).colorScheme.primary,
-                                    foregroundColor: Theme.of(
-                                      context,
-                                    ).colorScheme.onPrimary,
+                                    backgroundColor:
+                                        Theme.of(context).colorScheme.primary,
+                                    foregroundColor:
+                                        Theme.of(context).colorScheme.onPrimary,
                                   ),
                                   onPressed: () {
                                     if (_formKey.currentState!.validate()) {
                                       context.read<SignUpCubit>().signUp(
-                                        _emailController.text,
-                                        _passwordController.text,
-                                      );
+                                            _emailController.text.trim(),
+                                            _passwordController.text.trim(),
+                                            _sellectedRole!,
+                                            _fullNameController.text.trim(),
+                                          );
                                     }
                                   },
                                   child: Row(
@@ -205,11 +234,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      Icon(
-                                        Icons.arrow_forward,
-                                        weight:
-                                            800, // Makes the icon thicker (Flutter 3.10+)
-                                      ),
+                                      Icon(Icons.arrow_forward, weight: 800),
                                     ],
                                   ),
                                 ),
@@ -221,7 +246,10 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                   ),
                 ),
+
                 SizedBox(height: height * 0.25),
+
+                /// Already have account
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -249,6 +277,5 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
       ),
     );
-
   }
 }

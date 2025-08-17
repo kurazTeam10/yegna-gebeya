@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:yegna_gebeya/core/router/routes.dart';
 import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_in/sign_in_cubit.dart';
 import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_in/sign_in_state.dart';
@@ -29,6 +30,24 @@ class _SignInPageState extends State<SignInPage> {
     super.dispose();
   }
 
+  /// ✅ Fetch role from Firestore
+  Future<String?> _getUserRole(String uid) async {
+    try {
+      final snapshot = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(uid)
+          .get();
+
+      if (snapshot.exists) {
+        return snapshot.data()?["role"] as String?;
+      }
+    } catch (e) {
+      debugPrint("Error fetching role: $e");
+    }
+    return null;
+  }
+  
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.sizeOf(context).height;
@@ -36,19 +55,37 @@ class _SignInPageState extends State<SignInPage> {
     return Scaffold(
       body: SafeArea(
         child: BlocListener<SignInCubit, SignInState>(
-          listener: (context, state) {
-            if (state is SignInSuccess) {
-              _emailController.clear();
-              _passwordController.clear();
+        listener: (context, state) async {
+          if (state is SignInSuccess) {
+            _emailController.clear();
+            _passwordController.clear();
+
+            final user = state.cred?.user;
+            if (user == null) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Sign In successful!")),
+                const SnackBar(content: Text("User not found!")),
               );
-            } else if (state is SignInFailure) {
+              return;
+            }
+
+            final role = await _getUserRole(user.uid);
+            if (role == "buyer") {
+              context.go(Routes.buyerHome);
+            } else if (role == "seller") {
+              context.go(Routes.sellerHome);
+            } else {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.errorMessage ?? "Error")),
+                const SnackBar(content: Text("Role not found.")),
               );
             }
-          },
+          } else if (state is SignInFailure) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.errorMessage ?? "Error")),
+            );
+          }
+        },
+
+
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,13 +115,13 @@ class _SignInPageState extends State<SignInPage> {
                         TextFormWidget(
                           controller: _emailController,
                           labelText: 'EMAIL',
-                          icon: Icon(Icons.email_outlined),
+                          icon: const Icon(Icons.email_outlined),
                           focusNode: _emailFocusNode,
                         ),
                         TextFormWidget(
                           controller: _passwordController,
                           labelText: 'PASSWORD',
-                          icon: Icon(Icons.key),
+                          icon: const Icon(Icons.key),
                           focusNode: _passwordFocusNode,
                         ),
                         Align(
@@ -119,7 +156,7 @@ class _SignInPageState extends State<SignInPage> {
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
-                                    children: [
+                                    children: const [
                                       Text(
                                         'LOGIN',
                                         style: TextStyle(
@@ -142,7 +179,7 @@ class _SignInPageState extends State<SignInPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       "Don't have an account ?",
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
