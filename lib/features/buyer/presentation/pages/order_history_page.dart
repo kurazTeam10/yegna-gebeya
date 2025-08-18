@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:yegna_gebeya/features/buyer/presentation/bloc/order_bloc/order_bloc.dart';
+import 'package:yegna_gebeya/features/buyer/presentation/widgets/cart_icon_widget.dart';
 
 //TODO: add proper id from an auth cubit/bloc
 
@@ -16,13 +17,13 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
   @override
   void initState() {
     super.initState();
-    context.read<OrderBloc>().add(GetOrderHistory(id: 'id'));
+    context.read<OrderBloc>().add(GetOrderHistory(id: 'AfGvuQs8LDYbPUFKtdl4wkMo2Br2'));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Order History')),
+      appBar: AppBar(title: const Text('Order History'),),
       body: BlocConsumer<OrderBloc, OrderState>(
         listener: (BuildContext context, OrderState state) {
           if (state is OrderError) {
@@ -47,7 +48,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                   const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () {
-                      context.read<OrderBloc>().add(GetOrderHistory(id: 'id'));
+                      context.read<OrderBloc>().add(GetOrderHistory(id: 'AfGvuQs8LDYbPUFKtdl4wkMo2Br2'));
                     },
                     child: const Text('Retry'),
                   ),
