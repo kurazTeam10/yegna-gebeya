@@ -8,6 +8,7 @@ import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_up/sign_up_c
 import 'package:yegna_gebeya/features/buyer/data/repositories/buyer_repository_impl.dart';
 import 'package:yegna_gebeya/features/buyer/domain/repositories/buyer_repository.dart';
 import 'package:yegna_gebeya/features/buyer/presentation/bloc/cart_bloc/cart_bloc.dart';
+import 'package:yegna_gebeya/features/buyer/presentation/bloc/order_bloc/order_bloc.dart';
 
 final GetIt getIt = GetIt.instance;
 
@@ -27,6 +28,8 @@ void setupLocator() {
   getIt.registerLazySingleton<BuyerRepository>(() => BuyerRepositoryImpl(firestore: getIt<FirebaseFirestore>()));
 
   getIt.registerFactory<CartBloc>(() => CartBloc(repository: getIt<BuyerRepository>()));
+
+  getIt.registerFactory<OrderBloc>(()=>OrderBloc(getIt<BuyerRepository>()));
 
   getIt.registerFactory<SignInCubit>(
     () => SignInCubit(authRepo: getIt<AuthRepository>()),
