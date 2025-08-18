@@ -58,14 +58,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
               children: [
                 Expanded(
                   child: ListView.builder(
-              itemCount: entries.length,
-              itemBuilder: (context, index) {
-final entry = entries[index];
-                final product = productIdToProduct[entry];
-                final quantity = productQuantities[entry];
-
-                return Row(
-crossAxisAlignment: CrossAxisAlignment.center,
+                    itemCount: entries.length,
+                    itemBuilder: (context, index) {
+                      final entry = entries[index];
+                      final product = productIdToProduct[entry];
+                      final quantity = productQuantities[entry];
+                  
+                      return Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           
                           SizedBox(
@@ -80,43 +80,43 @@ crossAxisAlignment: CrossAxisAlignment.center,
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-product.productName,
+                              children: [
+                                Text(
+                                  product.productName,
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
                                 ),
-Text('${product.price}'),
-],
-),
-                    ),
-                    Column(
-mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
+                                Text('${product.price}'),
+                              ],
+                            ),
+                          ),
+                          Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
                                 onPressed: () => context.read<CartBloc>().add(
                                   AddToCartEvent(
                                     id: 'AfGvuQs8LDYbPUFKtdl4wkMo2Br2',
                                     product: product,
                                   ),
+                                ),
+                                icon: const Icon(Icons.arrow_upward),
+                              ),
+                              Text(quantity.toString()),
+                              IconButton(
+                                onPressed: () => context.read<CartBloc>().add(
+                                  RemoveFromCartEvent(
+                                    id: 'AfGvuQs8LDYbPUFKtdl4wkMo2Br2',
+                                    product: product,
+                                  ),
+                                ),
+                                icon: const Icon(Icons.arrow_downward),
+                              ),
+                            ],
                           ),
-                          icon: Icon(Icons.arrow_upward),
-                        ),
-                        Text(quantity.toString()),
-                        IconButton(
-                          onPressed: () => context.read<CartBloc>().add(
-                            RemoveFromCartEvent(
-id: 'AfGvuQs8LDYbPUFKtdl4wkMo2Br2',
-product: product,
-),
-                          ),
-                          icon: Icon(Icons.arrow_downward),
-                        ),
-                      ],
-                    ),
-                  ],
-                );
-              },
+                        ],
+                      );
+                    },
                   ),
                 ),
               
