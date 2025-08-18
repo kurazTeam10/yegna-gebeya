@@ -77,6 +77,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   ],
                 );
               },
+                  ),
+                ),
+              
+              ElevatedButton(onPressed: (){
+                context.read<CartBloc>().add(PurchaseProducts(id: 'AfGvuQs8LDYbPUFKtdl4wkMo2Br2'));
+              }, child: Text('purchase products now'))
+              ],
             );
           }
 
