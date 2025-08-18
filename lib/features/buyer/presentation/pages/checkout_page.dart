@@ -17,7 +17,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   void initState() {
     super.initState();
 
-    final cartBloc = getIt<CartBloc>();
+    final cartBloc = context.read<CartBloc>();
 
     if (cartBloc.state is! CartLoaded && cartBloc.state is! CartLoading) {
       cartBloc.add(GetCartEvent(id: '1'));
@@ -60,15 +60,21 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     Column(
                       children: [
                         IconButton(
-                          onPressed: () => getIt<CartBloc>().add(
-                            AddToCartEvent(id: '1', product: product),
+                                onPressed: () => context.read<CartBloc>().add(
+                                  AddToCartEvent(
+                                    id: 'AfGvuQs8LDYbPUFKtdl4wkMo2Br2',
+                                    product: product,
+                                  ),
                           ),
                           icon: Icon(Icons.arrow_upward),
                         ),
                         Text(quantity.toString()),
                         IconButton(
-                          onPressed: () => getIt<CartBloc>().add(
-                            RemoveFromCartEvent(id: '1', product: product),
+                          onPressed: () => context.read<CartBloc>().add(
+                            RemoveFromCartEvent(
+id: 'AfGvuQs8LDYbPUFKtdl4wkMo2Br2',
+product: product,
+),
                           ),
                           icon: Icon(Icons.arrow_downward),
                         ),
