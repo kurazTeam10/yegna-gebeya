@@ -2,9 +2,12 @@ import 'package:go_router/go_router.dart';
 import 'package:yegna_gebeya/core/router/routes.dart';
 import 'package:yegna_gebeya/features/auth/presentation/pages/sign_in_page.dart';
 import 'package:yegna_gebeya/features/auth/presentation/pages/sign_up_page.dart';
+import 'package:yegna_gebeya/features/buyer/presentation/pages/checkout_page.dart';
+import 'package:yegna_gebeya/features/buyer/presentation/pages/order_history_page.dart';
 import 'package:yegna_gebeya/features/landing/presentation/pages/landing_page.dart';
 
 final goRouter = GoRouter(
+  initialLocation: Routes.landigPage,
   routes: [
     GoRoute(
       path: Routes.landigPage,
@@ -12,5 +15,10 @@ final goRouter = GoRouter(
     ),
     GoRoute(path: Routes.signUp, builder: (context, state) => SignUpPage()),
     GoRoute(path: Routes.signIn, builder: (context, state) => SignInPage()),
+    GoRoute(path: Routes.checkOut, builder: (context, state) => CheckoutPage()),
+    GoRoute(
+      path: Routes.orderHistory,
+      builder: (context, state) => OrderHistoryPage(),
+    ),
   ],
 );
