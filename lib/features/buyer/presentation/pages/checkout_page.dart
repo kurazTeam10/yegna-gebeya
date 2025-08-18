@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yegna_gebeya/core/locator.dart';
+import 'package:yegna_gebeya/features/buyer/domain/models/product.dart';
 import 'package:yegna_gebeya/features/buyer/presentation/bloc/cart_bloc/cart_bloc.dart';
 
 //TODO: add proper id from an auth cubit/bloc
@@ -42,22 +43,55 @@ class _CheckoutPageState extends State<CheckoutPage> {
           }
 
           if (state is CartLoaded) {
-            final products = state.products;
-            return ListView.builder(
-              itemCount: products.length,
+            final productQuantities = <String, int>{};
+            final productIdToProduct = <String, Product>{};
+
+            for (final product in state.products) {
+              productQuantities[product.productId!] =
+                  (productQuantities[product.productId!] ?? 0) + 1;
+              productIdToProduct[product.productId!] = product;              
+            }
+
+            final entries = productQuantities.keys.toList();
+
+            return Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+              itemCount: entries.length,
               itemBuilder: (context, index) {
-                final product = products[index];
-                final quantity = products
-                    .where((p) => p.productId == product.productId)
-                    .length;
+final entry = entries[index];
+                final product = productIdToProduct[entry];
+                final quantity = productQuantities[entry];
 
                 return Row(
+crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          
+                          SizedBox(
+                            width: 80,
+                            height: 80,
+                            child: Image.network(
+                              product!.productImageUrl,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Image(image: NetworkImage(product.productImageUrl)),
-                    Column(
-                      children: [Text(product.productName), Text('${product.price}')],
+                    Text(
+product.productName,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                ),
+Text('${product.price}'),
+],
+),
                     ),
                     Column(
+mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
                                 onPressed: () => context.read<CartBloc>().add(
