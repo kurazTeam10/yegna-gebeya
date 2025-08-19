@@ -5,7 +5,7 @@ import 'package:meta/meta.dart';
 
 import 'package:yegna_gebeya/features/buyer/domain/repositories/buyer_repository.dart';
 
-import '../../../domain/models/product.dart';
+import '../../../../../shared/models/product.dart';
 
 part 'cart_event.dart';
 part 'cart_state.dart';

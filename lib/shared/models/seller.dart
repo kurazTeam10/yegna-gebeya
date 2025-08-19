@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:yegna_gebeya/features/buyer/domain/models/user.dart';
+import 'package:yegna_gebeya/shared/models/user.dart';
 
 class Seller extends User {
   Seller({
