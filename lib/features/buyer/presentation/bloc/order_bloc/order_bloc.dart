@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:yegna_gebeya/features/buyer/domain/models/order.dart';
 import 'package:yegna_gebeya/features/buyer/domain/repositories/buyer_repository.dart';
