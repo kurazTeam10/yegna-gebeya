@@ -17,10 +17,10 @@ class _CartIconWidgetState extends State<CartIconWidget> {
   void initState() {
     super.initState();
 
-    final cartBloc = getIt<CartBloc>();
+    final cartBloc = context.read<CartBloc>();
 
     if (cartBloc.state is! CartLoaded && cartBloc.state is! CartLoading) {
-      cartBloc.add(GetCartEvent(id: '1'));
+      cartBloc.add(GetCartEvent(id: 'AfGvuQs8LDYbPUFKtdl4wkMo2Br2'));
     }
   }
 
