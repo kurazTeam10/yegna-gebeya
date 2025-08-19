@@ -136,8 +136,9 @@ class BuyerRepositoryImpl extends BuyerRepository {
           .collection('cart')
           .get();
 
-      final Order order = Order.fromProducts(id, querySnapshot);
-      _firestore.collection('orders').add(order.toMap());
+      final orderRef = _firestore.collection('orders').doc();
+      final order = Order.fromProducts(id, querySnapshot, orderRef.id);
+      batch.set(orderRef, order.toMap());
 
       for (var doc in querySnapshot.docs) {
         batch.delete(doc.reference);
