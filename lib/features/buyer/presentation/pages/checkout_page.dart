@@ -43,40 +43,56 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
           if (state is CartLoaded) {
             final products = state.products;
-            return ListView.builder(
-              itemCount: products.length,
-              itemBuilder: (context, index) {
-                final product = products[index];
-                final quantity = products
-                    .where((p) => p.productId == product.productId)
-                    .length;
+            return Column(
+              children: [
+                ListView.builder(
+                  itemCount: products.length,
+                  itemBuilder: (context, index) {
+                    final product = products[index];
+                    final quantity = products
+                        .where((p) => p.productId == product.productId)
+                        .length;
 
-                return Row(
-                  children: [
-                    Image(image: NetworkImage(product.productImageUrl)),
-                    Column(
-                      children: [Text(product.productName), Text('${product.price}')],
-                    ),
-                    Column(
+                    return Row(
                       children: [
-                        IconButton(
-                          onPressed: () => getIt<CartBloc>().add(
-                            AddToCartEvent(id: '1', product: product),
-                          ),
-                          icon: Icon(Icons.arrow_upward),
+                        Image(image: NetworkImage(product.productImageUrl)),
+                        Column(
+                          children: [
+                            Text(product.productName),
+                            Text('${product.price}'),
+                          ],
                         ),
-                        Text(quantity.toString()),
-                        IconButton(
-                          onPressed: () => getIt<CartBloc>().add(
-                            RemoveFromCartEvent(id: '1', product: product),
-                          ),
-                          icon: Icon(Icons.arrow_downward),
+                        Column(
+                          children: [
+                            IconButton(
+                              onPressed: () => getIt<CartBloc>().add(
+                                AddToCartEvent(id: '1', product: product),
+                              ),
+                              icon: Icon(Icons.arrow_upward),
+                            ),
+                            Text(quantity.toString()),
+                            IconButton(
+                              onPressed: () => getIt<CartBloc>().add(
+                                RemoveFromCartEvent(id: '1', product: product),
+                              ),
+                              icon: Icon(Icons.arrow_downward),
+                            ),
+                          ],
                         ),
                       ],
-                    ),
-                  ],
-                );
-              },
+                    );
+                  },
+                ),
+
+                ElevatedButton(
+                  onPressed: () {
+                    context.read<CartBloc>().add(
+                      PurchaseProducts(id: 'AfGvuQs8LDYbPUFKtdl4wkMo2Br2'),
+                    );
+                  },
+                  child: Text('purchase products now'),
+                ),
+              ],
             );
           }
 
