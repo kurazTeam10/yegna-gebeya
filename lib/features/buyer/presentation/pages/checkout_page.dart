@@ -19,7 +19,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
     final cartBloc = context.read<CartBloc>();
 
-    if (cartBloc.state is! CartLoaded && cartBloc.state is! CartLoading) {
+    if (cartBloc.state is CartInitial) {
       cartBloc.add(GetCartEvent(id: 'AfGvuQs8LDYbPUFKtdl4wkMo2Br2'));
     }
   }
