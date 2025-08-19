@@ -25,13 +25,13 @@ class App extends StatelessWidget {
           ),
           useMaterial3: true,
           textTheme: ThemeData.light().textTheme.copyWith(
-            displaySmall: const TextStyle(
-              color: Color(0xFF000000),
-              fontFamily: 'Roboto',
-              fontWeight: FontWeight.bold,
-              fontSize: 25,
-            ),
-          ),
+                displaySmall: const TextStyle(
+                  color: Color(0xFF000000),
+                  fontFamily: 'Roboto',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 25,
+                ),
+              ),
         ),
       ),
     );

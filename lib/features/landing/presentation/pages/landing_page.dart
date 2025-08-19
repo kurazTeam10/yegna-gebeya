@@ -24,9 +24,7 @@ class LandingPage extends StatelessWidget {
                   fit: BoxFit.contain,
                 ),
               ),
-
               const SizedBox(height: 20),
-
               SizedBox(
                 width: width * 0.5,
                 child: Column(
@@ -54,7 +52,6 @@ class LandingPage extends StatelessWidget {
                   ],
                 ),
               ),
-
               SizedBox(height: height * 0.02),
               SizedBox(
                 width: 328,
@@ -69,7 +66,6 @@ class LandingPage extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
               ),
-
               const SizedBox(height: 40),
               SizedBox(
                 width: width * 0.8,
@@ -90,9 +86,7 @@ class LandingPage extends StatelessWidget {
                   ),
                 ),
               ),
-
               const SizedBox(height: 12),
-
               SizedBox(
                 width: width * 0.8,
                 height: height * 0.075,
@@ -107,7 +101,6 @@ class LandingPage extends StatelessWidget {
                       ).colorScheme.onSurface.withAlpha(13),
                       width: 2,
                     ),
-
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),

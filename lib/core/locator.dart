@@ -4,6 +4,8 @@ import 'package:yegna_gebeya/features/auth/data/repositories/auth_repository.dar
 import 'package:yegna_gebeya/features/auth/domain/repositories/auth_repository.dart';
 import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_in/sign_in_cubit.dart';
 import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_up/sign_up_cubit.dart';
+import 'package:yegna_gebeya/features/buyer/data/repositories/buyer_repository_impl.dart';
+import 'package:yegna_gebeya/features/buyer/domain/repositories/buyer_repository.dart';
 
 final GetIt getIt = GetIt.instance;
 
@@ -19,5 +21,9 @@ void setupLocator() {
   );
   getIt.registerFactory<SignInCubit>(
     () => SignInCubit(authRepo: getIt<AuthRepository>()),
+  );
+
+  getIt.registerLazySingleton<BuyerRepository>(
+    () => BuyerRepositoryImpl(),
   );
 }

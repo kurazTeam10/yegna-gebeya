@@ -119,7 +119,6 @@ class _SignUpPageState extends State<SignUpPage> {
                           icon: Icon(Icons.key),
                           focusNode: _confirmPasswordFocusNode,
                         ),
-
                         DropdownButtonFormField<String>(
                           value: _sellectedRole,
                           decoration: InputDecoration(
@@ -189,9 +188,9 @@ class _SignUpPageState extends State<SignUpPage> {
                                   onPressed: () {
                                     if (_formKey.currentState!.validate()) {
                                       context.read<SignUpCubit>().signUp(
-                                        _emailController.text,
-                                        _passwordController.text,
-                                      );
+                                            _emailController.text,
+                                            _passwordController.text,
+                                          );
                                     }
                                   },
                                   child: Row(
