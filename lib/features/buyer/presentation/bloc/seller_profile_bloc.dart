@@ -18,7 +18,9 @@ class SellerProfileBloc extends Bloc<SellerProfileEvent, SellerProfileState> {
     emit(SellerProfileLoading());
     try {
       final seller = await buyerRepository.getSellerById(event.sellerId);
-      emit(SellerProfileLoaded(seller));
+      final products =
+          await buyerRepository.getProductsBySellerId(event.sellerId);
+      emit(SellerProfileLoaded(seller, products));
     } catch (e) {
       emit(SellerProfileError(e.toString()));
     }
