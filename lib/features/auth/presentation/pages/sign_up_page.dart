@@ -6,6 +6,7 @@ import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_up/sign_up_c
 import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_up/sign_up_state.dart';
 import 'package:yegna_gebeya/features/auth/presentation/widgets/text_form_widget.dart';
 
+
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
 
@@ -247,5 +248,6 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
       ),
     );
+
   }
 }
