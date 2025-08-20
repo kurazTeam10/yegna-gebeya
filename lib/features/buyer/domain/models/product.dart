@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 enum ProductCategory {
-  clothesForMen,
-  clothesForWomen,
+  clothes,
   furniture,
   jewellery,
   technology,
@@ -47,16 +46,16 @@ class Product {
 
   factory Product.fromMap(Map<String, dynamic> map) {
     return Product(
-      productId: map['productId'],
-      productImageUrl: map['productImageUrl'],
-      productName: map['productName'],
-      sellerId: map['sellerId'],
-      productDescription: map['productDescription'],
+      productId: map['productId'] ?? '',
+      productImageUrl: map['productImageUrl'] ?? '',
+      productName: map['productName'] ?? '',
+      sellerId: map['sellerId'] ?? '',
+      productDescription: map['productDescription'] ?? '',
       category: ProductCategory.values.firstWhere(
-        (e) => e.name == map['category'],
+        (e) => e.name.toLowerCase() == map['category']?.toString().toLowerCase(),
         orElse: () => ProductCategory.others,
       ),
-      price: map['price'],
+      price: (map['price'] is num) ? map['price'].toDouble() : 0.0,
     );
   }
 }
