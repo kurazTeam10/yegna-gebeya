@@ -6,7 +6,7 @@ class Order {
   final String buyerId;
   final List<Product> productList;
   final DateTime orderDate;
-  bool isDelivered;
+  bool? isDelivered;
 
   Order({
     this.orderId,
@@ -28,6 +28,7 @@ class Order {
           .map((doc) => Product.fromFirestore(doc))
           .toList(),
       orderDate: DateTime.now(),
+      isDelivered: false
     );
   }
 
@@ -40,7 +41,7 @@ class Order {
           .map((p) => Product.fromMap(p))
           .toList(),
       orderDate: (data['orderDate'] as Timestamp).toDate(),
-      isDelivered: data['isDelivered'] as bool,
+      isDelivered: data['isDelivered'] as bool?,
     );
   }
 
