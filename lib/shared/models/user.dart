@@ -1,4 +1,3 @@
-import 'package:yegna_gebeya/features/buyer/domain/models/order.dart';
 
 abstract class User {
   final String userId;
