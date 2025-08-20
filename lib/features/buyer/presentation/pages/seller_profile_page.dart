@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:yegna_gebeya/features/buyer/presentation/bloc/seller_profile_bloc.dart';
 import 'package:yegna_gebeya/features/buyer/presentation/bloc/seller_profile_event.dart';
 import 'package:yegna_gebeya/features/buyer/presentation/bloc/seller_profile_state.dart';
-import 'package:yegna_gebeya/features/buyer/domain/models/product.dart';
+import 'package:yegna_gebeya/shared/domain/models/product.dart';
 import 'package:yegna_gebeya/features/buyer/presentation/widgets/product_card.dart';
 import 'package:yegna_gebeya/features/buyer/presentation/widgets/category_chip.dart';
 

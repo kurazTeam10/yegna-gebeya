@@ -43,7 +43,7 @@ class SellerCard extends StatelessWidget {
       child: ListTile(
         contentPadding: EdgeInsets.all(screenWidth * 0.04),
         onTap: () {
-          context.go('/sellerProfile/${seller.userId}');
+          context.go('/sellerProfile/${seller.id}');
         },
         leading: CircleAvatar(
           radius: screenWidth * 0.075,
