@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:yegna_gebeya/features/buyer/domain/models/product.dart';
+import 'package:yegna_gebeya/shared/models/product.dart';
 
 class Order {
   final String? orderId;
@@ -7,19 +7,26 @@ class Order {
   final List<Product> productList;
   final DateTime orderDate;
   bool isDelivered;
+  
+  Order({
+    this.orderId,
+    required this.buyerId,
+    required this.productList,
+    required this.orderDate,
+    this.isDelivered = false,
+  });
 
-  Order(
-      {this.orderId,
-      required this.buyerId,
-      required this.productList,
-      required this.orderDate,
-      this.isDelivered = false});
-
-  factory Order.fromProducts(String buyerId, QuerySnapshot snapshot) {
+  factory Order.fromProducts(
+    String buyerId,
+    QuerySnapshot snapshot,
+    String orderId,
+  ) {
     return Order(
+      orderId: orderId,
       buyerId: buyerId,
-      productList:
-          snapshot.docs.map((doc) => Product.fromFirestore(doc)).toList(),
+      productList: snapshot.docs
+          .map((doc) => Product.fromFirestore(doc))
+          .toList(),
       orderDate: DateTime.now(),
     );
   }
@@ -33,6 +40,7 @@ class Order {
           (data['productList'] as List).map((p) => Product.fromMap(p)).toList(),
       orderDate: data['orderDate'] as DateTime,
       isDelivered: doc['isDelivered'] as bool,
+
     );
   }
 
