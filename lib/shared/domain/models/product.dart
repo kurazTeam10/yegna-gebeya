@@ -41,15 +41,15 @@ class Product {
   factory Product.fromMap(Map<String, dynamic> map) {
     return Product(
       productId: map['productId'],
-      productImageUrl: map['productImageUrl'],
-      productName: map['productName'],
-      sellerId: map['sellerId'],
-      productDescription: map['productDescription'],
+      productImageUrl: map['productImageUrl'] ?? '',
+      productName: map['productName'] ?? '',
+      sellerId: map['sellerId'] ?? '',
+      productDescription: map['productDescription'] ?? '',
       category: ProductCategory.values.firstWhere(
         (e) => e.name == map['category'],
         orElse: () => ProductCategory.others,
       ),
-      price: map['price'],
+      price: (map['price'] as num?)?.toDouble() ?? 0.0,
     );
   }
 }
