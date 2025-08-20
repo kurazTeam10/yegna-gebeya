@@ -37,3 +37,5 @@ crashlytics-build.properties
 .idea/
 .vscode/
 *.iml
+
+/android/app/google-services.json
