@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:yegna_gebeya/shared/domain/models/product.dart';
 import 'package:yegna_gebeya/shared/domain/repositories/product_repository.dart';
 
 class ProductRepositoryImpl extends ProductRepository {
-  FirebaseFirestore firestore;
-  ProductRepositoryImpl({required this.firestore});
+  final FirebaseFirestore firestore;
+  final Dio dio;
+  ProductRepositoryImpl({required this.firestore, required this.dio});
   @override
   Future<List<Product>> getAllProducts() {
     return firestore.collection('products').get().then((querySnapshot) {
@@ -50,7 +52,30 @@ class ProductRepositoryImpl extends ProductRepository {
 
   @override
   Future<void> uploadProduct({required Product product}) {
-    // TODO: implement uploadProduct
-    throw UnimplementedError();
+    return _uploadImage(filePath: product.imgUrl).then((imageUrl) async {
+      final updatedProduct = product.copyWith(imgUrl: imageUrl);
+      await firestore.collection('products').add(updatedProduct.toMap());
+    });
+  }
+
+  Future<String> _uploadImage({required String filePath}) async {
+    final url = "https://api.cloudinary.com/v1_1/dbrddd3ho/image/upload";
+
+    final formData = FormData.fromMap({
+      'upload_preset': "yegna_gebeya",
+      'file': await MultipartFile.fromFile(filePath),
+    });
+
+    try {
+      final response = await dio.post(url, data: formData);
+
+      if (response.statusCode == 200) {
+        return response.data['secure_url'];
+      } else {
+        throw Exception("Upload failed: ${response.statusMessage}");
+      }
+    } on DioException catch (e) {
+      throw Exception("Dio error: ${e.response?.data ?? e.message}");
+    }
   }
 }
