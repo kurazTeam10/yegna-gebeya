@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
 import 'package:yegna_gebeya/features/buyer/domain/repositories/buyer_repository.dart';
@@ -14,7 +15,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
   CartBloc({required this.repository}) : super(CartInitial()) {
     on<GetCartEvent>((event, emit) async {
-      emit(CartLoading());
+            emit(CartLoading());
       await emit.forEach(
         repository.getCartProducts(event.id),
         onData: (data) {
@@ -48,12 +49,5 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       }
     });
 
-    on<PurchaseProducts>((event, emit) async {
-      try {
-        await repository.purchaseProduct(event.id);
-      } catch (e) {
-        emit(CartError(message: e.toString()));
-      }
-    });
   }
 }
