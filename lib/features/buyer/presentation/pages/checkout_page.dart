@@ -5,6 +5,8 @@ import 'package:yegna_gebeya/core/locator.dart';
 import 'package:yegna_gebeya/shared/models/product.dart';
 import 'package:yegna_gebeya/features/buyer/presentation/bloc/cart_bloc/cart_bloc.dart';
 
+import '../bloc/order_bloc/order_bloc.dart';
+
 //TODO: add proper id from an auth cubit/bloc
 
 class CheckoutPage extends StatefulWidget {
@@ -193,56 +195,77 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     ),
                   ),
                   onPressed: () {
-                    context.read<CartBloc>().add(
+                    context.read<OrderBloc>().add(
                       PurchaseProducts(id: 'AfGvuQs8LDYbPUFKtdl4wkMo2Br2'),
                     );
                     showDialog(
                       context: context,
                       builder: (context) {
+                        final totalPrice = state.totalPrice;
                         return AlertDialog.adaptive(
                           backgroundColor: Colors.white,
                           content: SizedBox(
                             height: deviceHeight * 0.45,
-                            child: Column(
-                              children: [
-                                Align(
-                                  alignment: AlignmentDirectional.topEnd,
-                                  child: IconButton(
-                                    onPressed: () => context.pop(),
-                                    icon: Icon(Icons.close_sharp),
-                                  ),
-                                ),
-
-                                Stack(
-                                  alignment: AlignmentDirectional.center,
-                                  children: [
-                                    Image.asset(
-                                      'assets/images/pyment done.png',
+                            child: BlocBuilder<OrderBloc, OrderState>(
+                              builder: (context, state) {
+                                if (state is OrderError) {
+                                  return Center(
+                                    child: Text(
+                                      'Error purchasing products, try again ${state.message}',
                                     ),
-                                    Image.asset('assets/images/Layer 2.png'),
-                                  ],
-                                ),
-                                SizedBox(height: 10),
-                                Text(
-                                  'ETB ${state.totalPrice.toStringAsFixed(2)}',
-                                  style: TextStyle(
-                                    color: Color(0xFF8D00DE),
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
+                                  );
+                                }
 
-                                SizedBox(height: 30),
-                                Text(
-                                  'We’re on our way with your items',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
+                                if (state is OrderSuccess) {
+                                  return Column(
+                                    children: [
+                                      Align(
+                                        alignment: AlignmentDirectional.topEnd,
+                                        child: IconButton(
+                                          onPressed: () => context.pop(),
+                                          icon: Icon(Icons.close_sharp),
+                                        ),
+                                      ),
+
+                                      Stack(
+                                        alignment: AlignmentDirectional.center,
+                                        children: [
+                                          Image.asset(
+                                            'assets/images/pyment done.png',
+                                          ),
+                                          Image.asset(
+                                            'assets/images/Layer 2.png',
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 10),
+                                      Text(
+                                        'ETB ${totalPrice.toStringAsFixed(2)}',
+                                        style: TextStyle(
+                                          color: Color(0xFF8D00DE),
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+
+                                      SizedBox(height: 30),
+                                      Text(
+                                        'We’re on our way with your items',
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  );
+                                }
+
+                                return Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              },
                             ),
                           ),
                         );
