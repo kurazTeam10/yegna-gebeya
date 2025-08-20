@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:yegna_gebeya/core/locator.dart';
+import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_in/sign_in_cubit.dart';
 import 'package:yegna_gebeya/shared/models/product.dart';
 import 'package:yegna_gebeya/features/buyer/presentation/bloc/cart_bloc/cart_bloc.dart';
 
 import '../bloc/order_bloc/order_bloc.dart';
-
-//TODO: add proper id from an auth cubit/bloc
 
 class CheckoutPage extends StatefulWidget {
   const CheckoutPage({super.key});
@@ -24,7 +23,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
     final cartBloc = context.read<CartBloc>();
 
     if (cartBloc.state is CartInitial) {
-      cartBloc.add(GetCartEvent(id: 'AfGvuQs8LDYbPUFKtdl4wkMo2Br2'));
+      cartBloc.add(
+        GetCartEvent(id: context.read<SignInCubit>().state.cred!.user!.uid),
+      );
     }
   }
 
@@ -127,7 +128,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                             onPressed: () =>
                                                 context.read<CartBloc>().add(
                                                   AddToCartEvent(
-                                                    id: 'AfGvuQs8LDYbPUFKtdl4wkMo2Br2',
+                                                    id: context
+                                                        .read<SignInCubit>()
+                                                        .state
+                                                        .cred!
+                                                        .user!
+                                                        .uid,
                                                     product: product,
                                                   ),
                                                 ),
@@ -143,7 +149,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                             onPressed: () =>
                                                 context.read<CartBloc>().add(
                                                   RemoveFromCartEvent(
-                                                    id: 'AfGvuQs8LDYbPUFKtdl4wkMo2Br2',
+                                                    id: context
+                                                        .read<SignInCubit>()
+                                                        .state
+                                                        .cred!
+                                                        .user!
+                                                        .uid,
                                                     product: product,
                                                   ),
                                                 ),
@@ -196,7 +207,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   ),
                   onPressed: () {
                     context.read<OrderBloc>().add(
-                      PurchaseProducts(id: 'AfGvuQs8LDYbPUFKtdl4wkMo2Br2'),
+                      PurchaseProducts(
+                        id: context.read<SignInCubit>().state.cred!.user!.uid,
+                      ),
                     );
                     showDialog(
                       context: context,

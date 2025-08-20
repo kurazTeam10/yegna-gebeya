@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_in/sign_in_cubit.dart';
 import 'package:yegna_gebeya/features/buyer/presentation/bloc/order_bloc/order_bloc.dart';
 import 'package:yegna_gebeya/features/buyer/presentation/widgets/cart_icon_widget.dart';
 
 import '../../domain/models/order.dart';
 import '../widgets/single_order_widget.dart';
-
-//TODO: add proper id from an auth cubit/bloc
 
 class OrderHistoryPage extends StatefulWidget {
   const OrderHistoryPage({super.key});
@@ -21,7 +20,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
   void initState() {
     super.initState();
     context.read<OrderBloc>().add(
-      GetOrderHistory(id: 'AfGvuQs8LDYbPUFKtdl4wkMo2Br2'),
+      GetOrderHistory(id: context.read<SignInCubit>().state.cred!.user!.uid),
     );
   }
 
@@ -137,7 +136,9 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                 ElevatedButton(
                   onPressed: () {
                     context.read<OrderBloc>().add(
-                      GetOrderHistory(id: 'AfGvuQs8LDYbPUFKtdl4wkMo2Br2'),
+                      GetOrderHistory(
+                        id: context.read<SignInCubit>().state.cred!.user!.uid,
+                      ),
                     );
                   },
                   child: const Text('Retry'),

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yegna_gebeya/core/locator.dart';
+import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_in/sign_in_cubit.dart';
 import 'package:yegna_gebeya/features/buyer/presentation/bloc/cart_bloc/cart_bloc.dart';
 
-//TODO: add proper id from an auth cubit/bloc
 
 class CartIconWidget extends StatefulWidget {
   const CartIconWidget({super.key});
@@ -20,7 +20,7 @@ class _CartIconWidgetState extends State<CartIconWidget> {
     final cartBloc = context.read<CartBloc>();
 
     if (cartBloc.state is! CartLoaded && cartBloc.state is! CartLoading) {
-      cartBloc.add(GetCartEvent(id: 'AfGvuQs8LDYbPUFKtdl4wkMo2Br2'));
+      cartBloc.add(GetCartEvent(id: context.read<SignInCubit>().state.cred!.user!.uid));
     }
   }
 
