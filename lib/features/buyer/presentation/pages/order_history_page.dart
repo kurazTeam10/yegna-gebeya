@@ -4,6 +4,9 @@ import 'package:intl/intl.dart';
 import 'package:yegna_gebeya/features/buyer/presentation/bloc/order_bloc/order_bloc.dart';
 import 'package:yegna_gebeya/features/buyer/presentation/widgets/cart_icon_widget.dart';
 
+import '../../domain/models/order.dart';
+import '../widgets/single_order_widget.dart';
+
 //TODO: add proper id from an auth cubit/bloc
 
 class OrderHistoryPage extends StatefulWidget {
@@ -17,13 +20,15 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
   @override
   void initState() {
     super.initState();
-    context.read<OrderBloc>().add(GetOrderHistory(id: 'AfGvuQs8LDYbPUFKtdl4wkMo2Br2'));
+    context.read<OrderBloc>().add(
+      GetOrderHistory(id: 'AfGvuQs8LDYbPUFKtdl4wkMo2Br2'),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Order History'),),
+      appBar: AppBar(title: const Text('Order History')),
       body: BlocConsumer<OrderBloc, OrderState>(
         listener: (BuildContext context, OrderState state) {
           if (state is OrderError) {
@@ -48,7 +53,9 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                   const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () {
-                      context.read<OrderBloc>().add(GetOrderHistory(id: 'AfGvuQs8LDYbPUFKtdl4wkMo2Br2'));
+                      context.read<OrderBloc>().add(
+                        GetOrderHistory(id: 'AfGvuQs8LDYbPUFKtdl4wkMo2Br2'),
+                      );
                     },
                     child: const Text('Retry'),
                   ),
@@ -67,28 +74,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
               itemCount: orders.length,
               itemBuilder: (context, index) => Card(
                 margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Order #${orders[index].orderId ?? 'N/A'}',
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Date: ${DateFormat('MMM dd, yyyy').format(orders[index].orderDate)}',
-                      ),
-                      Text(
-                        'Status: ${orders[index].isDelivered ? 'Delivered' : 'Not Delivered'}',
-                      ),
-                      Text(
-                        'Total: \$${orders[index].productList.map((product) => product.price).toList().reduce((sum, cur) => sum + cur).toStringAsFixed(2)}',
-                      ),
-                    ],
-                  ),
-                ),
+                child: SingleOrderWidget(order: orders[index]),
               ),
             );
           }
@@ -99,3 +85,4 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
     );
   }
 }
+
