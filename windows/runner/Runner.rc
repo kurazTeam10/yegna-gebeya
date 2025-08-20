@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "yegna_gebeya" "\0"
+            VALUE "FileDescription", "seller_ecommerce" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "yegna_gebeya" "\0"
+            VALUE "InternalName", "seller_ecommerce" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2025 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "yegna_gebeya.exe" "\0"
-            VALUE "ProductName", "yegna_gebeya" "\0"
+            VALUE "OriginalFilename", "seller_ecommerce.exe" "\0"
+            VALUE "ProductName", "seller_ecommerce" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

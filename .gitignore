@@ -1,39 +1,45 @@
-# Firebase service account keys or any private keys (if you keep them locally)
-*.json
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
 
-# Firebase CLI cache or temporary files
-.firebase/
-
-# Flutter/Dart build outputs
-build/
-.dart_tool
-.flutter-plugins
-.dart_tool
-.vscode/
-.flutter-plugins-dependencies
-.packages
-.pub-cache/
-
-# Android build files
-android/.gradle/
-android/app/build/
-android/build/
-
-# iOS build files
-ios/Pods/
-ios/Runner.xcworkspace/
-ios/build/
-
-# Firebase Crashlytics auto-generated files
-crashlytics-build.properties
-
-# Google Services config files that are auto-generated or local only
-# Usually, google-services.json is checked in because it’s needed to build
-# But if you have secrets or multiple envs, you might exclude some config files
-# Uncomment if you keep service account keys locally:
-# serviceAccountKey.json
-
-# IntelliJ / VSCode / IDE files
-.idea/
-.vscode/
+# IntelliJ related
 *.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release

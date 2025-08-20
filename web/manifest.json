@@ -1,6 +1,6 @@
 {
-    "name": "yegna_gebeya",
-    "short_name": "yegna_gebeya",
+    "name": "seller_ecommerce",
+    "short_name": "seller_ecommerce",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
