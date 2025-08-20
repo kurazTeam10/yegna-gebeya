@@ -39,3 +39,4 @@ crashlytics-build.properties
 *.iml
 
 /android/app/google-services.json
+/android/app/google-services.json
