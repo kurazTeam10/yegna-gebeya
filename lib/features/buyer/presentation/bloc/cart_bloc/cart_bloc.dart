@@ -49,12 +49,5 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       }
     });
 
-    on<PurchaseProducts>((event, emit) async {
-      try {
-        await repository.purchaseProduct(event.id);
-      } catch (e) {
-        emit(CartError(message: e.toString()));
-      }
-    });
   }
 }

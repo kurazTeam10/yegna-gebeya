@@ -23,8 +23,3 @@ class GetCartEvent extends CartEvent {
   GetCartEvent({required this.id});
 }
 
-class PurchaseProducts extends CartEvent {
-  final String id;
-
-  PurchaseProducts({required this.id});
-}

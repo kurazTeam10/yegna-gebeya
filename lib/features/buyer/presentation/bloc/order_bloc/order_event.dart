@@ -15,3 +15,9 @@ class CancelOrder extends OrderEvent {
 
   CancelOrder({required this.orderId, required this.id});
 }
+
+class PurchaseProducts extends OrderEvent {
+  final String id;
+
+  PurchaseProducts({required this.id});
+}
