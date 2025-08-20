@@ -7,7 +7,7 @@ class Order {
   final List<Product> productList;
   final DateTime orderDate;
   bool isDelivered;
-
+  
   Order({
     this.orderId,
     required this.buyerId,
@@ -34,13 +34,13 @@ class Order {
   factory Order.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     return Order(
-      orderId: doc.id,
-      buyerId: data['buyerId'] as String,
-      productList: (data['productList'] as List)
-          .map((p) => Product.fromMap(p))
-          .toList(),
-      orderDate: (data['orderDate'] as Timestamp).toDate(),
-      isDelivered: data['isDelivered'] as bool,
+      orderId: doc['orderId'] as String,
+      buyerId: doc['buyerId'] as String,
+      productList:
+          (data['productList'] as List).map((p) => Product.fromMap(p)).toList(),
+      orderDate: data['orderDate'] as DateTime,
+      isDelivered: doc['isDelivered'] as bool,
+
     );
   }
 
@@ -49,7 +49,7 @@ class Order {
       'orderId': orderId,
       'buyerId': buyerId,
       'productList': productList.map((product) => product.toMap()).toList(),
-      'orderDate': Timestamp.fromDate(orderDate),
+      'orderDate': orderDate,
       'isDelivered': isDelivered,
     };
   }

@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:yegna_gebeya/features/auth/domain/repositories/auth_repository.dart';
-import 'package:yegna_gebeya/features/auth/presentation/cubit/sign_up_state.dart';
+import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_up/sign_up_state.dart';
 
 class SignUpCubit extends Cubit<SignUpState> {
   final AuthRepository authRepo;
