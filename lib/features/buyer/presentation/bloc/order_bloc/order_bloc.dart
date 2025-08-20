@@ -30,5 +30,15 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         emit(OrderError(message: 'Failed to cancel order ${e.toString()}'));
       }
     });
+
+    on<PurchaseProducts>((event, emit) async {
+      emit(OrderLoading());
+      try {
+        await repository.purchaseProduct(event.id);
+        emit(OrderSuccess());
+      } catch (e) {
+        emit(OrderError(message: e.toString()));
+      }
+    });
   }
 }

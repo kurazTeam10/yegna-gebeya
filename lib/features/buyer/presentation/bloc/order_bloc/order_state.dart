@@ -13,6 +13,11 @@ final class OrderLoading extends OrderState {
   List<Object?> get props => [];
 }
 
+final class OrderSuccess extends OrderState {
+  @override
+  List<Object?> get props => [];
+}
+
 final class OrderLoaded extends OrderState {
   final List<Order> orders;
 

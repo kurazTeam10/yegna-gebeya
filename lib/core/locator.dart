@@ -22,9 +22,6 @@ void setupLocator() {
   getIt.registerFactory<SignUpCubit>(
     () => SignUpCubit(authRepo: getIt<AuthRepository>()),
   );
-  getIt.registerFactory<SignInCubit>(
-    () => SignInCubit(authRepo: getIt<AuthRepository>()),
-  );
 
   getIt.registerLazySingleton<FirebaseFirestore>(() => FirebaseFirestore.instance);
 
@@ -32,5 +29,9 @@ void setupLocator() {
 
   getIt.registerFactory<CartBloc>(() => CartBloc(repository: getIt<BuyerRepository>()));
 
-  getIt.registerFactory<OrderBloc>(() => OrderBloc(getIt<BuyerRepository>()));
+  getIt.registerFactory<OrderBloc>(()=>OrderBloc(getIt<BuyerRepository>()));
+
+  getIt.registerFactory<SignInCubit>(
+    () => SignInCubit(authRepo: getIt<AuthRepository>()),
+  );
 }

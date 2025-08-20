@@ -6,8 +6,8 @@ class Order {
   final String buyerId;
   final List<Product> productList;
   final DateTime orderDate;
-  bool isDelivered;
-  
+  bool? isDelivered;
+
   Order({
     this.orderId,
     required this.buyerId,
@@ -28,19 +28,20 @@ class Order {
           .map((doc) => Product.fromFirestore(doc))
           .toList(),
       orderDate: DateTime.now(),
+      isDelivered: false
     );
   }
 
   factory Order.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     return Order(
-      orderId: doc['orderId'] as String,
-      buyerId: doc['buyerId'] as String,
-      productList:
-          (data['productList'] as List).map((p) => Product.fromMap(p)).toList(),
-      orderDate: data['orderDate'] as DateTime,
-      isDelivered: doc['isDelivered'] as bool,
-
+      orderId: doc.id,
+      buyerId: data['buyerId'] as String,
+      productList: (data['productList'] as List)
+          .map((p) => Product.fromMap(p))
+          .toList(),
+      orderDate: (data['orderDate'] as Timestamp).toDate(),
+      isDelivered: data['isDelivered'] as bool?,
     );
   }
 

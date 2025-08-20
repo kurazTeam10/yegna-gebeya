@@ -4,6 +4,8 @@ import 'package:yegna_gebeya/core/router/router.dart';
 import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_in/sign_in_cubit.dart';
 import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_up/sign_up_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:yegna_gebeya/features/buyer/presentation/bloc/cart_bloc/cart_bloc.dart';
+import 'package:yegna_gebeya/features/buyer/presentation/bloc/order_bloc/order_bloc.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -14,6 +16,8 @@ class App extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => getIt<SignUpCubit>()),
         BlocProvider(create: (context) => getIt<SignInCubit>()),
+        BlocProvider(create: (context) => getIt<CartBloc>(),),
+        BlocProvider(create: (context) => getIt<OrderBloc>()),
       ],
       child: MaterialApp.router(
         routerConfig: goRouter,
