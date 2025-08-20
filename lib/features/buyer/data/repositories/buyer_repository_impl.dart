@@ -12,14 +12,23 @@ class BuyerRepositoryImpl extends BuyerRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
-  Future<List<Seller>> getSellers() async {
+  Stream<List<Seller>> getSellers() {
     try {
-      final querySnapshot = await _firestore.collection('sellers').get();
-      return querySnapshot.docs
-          .map((doc) => Seller.fromFirestore(doc))
-          .toList();
+      return _firestore.collection('sellers').snapshots().map((querySnapshot) {
+        print('Firebase query returned ${querySnapshot.docs.length} documents');
+        for (var doc in querySnapshot.docs) {
+          print('Document data: ${doc.data()}');
+        }
+        return querySnapshot.docs
+            .map((doc) => Seller.fromFirestore(doc))
+            .toList();
+      });
     } on FirebaseException catch (e) {
-      throw (Exception('Failed to get sellers ${e.message}'));
+      print('Firebase error: ${e.message}');
+      throw Exception('Failed to get sellers ${e.message}');
+    } catch (e) {
+      print('General error: $e');
+      throw Exception('Failed to get sellers: $e');
     }
   }
 
@@ -34,19 +43,59 @@ class BuyerRepositoryImpl extends BuyerRepository {
   }
 
   @override
-  Future<List<Seller>> searchSellers(String query) async {
+  Stream<List<Seller>> searchSellers(String query) async* {
+    if (query.isEmpty) {
+      yield* getSellers();
+      return;
+    }
+
     try {
-      final querySnapshot = await _firestore
+      final lowerCaseQuery = query.toLowerCase();
+
+      // 1. Search sellers by name (case-insensitive)
+      final sellerNameQuery = _firestore
           .collection('sellers')
-          .where('fullName', isGreaterThanOrEqualTo: query)
-          .where('fullName', isLessThanOrEqualTo: query + '\uf8ff')
+          .where('fullName', isGreaterThanOrEqualTo: lowerCaseQuery)
+          .where('fullName', isLessThanOrEqualTo: '$lowerCaseQuery\uf8ff');
+
+      // 2. Search sellers by phone
+      final sellerPhoneQuery =
+          _firestore.collection('sellers').where('phone', isEqualTo: query);
+
+      // 3. Search products by name and get unique seller IDs
+      final productQuery = await _firestore
+          .collection('products')
+          .where('productName', isGreaterThanOrEqualTo: lowerCaseQuery)
+          .where('productName', isLessThanOrEqualTo: '$lowerCaseQuery\uf8ff')
           .get();
 
-      return querySnapshot.docs
-          .map((doc) => Seller.fromFirestore(doc))
-          .toList();
-    } on FirebaseException catch (e) {
-      throw (Exception('Failed to search sellers ${e.message}'));
+      final sellerIdsFromProducts = productQuery.docs
+          .map((doc) => doc.data()['sellerId'] as String)
+          .toSet();
+
+      // Combine all results
+      final nameResults = await sellerNameQuery.get();
+      final phoneResults = await sellerPhoneQuery.get();
+
+      final Map<String, Seller> combinedSellers = {};
+
+      for (var doc in [...nameResults.docs, ...phoneResults.docs]) {
+        final seller = Seller.fromFirestore(doc);
+        combinedSellers[seller.userId] = seller;
+      }
+
+      if (sellerIdsFromProducts.isNotEmpty) {
+        for (var sellerId in sellerIdsFromProducts) {
+          if (!combinedSellers.containsKey(sellerId)) {
+            final seller = await getSellerById(sellerId);
+            combinedSellers[sellerId] = seller;
+          }
+        }
+      }
+
+      yield combinedSellers.values.toList();
+    } catch (e) {
+      yield* Stream.error(Exception('Failed to search sellers: $e'));
     }
   }
 
@@ -63,12 +112,31 @@ class BuyerRepositoryImpl extends BuyerRepository {
   }
 
   @override
-  Future<Product> getProductById(String id) async {
+  Future<Product> getProductById(String id) {
+    // TODO: implement getProductById
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<Product>> getProductsBySellerId(String sellerId) async {
     try {
-      final productDoc = await _firestore.collection('products').doc(id).get();
-      return Product.fromFirestore(productDoc);
-    } on FirebaseException catch (e) {
-      throw (Exception('Failed to get product ${e.message}'));
+      final querySnapshot = await _firestore
+          .collection('products')
+          .where('sellerId', isEqualTo: sellerId)
+          .get();
+
+      return querySnapshot.docs.map((doc) {
+        try {
+          return Product.fromFirestore(doc);
+        } catch (e) {
+          print('Error parsing product ${doc.id}: $e');
+          print('Document data: ${doc.data()}');
+          rethrow;
+        }
+      }).toList();
+    } catch (e) {
+      print('Failed to fetch products for seller $sellerId: $e');
+      throw Exception('Failed to fetch products for seller: $e');
     }
   }
 
