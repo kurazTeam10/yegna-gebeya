@@ -4,8 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SellerRepositoryImpl extends SellerRepository {
   @override
+  /// Get seller info from Firestore
   Future<Seller> getSellerInfo({required String sellerId}) async {
-    /// Get seller info from Firestore
     final doc = await FirebaseFirestore.instance
         .collection('sellers')
         .doc(sellerId)
@@ -17,6 +17,7 @@ class SellerRepositoryImpl extends SellerRepository {
   }
 
   @override
+  /// Register a new seller
   Future<void> registerSeller({required Seller seller}) {
     return FirebaseFirestore.instance
         .collection('sellers')
@@ -25,6 +26,7 @@ class SellerRepositoryImpl extends SellerRepository {
   }
 
   @override
+  /// Update seller information
   Future<void> updateSellerInfo({
     required String sellerId,
     required Seller seller,
