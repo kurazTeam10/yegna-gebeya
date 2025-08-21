@@ -54,4 +54,18 @@ class User {
       'role': role.toString(),
     };
   }
+
+  factory User.fromMap(Map<String, dynamic> map) {
+    return User(
+      id: map['id'],
+      email: map['email'],
+      fullName: map['fullName'],
+      imgUrl: map['imgUrl'],
+      role: UserRole.values.firstWhere(
+        (e)=>e.name == map['role'],
+        orElse: () => UserRole.buyer,
+      ),
+      createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt']),
+    );
+  }
 }
