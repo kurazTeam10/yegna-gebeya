@@ -7,6 +7,7 @@ import 'package:yegna_gebeya/features/buyer/presentation/pages/seller_profile_pa
 import 'package:yegna_gebeya/features/landing/presentation/pages/landing_page.dart';
 
 final goRouter = GoRouter(
+  initialLocation: Routes.landingPage,
   routes: [
     GoRoute(
       path: Routes.sellerList,

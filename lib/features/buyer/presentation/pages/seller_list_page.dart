@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:yegna_gebeya/core/router/routes.dart';
 import 'package:yegna_gebeya/features/buyer/presentation/bloc/sellerList/seller_list_bloc.dart';
 import 'package:yegna_gebeya/features/buyer/presentation/bloc/sellerList/seller_list_event.dart';
 import 'package:yegna_gebeya/features/buyer/presentation/bloc/sellerList/seller_list_state.dart';
@@ -64,13 +65,13 @@ class _SellerListPageState extends State<SellerListPage> {
         onTap: (index) {
           switch (index) {
             case 0:
-              GoRouter.of(context).go('/');
+              // TODO: Navigate to Home page
               break;
             case 1:
               // TODO: Navigate to Profile page
               break;
             case 2:
-              GoRouter.of(context).go('/');
+              GoRouter.of(context).go(Routes.sellerList);
               break;
             case 3:
               // TODO: Navigate to Orders page
