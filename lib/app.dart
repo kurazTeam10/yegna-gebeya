@@ -20,6 +20,7 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => getIt<SellerProfileBloc>()),
       ],
       child: MaterialApp.router(
+        debugShowCheckedModeBanner: false,
         routerConfig: goRouter,
         theme: ThemeData(
           scaffoldBackgroundColor: const Color(0xFFFFFFFF),

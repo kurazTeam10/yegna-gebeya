@@ -52,48 +52,43 @@ class BuyerRepositoryImpl extends BuyerRepository {
     try {
       final lowerCaseQuery = query.toLowerCase();
 
-      // 1. Search sellers by name (case-insensitive)
-      final sellerNameQuery = _firestore
-          .collection('sellers')
-          .where('fullName', isGreaterThanOrEqualTo: lowerCaseQuery)
-          .where('fullName', isLessThanOrEqualTo: '$lowerCaseQuery\uf8ff');
+      // Fetch all sellers and products
+      final allSellers = await getSellers().first;
+      final allProducts = await getProducts();
 
-      // 2. Search sellers by phone
-      final sellerPhoneQuery =
-          _firestore.collection('sellers').where('phone', isEqualTo: query);
-
-      // 3. Search products by name and get unique seller IDs
-      final productQuery = await _firestore
-          .collection('products')
-          .where('productName', isGreaterThanOrEqualTo: lowerCaseQuery)
-          .where('productName', isLessThanOrEqualTo: '$lowerCaseQuery\uf8ff')
-          .get();
-
-      final sellerIdsFromProducts = productQuery.docs
-          .map((doc) => doc.data()['sellerId'] as String)
-          .toSet();
-
-      // Combine all results
-      final nameResults = await sellerNameQuery.get();
-      final phoneResults = await sellerPhoneQuery.get();
-
-      final Map<String, Seller> combinedSellers = {};
-
-      for (var doc in [...nameResults.docs, ...phoneResults.docs]) {
-        final seller = Seller.fromFirestore(doc);
-        combinedSellers[seller.id] = seller;
+      // Create a map of sellerId to their products
+      final Map<String, List<Product>> sellerProductsMap = {};
+      for (var product in allProducts) {
+        (sellerProductsMap[product.sellerId] ??= []).add(product);
       }
 
-      if (sellerIdsFromProducts.isNotEmpty) {
-        for (var sellerId in sellerIdsFromProducts) {
-          if (!combinedSellers.containsKey(sellerId)) {
-            final seller = await getSellerById(sellerId);
-            combinedSellers[sellerId] = seller;
+      final Set<Seller> matchingSellers = {};
+
+      // Filter sellers by name, phone, or products
+      for (var seller in allSellers) {
+        // Check seller name
+        if (seller.fullName.toLowerCase().contains(lowerCaseQuery)) {
+          matchingSellers.add(seller);
+          continue;
+        }
+
+        // Check seller phone
+        if (seller.phone.contains(query)) {
+          matchingSellers.add(seller);
+          continue;
+        }
+
+        // Check seller's products
+        final productsOfSeller = sellerProductsMap[seller.id] ?? [];
+        for (var product in productsOfSeller) {
+          if (product.productName.toLowerCase().contains(lowerCaseQuery)) {
+            matchingSellers.add(seller);
+            break; // Move to the next seller once a match is found
           }
         }
       }
 
-      yield combinedSellers.values.toList();
+      yield matchingSellers.toList();
     } catch (e) {
       yield* Stream.error(Exception('Failed to search sellers: $e'));
     }
