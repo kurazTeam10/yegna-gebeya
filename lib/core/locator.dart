@@ -50,4 +50,7 @@ void setupLocator() {
   getIt.registerFactory<ProductUploadCubit>(
     () => ProductUploadCubit(repository: getIt<ProductRepository>()),
   );
+  getIt.registerLazySingleton<FirebaseFirestore>(
+    () => FirebaseFirestore.instance,
+  );
 }

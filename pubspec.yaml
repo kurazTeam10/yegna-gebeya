@@ -35,4 +35,4 @@ flutter:
     - family: Roboto
       fonts:
       - asset: assets/fonts/roboto.ttf
-      - asset: assets/fonts/roboto_italic.ttf
+      - asset: assets/fonts/roboto_italic.ttf     

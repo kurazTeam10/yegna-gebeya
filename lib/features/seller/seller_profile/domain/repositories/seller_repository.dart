@@ -1,3 +1,4 @@
+
 import 'package:yegna_gebeya/features/seller/seller_profile/domain/models/seller.dart';
 
 abstract class SellerRepository {

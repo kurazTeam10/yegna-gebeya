@@ -11,6 +11,7 @@ class Seller extends User {
     super.role = UserRole.seller,
     required super.createdAt,
     this.phone,
+
   });
   @override
   Map<String, dynamic> toMap() {
