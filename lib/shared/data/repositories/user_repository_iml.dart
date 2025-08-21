@@ -6,8 +6,14 @@ class UserRepositoryIml extends UserRepository {
   final FirebaseFirestore firestore;
 
   UserRepositoryIml({required this.firestore});
+
   @override
   Future<void> saveUser(User user) async {
     await firestore.collection('users').doc(user.id).set(user.toMap());
+    if (user.role == UserRole.buyer) {
+      await firestore.collection('buyers').doc(user.id).set(user.toMap());
+    } else if (user.role == UserRole.seller) {
+      await firestore.collection('sellers').doc(user.id).set(user.toMap());
+    }
   }
 }

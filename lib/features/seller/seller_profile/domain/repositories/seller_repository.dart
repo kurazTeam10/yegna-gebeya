@@ -1,4 +1,4 @@
-import 'package:yegna_gebeya/features/seller/registration/domain/models/seller.dart';
+import 'package:yegna_gebeya/features/seller/seller_profile/domain/models/seller.dart';
 
 abstract class SellerRepository {
   Future<void> registerSeller({required Seller seller});
