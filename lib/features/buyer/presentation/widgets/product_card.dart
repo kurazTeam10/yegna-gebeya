@@ -3,8 +3,10 @@ import 'package:yegna_gebeya/shared/domain/models/product.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
+  final VoidCallback onAddToCart;
 
-  const ProductCard({super.key, required this.product});
+  const ProductCard(
+      {super.key, required this.product, required this.onAddToCart});
 
   @override
   Widget build(BuildContext context) {
@@ -99,16 +101,7 @@ class ProductCard extends StatelessWidget {
             bottom: -10,
             right: 5,
             child: GestureDetector(
-              onTap: () {
-                // Add to cart functionality
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('${product.productName} added to cart'),
-                    backgroundColor: const Color(0xFF8D00DE),
-                    duration: const Duration(seconds: 2),
-                  ),
-                );
-              },
+              onTap: onAddToCart,
               child: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(

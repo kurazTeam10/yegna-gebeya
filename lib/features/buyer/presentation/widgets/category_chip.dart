@@ -29,7 +29,7 @@ class CategoryChip extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
             color: const Color(0xFF8D00DE),
-            width: 2.0, // Make border bolder
+            width: 2.5, // Make border bolder
           ),
         ),
         child: Center(
@@ -38,7 +38,7 @@ class CategoryChip extends StatelessWidget {
             style: TextStyle(
               color: isSelected ? Colors.white : const Color(0xFF8D00DE),
               fontSize: screenWidth * 0.035,
-              fontWeight: FontWeight.bold, // Make text bold
+              fontWeight: FontWeight.w900, // Make text bold
             ),
           ),
         ),
