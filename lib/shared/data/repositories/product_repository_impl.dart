@@ -54,7 +54,9 @@ class ProductRepositoryImpl extends ProductRepository {
   Future<void> uploadProduct({required Product product}) {
     return _uploadImage(filePath: product.imgUrl).then((imageUrl) async {
       final updatedProduct = product.copyWith(imgUrl: imageUrl);
-      await firestore.collection('products').add(updatedProduct.toMap());
+      final docRef = firestore.collection('products').doc();
+      final productWithId = updatedProduct.copyWith(id: docRef.id);
+      await docRef.set(productWithId.toMap());
     });
   }
 

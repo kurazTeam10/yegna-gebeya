@@ -181,18 +181,19 @@ class _ProductUploadPageState extends State<ProductUploadPage> {
                   },
                 ),
                 SizedBox(height: height * 0.1),
-                SizedBox(
-                  width: width * 0.6,
-                  height: height * 0.06,
-                  child: BlocBuilder<ProductUploadCubit, ProductUploadState>(
-                    builder: (context, state) {
-                      if (state is ProductUploadLoading) {
-                        return SizedBox(
-                          height: height * 0.2,
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-                      return ElevatedButton(
+                BlocBuilder<ProductUploadCubit, ProductUploadState>(
+                  builder: (context, state) {
+                    if (state is ProductUploadLoading) {
+                      return SizedBox(
+                        height: height * 0.05,
+                        width: height * 0.05,
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    return SizedBox(
+                      width: width * 0.6,
+                      height: height * 0.06,
+                      child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Theme.of(
                             context,
@@ -224,9 +225,9 @@ class _ProductUploadPageState extends State<ProductUploadPage> {
                           }
                         },
                         child: const Text('Upload'),
-                      );
-                    },
-                  ),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),

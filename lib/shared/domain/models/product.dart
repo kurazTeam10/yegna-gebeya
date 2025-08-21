@@ -53,6 +53,7 @@ class Product {
     );
   }
   Product copyWith({
+    String? id,
     String? imgUrl,
     String? name,
     String? sellerId,
@@ -61,7 +62,7 @@ class Product {
     double? price,
   }) {
     return Product(
-      id: id,
+      id: id ?? this.id,
       imgUrl: imgUrl ?? this.imgUrl,
       name: name ?? this.name,
       sellerId: sellerId ?? this.sellerId,
