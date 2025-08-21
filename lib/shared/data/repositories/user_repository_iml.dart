@@ -16,4 +16,18 @@ class UserRepositoryIml extends UserRepository {
       await firestore.collection('sellers').doc(user.id).set(user.toMap());
     }
   }
+
+  @override
+  Future<UserRole?> getUserRole(String userId) async {
+    final doc = await firestore.collection('users').doc(userId).get();
+    if (doc.exists) {
+      final role = doc.data()?['role'] as String?;
+      return role == 'seller'
+          ? UserRole.seller
+          : role == 'buyer'
+          ? UserRole.buyer
+          : null;
+    }
+    return null;
+  }
 }

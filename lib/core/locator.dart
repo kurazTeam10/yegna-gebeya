@@ -12,6 +12,9 @@ final GetIt getIt = GetIt.instance;
 
 void setupLocator() {
   getIt.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
+  getIt.registerLazySingleton<FirebaseFirestore>(
+    () => FirebaseFirestore.instance,
+  );
 
   getIt.registerLazySingleton<UserRepository>(
     () => UserRepositoryIml(firestore: getIt<FirebaseFirestore>()),
@@ -27,9 +30,9 @@ void setupLocator() {
     () => SignUpCubit(authRepo: getIt<AuthRepository>()),
   );
   getIt.registerFactory<SignInCubit>(
-    () => SignInCubit(authRepo: getIt<AuthRepository>()),
-  );
-  getIt.registerLazySingleton<FirebaseFirestore>(
-    () => FirebaseFirestore.instance,
+    () => SignInCubit(
+      authRepo: getIt<AuthRepository>(),
+      userRepo: getIt<UserRepository>(),
+    ),
   );
 }
