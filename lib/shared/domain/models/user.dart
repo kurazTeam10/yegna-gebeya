@@ -19,6 +19,7 @@ class User {
   final String imgUrl;
   final UserRole role;
   final DateTime createdAt;
+  final String phoneNo;
 
   const User({
     required this.id,
@@ -27,6 +28,7 @@ class User {
     required this.imgUrl,
     required this.role,
     required this.createdAt,
+    required this.phoneNo,
   });
 
   factory User.fromFirebaseAuthUser({
@@ -41,6 +43,7 @@ class User {
       imgUrl: user.photoURL ?? '',
       role: role,
       createdAt: createdAt ?? DateTime.now(),
+      phoneNo: user.phoneNumber ?? '',
     );
   }
 
@@ -52,6 +55,7 @@ class User {
       'fullName': fullName,
       'imgUrl': imgUrl,
       'role': role.toString(),
+      'phoneNo' : phoneNo,
     };
   }
 
@@ -66,6 +70,7 @@ class User {
         orElse: () => UserRole.buyer,
       ),
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt']),
+      phoneNo: map['phoneNo']
     );
   }
 }
