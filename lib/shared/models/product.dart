@@ -56,7 +56,7 @@ class Product {
         (e) => e.name == map['category'],
         orElse: () => ProductCategory.others,
       ),
-      price: map['price'],
+      price: (map['price'] as num).toDouble(),
     );
   }
 }
