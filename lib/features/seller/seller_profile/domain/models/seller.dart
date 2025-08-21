@@ -2,8 +2,6 @@ import 'package:yegna_gebeya/shared/domain/models/user.dart';
 
 class Seller extends User {
   String? phone;
-  double? rating;
-  int? reviewCount;
 
   Seller({
     required super.id,
@@ -13,8 +11,7 @@ class Seller extends User {
     super.role = UserRole.seller,
     required super.createdAt,
     this.phone,
-    this.rating,
-    this.reviewCount,
+
   });
   @override
   Map<String, dynamic> toMap() {
@@ -24,8 +21,6 @@ class Seller extends User {
       'fullName': fullName,
       'imgUrl': imgUrl,
       'phone': phone,
-      'rating': rating,
-      'reviewCount': reviewCount,
       'createdAt': createdAt,
     };
   }
@@ -38,8 +33,6 @@ class Seller extends User {
       imgUrl: map['imgUrl'],
       createdAt: map['createdAt'],
       phone: map['phone'],
-      rating: map['rating'],
-      reviewCount: map['reviewCount'],
     );
   }
 }
