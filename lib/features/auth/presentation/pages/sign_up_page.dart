@@ -5,6 +5,7 @@ import 'package:yegna_gebeya/core/router/routes.dart';
 import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_up/sign_up_cubit.dart';
 import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_up/sign_up_state.dart';
 import 'package:yegna_gebeya/features/auth/presentation/widgets/text_form_widget.dart';
+import 'package:yegna_gebeya/shared/domain/models/user.dart';
 
 
 class SignUpPage extends StatefulWidget {
@@ -190,8 +191,12 @@ class _SignUpPageState extends State<SignUpPage> {
                                   onPressed: () {
                                     if (_formKey.currentState!.validate()) {
                                       context.read<SignUpCubit>().signUp(
+                                        _fullNameController.text,
                                         _emailController.text,
                                         _passwordController.text,
+                                        _sellectedRole == 'buyer'
+                                            ? UserRole.buyer
+                                            : UserRole.seller,
                                       );
                                     }
                                   },
