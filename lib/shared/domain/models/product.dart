@@ -1,13 +1,13 @@
-// shared/domain/models/product.dart
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Product {
-  final String? id; // Changed from productId to match Firestore
+  final String? id; 
   final String? productImageUrl;
   final String? productName;
   final String? sellerId;
   final String? productDescription;
-  final String category; // Keep as String
+  final String category; 
   final double price;
 
   Product({
@@ -27,19 +27,19 @@ class Product {
       'productName': productName,
       'sellerId': sellerId,
       'productDescription': productDescription,
-      'category': category, // This should match Firestore field name
+      'category': category, 
       'price': price,
     };
   }
 
   factory Product.fromMap(Map<String, dynamic> map) {
     return Product(
-      id: map['id'] ?? map['productId'], // Handle both field names
+      id: map['id'] ?? map['productId'], 
       productImageUrl: map['productImageUrl'],
       productName: map['productName'],
       sellerId: map['sellerId'],
       productDescription: map['productDescription'],
-      category: map['category'] ?? '', // Ensure it's never null
+      category: map['category'] ?? '', 
       price: (map['price'] ?? 0.0).toDouble(),
     );
   }

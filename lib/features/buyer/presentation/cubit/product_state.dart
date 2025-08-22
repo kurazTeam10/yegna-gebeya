@@ -1,4 +1,4 @@
-// product_state.dart
+
 part of 'product_cubit.dart';
 
 abstract class ProductState {}

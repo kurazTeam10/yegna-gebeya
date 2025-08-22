@@ -24,7 +24,7 @@ class _HomeState extends State<Home> {
 void initState() {
   super.initState();
   
-  // Fetch categories first, then products
+  
   WidgetsBinding.instance.addPostFrameCallback((_) {
     context.read<ProductCubit>().fetchCategories().then((_) {
       context.read<ProductCubit>().fetchAllProducts();
@@ -173,11 +173,11 @@ void initState() {
               ),
             ),
         
-            // In your Home build method, replace the BlocBuilder with:
+    
         BlocConsumer<ProductCubit, ProductState>(
           listener: (context, state) {
             if (state is CategoriesLoaded) {
-              // Update local categories when they are loaded
+            
               setState(() {
                 categories = state.categories;
               });

@@ -10,20 +10,20 @@ part 'product_state.dart';
 class ProductCubit extends Cubit<ProductState> {
   final ProductRepository productRepository;
 
-  List<String> categories = ['All']; // Default category
+  List<String> categories = ['All']; 
 
   ProductCubit({required this.productRepository}) : super(ProductInitial());
-// product_cubit.dart
+
 Future<void> fetchCategories() async {
   try {
-    emit(ProductLoading()); // Show loading state
+    emit(ProductLoading());
     final firebaseCategories = await productRepository.getCategories();
-    // Add 'All' to the beginning of the Firebase categories
+    
     categories = ['All', ...firebaseCategories];
     emit(CategoriesLoaded(categories: categories));
   } catch (e) {
     emit(ProductError(message: 'Failed to fetch categories: $e'));
-    // Optionally, you could retry after a delay
+  
   }
 }
 
