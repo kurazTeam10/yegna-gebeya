@@ -1,9 +1,12 @@
+// home.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:yegna_gebeya/features/buyer/presentation/cubit/product_cubit.dart';
 import 'package:yegna_gebeya/features/buyer/presentation/widgets/category_button.dart';
 import 'package:yegna_gebeya/features/buyer/presentation/widgets/product_card.dart';
 import 'package:yegna_gebeya/features/buyer/presentation/widgets/search_bar.dart';
-import 'package:yegna_gebeya/shared/domain/models/product.dart';
+
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -14,74 +17,20 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   String selectedCategory = 'All';
+  List<String> categories = ['All']; 
 
-  final categories = [
-    'All',
-    'Electronic',
-    'cloth',
-    'furniture',
-    'cosmetics',
-    'shoes',
-    'machine',
-  ];
-
-  final List<Product> products = [
-    Product(
-      productId: '1',
-      productName: 'Wireless Headphones',
-      productImageUrl: 'assets/images/Rectangle 11 (1).png',
-      productDescription: 'High-quality wireless headphones',
-      price: 1250.0,
-      sellerId: 'seller1',
-      category: ProductCategory.technology,
-    ),
-    Product(
-      productId: '2',
-      productName: 'T-shirt',
-      productImageUrl: 'assets/images/Rectangle 11 (1).png',
-      productDescription: 'Latest smartwatch with advanced features',
-      price: 3499.0,
-      sellerId: 'seller2',
-      category: ProductCategory.technology,
-    ),
-    Product(
-      productId: '3',
-      productName: 'Leather Jacket',
-      productImageUrl: 'assets/images/Rectangle 11 (2).png',
-      productDescription: 'Genuine leather jacket',
-      price: 2800.0,
-      sellerId: 'seller3',
-      category: ProductCategory.clothes,
-    ),
-    Product(
-      productId: '4',
-      productName: 'Running Shoes',
-      productImageUrl: 'assets/images/Rectangle 11 (3).png',
-      productDescription: 'Comfortable running shoes',
-      price: 1899.0,
-      sellerId: 'seller4',
-      category: ProductCategory.others,
-    ),
-    Product(
-      productId: '5',
-      productName: 'Perfume Collection',
-      productImageUrl: 'assets/images/Rectangle 11 (1).png',
-      productDescription: 'Luxury perfume collection',
-      price: 1500.0,
-      sellerId: 'seller5',
-      category: ProductCategory.others,
-    ),
-    Product(
-      productId: '6',
-      productName: 'Coffee Table',
-      productImageUrl: 'assets/images/Rectangle 11 (1).png',
-      productDescription: 'Modern coffee table',
-      price: 4200.0,
-      sellerId: 'seller6',
-      category: ProductCategory.furniture,
-    ),
-  ];
-
+  
+@override
+void initState() {
+  super.initState();
+  
+  // Fetch categories first, then products
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    context.read<ProductCubit>().fetchCategories().then((_) {
+      context.read<ProductCubit>().fetchAllProducts();
+    });
+  });
+}
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -91,7 +40,6 @@ class _HomeState extends State<Home> {
       body: SafeArea(
         child: Column(
           children: [
-          
             Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: size.width * 0.04,
@@ -108,8 +56,7 @@ class _HomeState extends State<Home> {
                 ],
               ),
             ),
-
-      
+        
             Container(
               width: double.infinity,
               height: size.height * 0.25, 
@@ -123,9 +70,7 @@ class _HomeState extends State<Home> {
               ),
               child: LayoutBuilder(
                 builder: (context, constraints) {
-             
                   if (constraints.maxWidth > 600) {
-              
                     return Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Row(
@@ -174,7 +119,6 @@ class _HomeState extends State<Home> {
                       ),
                     );
                   } else {
-                
                     return Stack(
                       children: [
                         Positioned(
@@ -228,57 +172,95 @@ class _HomeState extends State<Home> {
                 },
               ),
             ),
-
-
-            SingleChildScrollView(
+        
+            // In your Home build method, replace the BlocBuilder with:
+        BlocConsumer<ProductCubit, ProductState>(
+          listener: (context, state) {
+            if (state is CategoriesLoaded) {
+              // Update local categories when they are loaded
+              setState(() {
+                categories = state.categories;
+              });
+            }
+          },
+          builder: (context, state) {
+            return SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               padding: EdgeInsets.symmetric(horizontal: size.width * 0.04),
               child: Row(
                 children: categories.map((label) {
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: CategoryButton(
-                      label: label,
-                      isSelected: selectedCategory == label,
-                      onPressed: () {
-                        setState(() {
-                          selectedCategory = label;
-                        });
-                      },
-                    ),
-                  );
+        return Padding(
+          padding: const EdgeInsets.only(right: 8),
+          child: CategoryButton(
+            label: label,
+            isSelected: selectedCategory == label,
+            onPressed: () {
+              setState(() {
+                selectedCategory = label;
+              });
+              if (label == 'All') {
+                context.read<ProductCubit>().fetchAllProducts();
+              } else {
+                context.read<ProductCubit>().fetchProductsByCategory(label);
+              }
+            },
+          ),
+        );
                 }).toList(),
               ),
-            ),
-
+            );
+          },
+        ),
+        
             SizedBox(height: size.height * 0.02),
-
-     
+        
             Expanded(
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-          
-                  final crossAxisCount = constraints.maxWidth > 600 ? 3 : 2;
-                  
-                  return GridView.builder(
-                    padding: EdgeInsets.symmetric(horizontal: size.width * 0.04),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: crossAxisCount,
-                      crossAxisSpacing: 12,
-                      mainAxisSpacing: 12,
-                      childAspectRatio: 160 / 250,
-                    ),
-                    itemCount: products.length,
-                    itemBuilder: (context, index) {
-                      final product = products[index];
-                      return ProductCard(
-                        product: product,
-                        onTap: () {
-                          
-                        },
+              child: BlocBuilder<ProductCubit, ProductState>(
+                builder: (context, state) {
+                  if (state is ProductLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state is ProductError) {
+                    return Center(child: Text(state.message));
+                  } else if (state is ProductLoaded) {
+                    final products = state.products;
+                    
+                    if (products.isEmpty) {
+                      return Center(
+                        child: Text(
+                          'No products found in $selectedCategory category',
+                          style: TextStyle(fontSize: 16),
+                        ),
                       );
-                    },
-                  );
+                    }
+                    
+                    return LayoutBuilder(
+                      builder: (context, constraints) {
+                        final crossAxisCount = constraints.maxWidth > 600 ? 3 : 2;
+                        
+                        return GridView.builder(
+                          padding: EdgeInsets.symmetric(horizontal: size.width * 0.04),
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: crossAxisCount,
+                            crossAxisSpacing: 12,
+                            mainAxisSpacing: 12,
+                            childAspectRatio: 160 / 250,
+                          ),
+                          itemCount: products.length,
+                          itemBuilder: (context, index) {
+                            final product = products[index];
+                            return ProductCard(
+                              product: product,
+                              onTap: () {
+                               
+                              },
+                            );
+                          },
+                        );
+                      },
+                    );
+                  } else {
+                    return const Center(child: Text('No products available'));
+                  }
                 },
               ),
             ),

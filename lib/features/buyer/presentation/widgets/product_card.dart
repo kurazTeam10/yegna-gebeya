@@ -32,9 +32,9 @@ class ProductCard extends StatelessWidget {
               child: ClipRRect(
                 borderRadius:
                     const BorderRadius.vertical(top: Radius.circular(12)),
-                child: product.productImageUrl.startsWith('http')
+                child: (product.productImageUrl ?? '').startsWith('http')
                     ? Image.network(
-                        product.productImageUrl,
+                        product.productImageUrl ?? '',
                         fit: BoxFit.cover,
                         width: double.infinity,
                         errorBuilder: (context, error, stackTrace) {
@@ -45,7 +45,7 @@ class ProductCard extends StatelessWidget {
                         },
                       )
                     : Image.asset(
-                        product.productImageUrl,
+                        product.productImageUrl ?? '',
                         fit: BoxFit.cover,
                         width: double.infinity,
                         errorBuilder: (context, error, stackTrace) {
@@ -60,7 +60,7 @@ class ProductCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(8),
               child: Text(
-                product.productName,
+                product.productName ?? '',
                 style: const TextStyle(fontWeight: FontWeight.bold),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
