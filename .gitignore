@@ -37,3 +37,6 @@ crashlytics-build.properties
 .idea/
 .vscode/
 *.iml
+
+
+*.env
