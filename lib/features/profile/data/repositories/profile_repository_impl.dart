@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cross_file/cross_file.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebaseAuth;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:yegna_gebeya/shared/domain/models/user.dart';
 import 'dart:convert';
@@ -72,10 +73,10 @@ class ProfileRepositoryImpl extends ProfileRepository {
   Future<String> uploadImage(XFile _imageFile) async {
     try {
       final url = Uri.parse(
-        'https://api.cloudinary.com/v1_1/<cloud_name>/upload',
+        'https://api.cloudinary.com/v1_1/${dotenv.env['CLOUDNAME']}/upload',
       );
       final request = http.MultipartRequest('POST', url);
-      request.fields['upload_preset'] = '<preset_name>';
+      request.fields['upload_preset'] = dotenv.env['PROFILEPRESET']!;
       request.files.add(
         await http.MultipartFile.fromPath('file', _imageFile.path),
       );
