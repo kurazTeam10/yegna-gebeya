@@ -55,7 +55,7 @@ class User {
       'fullName': fullName,
       'imgUrl': imgUrl,
       'role': role.toString(),
-      'phoneNo' : phoneNo,
+      'phoneNo': phoneNo,
     };
   }
 
@@ -66,11 +66,30 @@ class User {
       fullName: map['fullName'],
       imgUrl: map['imgUrl'],
       role: UserRole.values.firstWhere(
-        (e)=>e.name == map['role'],
+        (e) => e.name == map['role'],
         orElse: () => UserRole.buyer,
       ),
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt']),
-      phoneNo: map['phoneNo']
+      phoneNo: map['phoneNo'],
+    );
+  }
+  User copyWith({
+    String? id,
+    String? email,
+    String? fullName,
+    String? imgUrl,
+    UserRole? role,
+    DateTime? createdAt,
+    String? phoneNo,
+  }) {
+    return User(
+      id: id ?? this.id,
+      email: email ?? this.email,
+      fullName: fullName ?? this.fullName,
+      imgUrl: imgUrl ?? this.imgUrl,
+      role: role ?? this.role,
+      createdAt: createdAt ?? this.createdAt,
+      phoneNo: phoneNo ?? this.phoneNo,
     );
   }
 }

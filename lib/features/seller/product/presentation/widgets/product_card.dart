@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:yegna_gebeya/core/router/routes.dart';
+import 'package:yegna_gebeya/features/seller/product/presentation/cubits/product_upload/product_upload_cubit.dart';
+import 'package:yegna_gebeya/features/seller/product/presentation/cubits/product_upload/product_upload_state.dart';
 import 'package:yegna_gebeya/shared/domain/models/product.dart';
 
 class ProductCard extends StatelessWidget {
@@ -26,7 +29,7 @@ class ProductCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withAlpha(1),
                   spreadRadius: 1,
                   blurRadius: 2,
                   offset: const Offset(1, 1),
@@ -41,7 +44,7 @@ class ProductCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Image.network(product.imgUrl),
+                  child: Image.network(product.imgUrl!),
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: height * 0.02),

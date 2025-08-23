@@ -3,12 +3,12 @@ import 'package:yegna_gebeya/shared/domain/models/user.dart';
 
 abstract class ProfileRepository {
   Future<User> getCurrentUserInfo();
-  Future<void> setCurrentUserInfo(
-    User curUser,
-    String fullName,
-    String phoneNo,
+  Future<User> registerUser({required User user});
+  Future<void> setCurrentUserInfo({
+    required User curUser,
+    required User newUser,
     XFile? image,
-  );
+  });
 }
 
 //get current user info 

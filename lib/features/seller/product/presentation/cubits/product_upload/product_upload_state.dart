@@ -1,9 +1,12 @@
+import 'package:yegna_gebeya/shared/domain/models/product.dart';
+
 sealed class ProductUploadState {
   const ProductUploadState();
 }
 
 class ProductUploadInitial extends ProductUploadState {
-  const ProductUploadInitial();
+  Product? product;
+  ProductUploadInitial({this.product});
 }
 
 class ProductUploadLoading extends ProductUploadState {
@@ -12,9 +15,10 @@ class ProductUploadLoading extends ProductUploadState {
 
 class ProductUploadFailure extends ProductUploadState {
   final String message;
-  const ProductUploadFailure(this.message);
+  const ProductUploadFailure({required this.message});
 }
 
 class ProductUploadSuccess extends ProductUploadState {
-  const ProductUploadSuccess();
+  Product product;
+  ProductUploadSuccess({required this.product});
 }

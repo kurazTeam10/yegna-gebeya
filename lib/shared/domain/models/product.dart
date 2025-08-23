@@ -5,7 +5,7 @@ enum ProductCategory { clothes, furniture, jewellery, technology, others }
 class Product {
   final String? id;
   final String name;
-  final String imgUrl;
+  final String? imgUrl;
   final String description;
   final double price;
   final String sellerId;
@@ -13,7 +13,7 @@ class Product {
 
   Product({
     this.id,
-    required this.imgUrl,
+    this.imgUrl,
     required this.name,
     required this.sellerId,
     required this.description,

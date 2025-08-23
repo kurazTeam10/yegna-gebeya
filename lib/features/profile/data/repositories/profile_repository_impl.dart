@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cross_file/cross_file.dart';
-import 'package:firebase_auth/firebase_auth.dart' as firebaseAuth;
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:http/http.dart' as http;
 import 'package:yegna_gebeya/shared/domain/models/user.dart';
 import 'dart:convert';
@@ -8,11 +8,11 @@ import 'dart:convert';
 import '../../domain/repositories/profile_repository.dart';
 
 class ProfileRepositoryImpl extends ProfileRepository {
-  final firebaseAuth.FirebaseAuth _firebaseAuth;
+  final firebase_auth.FirebaseAuth _firebaseAuth;
   final FirebaseFirestore _firebaseFirestore;
 
   ProfileRepositoryImpl({
-    required firebaseAuth.FirebaseAuth firebaseAuth,
+    required firebase_auth.FirebaseAuth firebaseAuth,
     required FirebaseFirestore firebaseFirestore,
   }) : _firebaseAuth = firebaseAuth,
        _firebaseFirestore = firebaseFirestore;
@@ -32,40 +32,55 @@ class ProfileRepositoryImpl extends ProfileRepository {
   }
 
   @override
-  Future<void> setCurrentUserInfo(
-    User curUser,
-    String fullName,
-    String phoneNo,
+  Future<void> setCurrentUserInfo({
+    required User curUser,
+    required User newUser,
     XFile? image,
-  ) async {
+  }) async {
     try {
-      // Make sure to update both buyer/seller collection, user collection AND firbase Authdata
-      String imgUrl = curUser.phoneNo;
       if (image != null) {
-        imgUrl = await uploadImage(image);
+        String imgUrl = await uploadImage(image);
+        await _firebaseAuth.currentUser!.updatePhotoURL(imgUrl);
       }
 
-      final userMap = curUser.toMap();
-      userMap['fullName'] = fullName;
-      userMap['phoneNo'] = phoneNo;
-      userMap['imgUrl'] = imgUrl;
+      final userMap = newUser.toMap();
 
-      final uid = _firebaseAuth.currentUser!.uid;
-
-      await _firebaseAuth.currentUser!.updateDisplayName(fullName);
-      // await _firebaseAuth.currentUser!.updatePhoneNumber(phoneNo);
-      await _firebaseAuth.currentUser!.updatePhotoURL(imgUrl);
-
-      await _firebaseFirestore.collection('users').doc(uid).update(userMap);
+      await _firebaseFirestore
+          .collection('users')
+          .doc(curUser.id.trim())
+          .update(userMap);
 
       if (curUser.role.name == 'buyer') {
-        await _firebaseFirestore.collection('buyers').doc(uid).update(userMap);
+        await _firebaseFirestore
+            .collection('buyers')
+            .doc(curUser.id)
+            .update(userMap);
       } else if (curUser.role.name == 'seller') {
-        await _firebaseFirestore.collection('sellers').doc(uid).update(userMap);
+        await _firebaseFirestore
+            .collection('sellers')
+            .doc(curUser.id)
+            .update(userMap);
       }
     } catch (e) {
-      throw (Exception('Error updating user information $e'));
+      throw (Exception('Error updating user information: $e'));
     }
+  }
+
+  @override
+  Future<User> registerUser({required User user}) async {
+    return _firebaseFirestore.runTransaction((transaction) async {
+      final userMap = user.toMap();
+      final userDoc = _firebaseFirestore.collection('users').doc(user.id);
+      transaction.set(userDoc, userMap);
+      if (user.role.name == 'buyer') {
+        final buyerDoc = _firebaseFirestore.collection('buyers').doc(user.id);
+        transaction.set(buyerDoc, userMap);
+      } else if (user.role.name == 'seller') {
+        final sellerDoc = _firebaseFirestore.collection('sellers').doc(user.id);
+        transaction.set(sellerDoc, userMap);
+      }
+      return user;
+    });
   }
 
   Future<String> uploadImage(XFile imageFile) async {

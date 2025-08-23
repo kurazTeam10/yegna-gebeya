@@ -22,7 +22,6 @@ class _ProductPageState extends State<ProductPage> {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.sizeOf(context).height;
-    final width = MediaQuery.sizeOf(context).width;
     return Scaffold(
       backgroundColor: const Color(0xFFFCF8FF),
       appBar: AppBar(title: Text("My Product"), centerTitle: true),

@@ -27,6 +27,8 @@ class _ProductUploadPageState extends State<ProductUploadPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
+  bool imageChanged = false;
+  bool productIsNew = false;
 
   ProductCategory? _selectedCategory;
 
@@ -48,9 +50,11 @@ class _ProductUploadPageState extends State<ProductUploadPage> {
       _priceController.text = product.price.toString();
       _selectedCategory = product.category;
       // Only set _imageFile if the image is a local file path
-      if (product.imgUrl.isNotEmpty && !product.imgUrl.startsWith('http')) {
-        _imageFile = File(product.imgUrl);
+      if (product.imgUrl!.isNotEmpty && !product.imgUrl!.startsWith('http')) {
+        _imageFile = File(product.imgUrl!);
       }
+    } else {
+      productIsNew = true;
     }
   }
 
@@ -113,7 +117,7 @@ class _ProductUploadPageState extends State<ProductUploadPage> {
                                         ),
                                         clipBehavior: Clip.antiAlias,
                                         child: Image.network(
-                                          widget.productToBeEditted!.imgUrl,
+                                          widget.productToBeEditted!.imgUrl!,
                                           fit: BoxFit.cover,
                                         ),
                                       )
@@ -139,6 +143,7 @@ class _ProductUploadPageState extends State<ProductUploadPage> {
                               );
                               if (pickedFile != null) {
                                 setState(() {
+                                  imageChanged = true;
                                   _imageFile = File(pickedFile.path);
                                 });
                               }
@@ -151,6 +156,9 @@ class _ProductUploadPageState extends State<ProductUploadPage> {
                   ),
                   SizedBox(height: height * 0.05),
                   TextFormField(
+                    onChanged: (_) {
+                      setState(() {});
+                    },
                     controller: _nameController,
                     decoration: const InputDecoration(
                       labelText: 'Product Name',
@@ -165,6 +173,7 @@ class _ProductUploadPageState extends State<ProductUploadPage> {
                   ),
                   SizedBox(height: height * 0.02),
                   TextFormField(
+                    onChanged: (_) {},
                     controller: _descController,
                     decoration: const InputDecoration(
                       labelText: 'Description',
@@ -180,6 +189,7 @@ class _ProductUploadPageState extends State<ProductUploadPage> {
                   ),
                   SizedBox(height: height * 0.02),
                   TextFormField(
+                    onChanged: (_) {},
                     controller: _priceController,
                     decoration: const InputDecoration(
                       labelText: 'Price',
@@ -262,62 +272,66 @@ class _ProductUploadPageState extends State<ProductUploadPage> {
                               _imageFile == null &&
                                   widget.productToBeEditted == null
                               ? () {}
-                              : () {
-                                  if (_formKey.currentState?.validate() ??
-                                      false) {
-                                    final currentUser =
-                                        getIt<FirebaseAuth>().currentUser;
-                                    Product product = Product(
-                                      id:
-                                          widget.productToBeEditted?.id ??
-                                          _imageFile?.path ??
-                                          "",
-                                      imgUrl:
-                                          _imageFile?.path ??
-                                          widget.productToBeEditted?.id ??
-                                          "",
-                                      name: _nameController.text,
-                                      sellerId: currentUser!.uid,
-                                      description: _descController.text,
-                                      category: _selectedCategory!,
-                                      price: double.parse(
-                                        _priceController.text,
-                                      ),
-                                    );
-                                    if (_imageFile == null &&
-                                        widget.productToBeEditted != null) {
-                                      product = product.copyWith(
-                                        name: _nameController.text,
-                                        description: _descController.text,
-                                        price: double.parse(
-                                          _priceController.text,
-                                        ),
-                                        category: _selectedCategory,
-                                        imgUrl:
-                                            widget.productToBeEditted!.imgUrl,
-                                      );
-                                      context
-                                          .read<ProductUploadCubit>()
-                                          .updateProductInfo(
-                                            oldProductId:
-                                                widget.productToBeEditted!.id!,
-                                            product: product,
-                                          );
-                                    } else if (_imageFile == null) {
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        SnackBar(
-                                          content: Text(
-                                            "Please select an image first",
+                              : () async {
+                                  final sellerId =
+                                      getIt<FirebaseAuth>().currentUser!.uid;
+                                  Product product = !productIsNew
+                                      ? widget.productToBeEditted == null
+                                            ? (state as ProductUploadSuccess)
+                                                  .product
+                                            : widget.productToBeEditted!
+                                                  .copyWith(
+                                                    name: _nameController.text
+                                                        .trim(),
+                                                    sellerId: sellerId,
+                                                    description: _descController
+                                                        .text
+                                                        .trim(),
+                                                    category:
+                                                        _selectedCategory!,
+                                                    price: double.parse(
+                                                      _priceController.text
+                                                          .trim(),
+                                                    ),
+                                                  )
+                                      : Product(
+                                          name: _nameController.text.trim(),
+                                          sellerId: sellerId,
+                                          description: _descController.text
+                                              .trim(),
+                                          category: _selectedCategory!,
+                                          price: double.parse(
+                                            _priceController.text.trim(),
                                           ),
-                                        ),
-                                      );
-                                    } else {
-                                      context
-                                          .read<ProductUploadCubit>()
-                                          .uploadProduct(product);
-                                    }
+                                        );
+                                  if (productIsNew) {
+                                    product = await context
+                                        .read<ProductUploadCubit>()
+                                        .uploadProduct(
+                                          product: product,
+                                          image: _imageFile!,
+                                          imageChanged: productIsNew,
+                                        );
+                                    setState(() {
+                                      product = product;
+                                      productIsNew = false;
+                                    });
+                                  } else {
+                                    imageChanged
+                                        ? context
+                                              .read<ProductUploadCubit>()
+                                              .updateProductInfo(
+                                                oldProductId: product.id!,
+                                                product: product,
+                                                imageChanged: imageChanged,
+                                              )
+                                        : context
+                                              .read<ProductUploadCubit>()
+                                              .updateProductInfo(
+                                                oldProductId: product.id!,
+                                                product: product,
+                                                imageChanged: imageChanged,
+                                              );
                                   }
                                 },
                           child: widget.productToBeEditted == null
