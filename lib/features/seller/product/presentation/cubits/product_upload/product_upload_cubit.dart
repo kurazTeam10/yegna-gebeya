@@ -17,4 +17,20 @@ class ProductUploadCubit extends Cubit<ProductUploadState> {
       emit(ProductUploadFailure(e.toString()));
     }
   }
+
+  Future<void> updateProductInfo({
+    required String oldProductId,
+    required Product product,
+  }) async {
+    emit(const ProductUploadLoading());
+    try {
+      await repository.updateProductInfo(
+        productId: oldProductId,
+        newProduct: product,
+      );
+      emit(const ProductUploadSuccess());
+    } catch (e) {
+      emit(ProductUploadFailure(e.toString()));
+    }
+  }
 }

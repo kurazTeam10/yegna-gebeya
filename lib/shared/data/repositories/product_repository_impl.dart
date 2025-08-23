@@ -43,11 +43,15 @@ class ProductRepositoryImpl extends ProductRepository {
   Future<void> updateProductInfo({
     required String productId,
     required Product newProduct,
-  }) {
-    return firestore
-        .collection('products')
-        .doc(productId)
-        .update(newProduct.toMap());
+  }) async {
+    try {
+      await firestore
+          .collection('products')
+          .doc(productId.trim())
+          .update(newProduct.toMap());
+    } on FirebaseException catch (e) {
+      throw Exception(e.toString());
+    }
   }
 
   @override

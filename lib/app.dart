@@ -5,7 +5,9 @@ import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_in/sign_in_c
 import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_up/sign_up_cubit.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:yegna_gebeya/features/seller/product/presentation/cubit/product_upload_cubit.dart';
+import 'package:yegna_gebeya/features/seller/order/presentation/cubit/orders_cubit.dart';
+import 'package:yegna_gebeya/features/seller/product/presentation/cubits/product_cubit/product_cubit.dart';
+import 'package:yegna_gebeya/features/seller/product/presentation/cubits/product_upload/product_upload_cubit.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -17,6 +19,8 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => getIt<SignUpCubit>()),
         BlocProvider(create: (context) => getIt<SignInCubit>()),
         BlocProvider(create: (context) => getIt<ProductUploadCubit>()),
+        BlocProvider(create: (context) => getIt<OrderCubit>()),
+        BlocProvider(create: (context) => getIt<ProductCubit>()),
       ],
       child: MaterialApp.router(
         routerConfig: goRouter,

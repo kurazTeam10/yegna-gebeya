@@ -8,13 +8,13 @@ class ContactInfoCard extends StatelessWidget {
   final VoidCallback? onTap;
 
   const ContactInfoCard({
-    Key? key,
+    super.key,
     required this.icon,
     required this.title,
     required this.value,
     this.backgroundColor,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -53,10 +53,7 @@ class ContactInfoCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     value,
-                    style: const TextStyle(
-                      fontSize: 13,
-                      color: Colors.black87,
-                    ),
+                    style: const TextStyle(fontSize: 13, color: Colors.black87),
                   ),
                 ],
               ),

@@ -63,13 +63,12 @@ class ProfileRepositoryImpl extends ProfileRepository {
       } else if (curUser.role.name == 'seller') {
         await _firebaseFirestore.collection('sellers').doc(uid).update(userMap);
       }
-      
     } catch (e) {
       throw (Exception('Error updating user information $e'));
     }
   }
 
-  Future<String> uploadImage(XFile _imageFile) async {
+  Future<String> uploadImage(XFile imageFile) async {
     try {
       final url = Uri.parse(
         'https://api.cloudinary.com/v1_1/<cloud_name>/upload',
@@ -77,7 +76,7 @@ class ProfileRepositoryImpl extends ProfileRepository {
       final request = http.MultipartRequest('POST', url);
       request.fields['upload_preset'] = '<preset_name>';
       request.files.add(
-        await http.MultipartFile.fromPath('file', _imageFile.path),
+        await http.MultipartFile.fromPath('file', imageFile.path),
       );
       final response = await request.send();
       if (response.statusCode != 200) {

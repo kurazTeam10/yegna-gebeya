@@ -1,25 +1,19 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../domain_layer/models/order.dart';
-import './orders_state.dart';
+import 'package:yegna_gebeya/features/seller/order/domain/repositories/order_repository.dart';
+
+import '../../domain/models/order.dart';
+import 'orders_state.dart';
 
 class OrderCubit extends Cubit<OrderState> {
-  final FirebaseFirestore firestore;
-
+  final OrderRepository orderRepository;
   List<OrderModel> _allOrders = [];
 
-  OrderCubit(this.firestore) : super(OrderInitial());
+  OrderCubit({required this.orderRepository}) : super(OrderInitial());
 
   Future<void> fetchOrders() async {
     emit(OrderLoading());
     try {
-      final snapshot = await firestore.collection("orders").get();
-
-      _allOrders = snapshot.docs.map((doc) {
-        final data = doc.data();
-        return OrderModel.fromMap(data, doc.id);
-      }).toList();
-
+      _allOrders = await orderRepository.getOrders();
       emit(OrderLoaded(_allOrders));
     } catch (e) {
       emit(OrderError(e.toString()));
@@ -28,9 +22,7 @@ class OrderCubit extends Cubit<OrderState> {
 
   Future<void> updateOrderStatus(String orderId, String newStatus) async {
     try {
-      await firestore.collection("orders").doc(orderId).update({
-        "status": newStatus,
-      });
+      await orderRepository.updateOrderStatus(orderId, newStatus);
 
       // also update locally
       final index = _allOrders.indexWhere((o) => o.id == orderId);

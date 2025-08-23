@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../domain_layer/models/order.dart';
+import '../../domain/models/order.dart';
 import '../cubit/orders_cubit.dart';
 
 class OrderItem extends StatelessWidget {
@@ -24,7 +24,9 @@ class OrderItem extends StatelessWidget {
   }
 
   Color getStatusColor(String status) {
-    return status == "pending" ? Colors.yellow.shade300 : Colors.purple.shade300;
+    return status == "pending"
+        ? Colors.yellow.shade300
+        : Colors.purple.shade300;
   }
 
   @override
@@ -61,10 +63,7 @@ class OrderItem extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     getFormattedDate(),
-                    style: const TextStyle(
-                      fontSize: 13,
-                      color: Colors.black54,
-                    ),
+                    style: const TextStyle(fontSize: 13, color: Colors.black54),
                   ),
                 ],
               ),
@@ -87,10 +86,7 @@ class OrderItem extends StatelessWidget {
                     fontSize: 13,
                   ),
                   items: const [
-                    DropdownMenuItem(
-                      value: "pending",
-                      child: Text("Pending"),
-                    ),
+                    DropdownMenuItem(value: "pending", child: Text("Pending")),
                     DropdownMenuItem(
                       value: "delivered",
                       child: Text("Delivered"),
@@ -98,9 +94,10 @@ class OrderItem extends StatelessWidget {
                   ],
                   onChanged: (newStatus) {
                     if (newStatus != null) {
-                      context
-                          .read<OrderCubit>()
-                          .updateOrderStatus(order.id, newStatus);
+                      context.read<OrderCubit>().updateOrderStatus(
+                        order.id,
+                        newStatus,
+                      );
                     }
                   },
                 ),

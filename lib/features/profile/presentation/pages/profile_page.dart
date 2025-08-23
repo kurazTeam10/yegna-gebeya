@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:yegna_gebeya/core/router/routes.dart';
 import '../widgets/contact_info_card.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
+
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  int _selectedIndex = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +38,7 @@ class ProfilePage extends StatelessWidget {
           const SizedBox(height: 8),
           const CircleAvatar(
             radius: 40,
-            backgroundImage: NetworkImage(
-              "https://i.pravatar.cc/150?img=3",
-            ),
+            backgroundImage: NetworkImage("https://i.pravatar.cc/150?img=3"),
           ),
           const SizedBox(height: 12),
           const Text(
@@ -44,10 +51,7 @@ class ProfilePage extends StatelessWidget {
           ),
           const Text(
             "johndoe@gmail.com",
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.black54,
-            ),
+            style: TextStyle(fontSize: 14, color: Colors.black54),
           ),
           const SizedBox(height: 24),
           Padding(
@@ -87,6 +91,29 @@ class ProfilePage extends StatelessWidget {
               ],
             ),
           ),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+          if (index == 2) {
+            context.go(Routes.orders);
+          } else if (index == 1) {
+            context.go(Routes.sellerProfile);
+          } else if (index == 0) {
+            context.go(Routes.products);
+          }
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_bag),
+            label: 'Products',
+          ),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+          BottomNavigationBarItem(icon: Icon(Icons.list_alt), label: 'Orders'),
         ],
       ),
     );
