@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dio/dio.dart';
 import 'package:yegna_gebeya/shared/domain/models/product.dart';
 import 'package:yegna_gebeya/shared/domain/repositories/product_repository.dart';
 
 class ProductRepositoryImpl extends ProductRepository {
   final FirebaseFirestore firestore;
-  final Dio dio;
-  ProductRepositoryImpl({required this.firestore, required this.dio});
+  ProductRepositoryImpl({required this.firestore});
   @override
   Future<List<Product>> getAllProducts() {
     return firestore.collection('products').get().then((querySnapshot) {
@@ -43,41 +41,22 @@ class ProductRepositoryImpl extends ProductRepository {
   Future<void> updateProductInfo({
     required String productId,
     required Product newProduct,
-  }) {
-    return firestore
-        .collection('products')
-        .doc(productId)
-        .update(newProduct.toMap());
+  }) async {
+    try {
+      await firestore
+          .collection('products')
+          .doc(productId.trim())
+          .update(newProduct.toMap());
+    } on FirebaseException catch (e) {
+      throw Exception(e.toString());
+    }
   }
 
   @override
-  Future<void> uploadProduct({required Product product}) {
-    return _uploadImage(filePath: product.imgUrl).then((imageUrl) async {
-      final updatedProduct = product.copyWith(imgUrl: imageUrl);
-      final docRef = firestore.collection('products').doc();
-      final productWithId = updatedProduct.copyWith(id: docRef.id);
-      await docRef.set(productWithId.toMap());
-    });
-  }
-
-  Future<String> _uploadImage({required String filePath}) async {
-    final url = "https://api.cloudinary.com/v1_1/dbrddd3ho/image/upload";
-
-    final formData = FormData.fromMap({
-      'upload_preset': "yegna_gebeya",
-      'file': await MultipartFile.fromFile(filePath),
-    });
-
-    try {
-      final response = await dio.post(url, data: formData);
-
-      if (response.statusCode == 200) {
-        return response.data['secure_url'];
-      } else {
-        throw Exception("Upload failed: ${response.statusMessage}");
-      }
-    } on DioException catch (e) {
-      throw Exception("Dio error: ${e.response?.data ?? e.message}");
-    }
+  Future<Product> uploadProduct({required Product product}) async {
+    final docRef = firestore.collection('products').doc();
+    final productWithId = product.copyWith(id: docRef.id);
+    await docRef.set(productWithId.toMap());
+    return productWithId;
   }
 }

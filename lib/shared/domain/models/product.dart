@@ -5,7 +5,7 @@ enum ProductCategory { clothes, furniture, jewellery, technology, others }
 class Product {
   final String? id;
   final String name;
-  final String imgUrl;
+  final String? imgUrl;
   final String description;
   final double price;
   final String sellerId;
@@ -13,7 +13,7 @@ class Product {
 
   Product({
     this.id,
-    required this.imgUrl,
+    this.imgUrl,
     required this.name,
     required this.sellerId,
     required this.description,
@@ -40,7 +40,7 @@ class Product {
 
   factory Product.fromMap(Map<String, dynamic> map) {
     return Product(
-      id: map['productId'],
+      id: map['id'],
       imgUrl: map['productImageUrl'],
       name: map['productName'],
       sellerId: map['sellerId'],

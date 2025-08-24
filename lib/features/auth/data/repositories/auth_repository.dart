@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:yegna_gebeya/features/auth/domain/repositories/auth_repository.dart';
 import 'package:yegna_gebeya/shared/domain/repositories/user_repository.dart';
-import 'package:yegna_gebeya/shared/domain/models/user.dart' as userModel;
+import 'package:yegna_gebeya/shared/domain/models/user.dart' as user_model;
 
 class AuthRepositoryImpl extends AuthRepository {
   final FirebaseAuth firebaseAuth;
@@ -15,7 +15,7 @@ class AuthRepositoryImpl extends AuthRepository {
     required String displayName,
     required String email,
     required String password,
-    required userModel.UserRole role,
+    required user_model.UserRole role,
   }) async {
     try {
       final credential = await firebaseAuth.createUserWithEmailAndPassword(
@@ -28,8 +28,11 @@ class AuthRepositoryImpl extends AuthRepository {
       await user.reload();
       final updatedUser = firebaseAuth.currentUser;
       if (updatedUser == null) throw Exception('User reload failed');
-      await repository.saveUser(
-        userModel.User.fromFirebaseAuthUser(user: updatedUser, role: role),
+      await repository.registerUser(
+        user: user_model.User.fromFirebaseAuthUser(
+          user: updatedUser,
+          role: role,
+        ),
       );
       return credential;
     } catch (e) {

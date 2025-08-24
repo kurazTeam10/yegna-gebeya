@@ -6,11 +6,16 @@ import 'package:yegna_gebeya/features/auth/data/repositories/auth_repository.dar
 import 'package:yegna_gebeya/features/auth/domain/repositories/auth_repository.dart';
 import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_in/sign_in_cubit.dart';
 import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_up/sign_up_cubit.dart';
-import 'package:yegna_gebeya/features/seller/product/presentation/cubit/product_upload_cubit.dart';
+import 'package:yegna_gebeya/features/seller/product/presentation/cubits/product_cubit/product_cubit.dart';
+import 'package:yegna_gebeya/features/seller/product/presentation/cubits/product_upload/product_upload_cubit.dart';
+import 'package:yegna_gebeya/shared/data/repositories/image_repository_impl.dart';
 import 'package:yegna_gebeya/shared/data/repositories/product_repository_impl.dart';
-import 'package:yegna_gebeya/shared/data/repositories/user_repository_iml.dart';
+import 'package:yegna_gebeya/shared/data/repositories/user_repository_impl.dart';
+import 'package:yegna_gebeya/shared/domain/repositories/image_repository.dart';
 import 'package:yegna_gebeya/shared/domain/repositories/product_repository.dart';
 import 'package:yegna_gebeya/shared/domain/repositories/user_repository.dart';
+import 'package:yegna_gebeya/shared/order/data/repositories/order_repository_impl.dart';
+import 'package:yegna_gebeya/shared/order/domain/repositories/order_repository.dart';
 
 final GetIt getIt = GetIt.instance;
 
@@ -20,20 +25,32 @@ void setupLocator() {
   getIt.registerLazySingleton<FirebaseFirestore>(
     () => FirebaseFirestore.instance,
   );
+
+  getIt.registerLazySingleton<ImageRepository>(
+    () => ImageRepositoryImpl(dio: getIt<Dio>()),
+  );
   getIt.registerLazySingleton<ProductRepository>(
-    () => ProductRepositoryImpl(
-      firestore: getIt<FirebaseFirestore>(),
-      dio: getIt<Dio>(),
-    ),
+    () => ProductRepositoryImpl(firestore: getIt<FirebaseFirestore>()),
   );
 
   getIt.registerLazySingleton<UserRepository>(
-    () => UserRepositoryIml(firestore: getIt<FirebaseFirestore>()),
+    () => UserRepositoryImpl(
+      firebaseAuth: getIt<FirebaseAuth>(),
+      firebaseFirestore: getIt<FirebaseFirestore>(),
+      imageRepository: getIt<ImageRepository>(),
+    ),
   );
   getIt.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(
       firebaseAuth: getIt<FirebaseAuth>(),
       repository: getIt<UserRepository>(),
+    ),
+  );
+
+  getIt.registerLazySingleton<OrderRepository>(
+    () => OrderRepositoryImpl(
+      firestore: getIt<FirebaseFirestore>(),
+      productRepository: getIt<ProductRepository>(),
     ),
   );
 
@@ -48,9 +65,12 @@ void setupLocator() {
   );
 
   getIt.registerFactory<ProductUploadCubit>(
-    () => ProductUploadCubit(repository: getIt<ProductRepository>()),
+    () => ProductUploadCubit(
+      repository: getIt<ProductRepository>(),
+      imageRepository: getIt<ImageRepository>(),
+    ),
   );
-  getIt.registerLazySingleton<FirebaseFirestore>(
-    () => FirebaseFirestore.instance,
+  getIt.registerFactory<ProductCubit>(
+    () => ProductCubit(repository: getIt<ProductRepository>()),
   );
 }

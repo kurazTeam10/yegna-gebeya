@@ -5,6 +5,7 @@ import 'package:yegna_gebeya/shared/domain/models/user.dart';
 
 class SignUpCubit extends Cubit<SignUpState> {
   final AuthRepository authRepo;
+
   SignUpCubit({required this.authRepo}) : super(SignUpInitial());
 
   Future<void> signUp(

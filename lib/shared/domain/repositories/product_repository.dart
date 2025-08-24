@@ -1,7 +1,7 @@
 import 'package:yegna_gebeya/shared/domain/models/product.dart';
 
 abstract class ProductRepository {
-  Future<void> uploadProduct({required Product product});
+  Future<Product> uploadProduct({required Product product});
   Future<void> updateProductInfo({
     required String productId,
     required Product newProduct,
