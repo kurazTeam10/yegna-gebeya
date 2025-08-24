@@ -13,9 +13,8 @@ class SignInCubit extends Cubit<SignInState> {
     emit(const SignInLoading());
     try {
       final cred = await authRepo.signInWithEmailAndPassword(email, password);
-      final userId = cred.user!.uid;
-      final role = await userRepo.getUserRole(userId);
-      emit(SignInSuccess(cred: cred, role: role));
+      final user = await userRepo.getCurrentUserInfo();
+      emit(SignInSuccess(cred: cred, appUser: user!));
     } catch (e) {
       emit(SignInFailure(errorMessage: e.toString()));
     }

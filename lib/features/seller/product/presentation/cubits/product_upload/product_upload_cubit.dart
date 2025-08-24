@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:yegna_gebeya/features/seller/product/presentation/cubits/product_cubit/product_cubit.dart';
 import 'package:yegna_gebeya/shared/domain/models/image_type.dart';
 import 'package:yegna_gebeya/shared/domain/models/product.dart';
 import 'package:yegna_gebeya/shared/domain/repositories/image_repository.dart';

@@ -11,10 +11,11 @@ import 'dart:io';
 import 'package:yegna_gebeya/features/seller/product/presentation/cubits/product_upload/product_upload_cubit.dart';
 import 'package:yegna_gebeya/features/seller/product/presentation/cubits/product_upload/product_upload_state.dart';
 import 'package:yegna_gebeya/shared/domain/models/product.dart';
+import 'package:yegna_gebeya/shared/domain/models/user.dart' as model;
 
 class ProductUploadPage extends StatefulWidget {
-  final Product? productToBeEditted;
-  const ProductUploadPage({super.key, this.productToBeEditted});
+  final Map<String, dynamic> params;
+  const ProductUploadPage({super.key, required this.params});
 
   @override
   State<ProductUploadPage> createState() => _ProductUploadPageState();
@@ -29,6 +30,8 @@ class _ProductUploadPageState extends State<ProductUploadPage> {
   final TextEditingController _priceController = TextEditingController();
   bool imageChanged = false;
   bool productIsNew = false;
+  late Product? myProduct;
+  late model.User user;
 
   ProductCategory? _selectedCategory;
 
@@ -42,16 +45,19 @@ class _ProductUploadPageState extends State<ProductUploadPage> {
 
   @override
   void initState() {
+    user = widget.params["user"] as model.User;
+    myProduct = widget.params["product"] as Product?;
     super.initState();
-    final product = widget.productToBeEditted;
-    if (product != null) {
-      _nameController.text = product.name;
-      _descController.text = product.description;
-      _priceController.text = product.price.toString();
-      _selectedCategory = product.category;
+    if (myProduct != null) {
+      myProduct = widget.params['product'] as Product;
+      _nameController.text = myProduct!.name;
+      _descController.text = myProduct!.description;
+      _priceController.text = myProduct!.price.toString();
+      _selectedCategory = myProduct!.category;
       // Only set _imageFile if the image is a local file path
-      if (product.imgUrl!.isNotEmpty && !product.imgUrl!.startsWith('http')) {
-        _imageFile = File(product.imgUrl!);
+      if (myProduct!.imgUrl!.isNotEmpty &&
+          !myProduct!.imgUrl!.startsWith('http')) {
+        _imageFile = File(myProduct!.imgUrl!);
       }
     } else {
       productIsNew = true;
@@ -68,7 +74,7 @@ class _ProductUploadPageState extends State<ProductUploadPage> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            context.go(Routes.products);
+            context.go(Routes.products, extra: user);
           },
         ),
       ),
@@ -104,7 +110,7 @@ class _ProductUploadPageState extends State<ProductUploadPage> {
                           height: height * 0.2,
                           alignment: Alignment.center,
                           child: _imageFile == null
-                              ? widget.productToBeEditted == null
+                              ? myProduct == null
                                     ? SizedBox.shrink()
                                     : Container(
                                         width: width * 0.3,
@@ -117,7 +123,7 @@ class _ProductUploadPageState extends State<ProductUploadPage> {
                                         ),
                                         clipBehavior: Clip.antiAlias,
                                         child: Image.network(
-                                          widget.productToBeEditted!.imgUrl!,
+                                          myProduct!.imgUrl!,
                                           fit: BoxFit.cover,
                                         ),
                                       )
@@ -258,8 +264,7 @@ class _ProductUploadPageState extends State<ProductUploadPage> {
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor:
-                                _imageFile == null &&
-                                    widget.productToBeEditted == null
+                                _imageFile == null && myProduct == null
                                 ? Theme.of(
                                     context,
                                   ).colorScheme.onSurface.withAlpha(1)
@@ -268,32 +273,27 @@ class _ProductUploadPageState extends State<ProductUploadPage> {
                               context,
                             ).colorScheme.onPrimary,
                           ),
-                          onPressed:
-                              _imageFile == null &&
-                                  widget.productToBeEditted == null
+                          onPressed: _imageFile == null && myProduct == null
                               ? () {}
                               : () async {
                                   final sellerId =
                                       getIt<FirebaseAuth>().currentUser!.uid;
                                   Product product = !productIsNew
-                                      ? widget.productToBeEditted == null
+                                      ? myProduct == null
                                             ? (state as ProductUploadSuccess)
                                                   .product
-                                            : widget.productToBeEditted!
-                                                  .copyWith(
-                                                    name: _nameController.text
-                                                        .trim(),
-                                                    sellerId: sellerId,
-                                                    description: _descController
-                                                        .text
-                                                        .trim(),
-                                                    category:
-                                                        _selectedCategory!,
-                                                    price: double.parse(
-                                                      _priceController.text
-                                                          .trim(),
-                                                    ),
-                                                  )
+                                            : myProduct!.copyWith(
+                                                name: _nameController.text
+                                                    .trim(),
+                                                sellerId: sellerId,
+                                                description: _descController
+                                                    .text
+                                                    .trim(),
+                                                category: _selectedCategory!,
+                                                price: double.parse(
+                                                  _priceController.text.trim(),
+                                                ),
+                                              )
                                       : Product(
                                           name: _nameController.text.trim(),
                                           sellerId: sellerId,
@@ -334,7 +334,7 @@ class _ProductUploadPageState extends State<ProductUploadPage> {
                                               );
                                   }
                                 },
-                          child: widget.productToBeEditted == null
+                          child: myProduct == null
                               ? const Text('Upload')
                               : const Text('Update'),
                         ),

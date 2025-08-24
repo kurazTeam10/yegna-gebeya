@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:yegna_gebeya/core/router/routes.dart';
-import 'package:yegna_gebeya/features/seller/product/presentation/cubits/product_upload/product_upload_cubit.dart';
-import 'package:yegna_gebeya/features/seller/product/presentation/cubits/product_upload/product_upload_state.dart';
 import 'package:yegna_gebeya/shared/domain/models/product.dart';
+import 'package:yegna_gebeya/shared/domain/models/user.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
-  const ProductCard({super.key, required this.product});
+  final User user;
+  const ProductCard({super.key, required this.product, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +15,10 @@ class ProductCard extends StatelessWidget {
     final width = MediaQuery.sizeOf(context).width;
     return GestureDetector(
       onTap: () {
-        context.go(Routes.productUpload, extra: product);
+        context.go(
+          Routes.productUpload,
+          extra: {"product": product, "user": user},
+        );
       },
       child: Column(
         children: [

@@ -5,9 +5,11 @@ import 'package:go_router/go_router.dart';
 import 'package:yegna_gebeya/features/seller/order/presentation/cubit/orders_cubit.dart';
 import 'package:yegna_gebeya/features/seller/order/presentation/cubit/orders_state.dart';
 import 'package:yegna_gebeya/features/seller/order/presentation/widgets/order_item.dart';
+import 'package:yegna_gebeya/shared/domain/models/user.dart';
 
 class OrderPage extends StatefulWidget {
-  const OrderPage({super.key});
+  final User currentUser;
+  const OrderPage({super.key, required this.currentUser});
 
   @override
   State<OrderPage> createState() => _OrderPageState();
@@ -108,11 +110,10 @@ class _OrderPageState extends State<OrderPage> {
             _selectedIndex = index;
           });
           if (index == 2) {
-            context.go(Routes.orders);
           } else if (index == 1) {
-            context.go(Routes.sellerProfile);
+            context.go(Routes.sellerProfile, extra: widget.currentUser);
           } else if (index == 0) {
-            context.go(Routes.products);
+            context.go(Routes.products, extra: widget.currentUser);
           }
         },
         items: const [

@@ -61,7 +61,7 @@ class User {
 
   factory User.fromMap(Map<String, dynamic> map) {
     return User(
-      id: map['id'],
+      id: map['uid'],
       email: map['email'],
       fullName: map['fullName'],
       imgUrl: map['imgUrl'],
@@ -69,7 +69,9 @@ class User {
         (e) => e.name == map['role'],
         orElse: () => UserRole.buyer,
       ),
-      createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt']),
+      createdAt: map['createdAt'] is Timestamp
+          ? (map['createdAt'] as Timestamp).toDate()
+          : DateTime.fromMillisecondsSinceEpoch(map['createdAt']),
       phoneNo: map['phoneNo'],
     );
   }

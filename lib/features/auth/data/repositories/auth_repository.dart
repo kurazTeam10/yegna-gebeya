@@ -28,8 +28,11 @@ class AuthRepositoryImpl extends AuthRepository {
       await user.reload();
       final updatedUser = firebaseAuth.currentUser;
       if (updatedUser == null) throw Exception('User reload failed');
-      await repository.saveUser(
-        userModel.User.fromFirebaseAuthUser(user: updatedUser, role: role),
+      await repository.registerUser(
+        user: userModel.User.fromFirebaseAuthUser(
+          user: updatedUser,
+          role: role,
+        ),
       );
       return credential;
     } catch (e) {

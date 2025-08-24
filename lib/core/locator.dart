@@ -13,7 +13,7 @@ import 'package:yegna_gebeya/features/seller/product/presentation/cubits/product
 import 'package:yegna_gebeya/features/seller/product/presentation/cubits/product_upload/product_upload_cubit.dart';
 import 'package:yegna_gebeya/shared/data/repositories/image_repository_impl.dart';
 import 'package:yegna_gebeya/shared/data/repositories/product_repository_impl.dart';
-import 'package:yegna_gebeya/shared/data/repositories/user_repository_iml.dart';
+import 'package:yegna_gebeya/shared/data/repositories/user_repository_impl.dart';
 import 'package:yegna_gebeya/shared/domain/repositories/image_repository.dart';
 import 'package:yegna_gebeya/shared/domain/repositories/product_repository.dart';
 import 'package:yegna_gebeya/shared/domain/repositories/user_repository.dart';
@@ -35,7 +35,11 @@ void setupLocator() {
   );
 
   getIt.registerLazySingleton<UserRepository>(
-    () => UserRepositoryIml(firestore: getIt<FirebaseFirestore>()),
+    () => UserRepositoryImpl(
+      firebaseAuth: getIt<FirebaseAuth>(),
+      firebaseFirestore: getIt<FirebaseFirestore>(),
+      imageRepository: getIt<ImageRepository>(),
+    ),
   );
   getIt.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(

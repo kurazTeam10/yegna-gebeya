@@ -7,9 +7,11 @@ import 'package:yegna_gebeya/features/seller/product/presentation/widgets/produc
 import 'package:go_router/go_router.dart';
 import 'package:yegna_gebeya/core/router/routes.dart';
 import 'package:yegna_gebeya/shared/domain/models/product.dart';
+import 'package:yegna_gebeya/shared/domain/models/user.dart' as user_model;
 
 class ProductPage extends StatefulWidget {
-  const ProductPage({super.key});
+  final user_model.User currentUser;
+  const ProductPage({super.key, required this.currentUser});
 
   @override
   State<ProductPage> createState() => _ProductPageState();
@@ -41,7 +43,10 @@ class _ProductPageState extends State<ProductPage> {
                 itemCount: state.products!.length,
                 itemBuilder: (context, index) {
                   final product = state.products![index];
-                  return ProductCard(product: product);
+                  return ProductCard(
+                    product: product,
+                    user: widget.currentUser,
+                  );
                 },
               ),
             );
@@ -65,7 +70,10 @@ class _ProductPageState extends State<ProductPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          context.go(Routes.productUpload);
+          context.go(
+            Routes.productUpload,
+            extra: {"user": widget.currentUser, "product": null},
+          );
         },
         backgroundColor: const Color(0xFF433CFF),
         shape: const CircleBorder(),
@@ -78,12 +86,10 @@ class _ProductPageState extends State<ProductPage> {
             _selectedIndex = index;
           });
           if (index == 2) {
-            context.go(Routes.orders);
+            context.go(Routes.orders, extra: widget.currentUser);
           } else if (index == 1) {
-            context.go(Routes.sellerProfile);
-          } else if (index == 0) {
-            context.go(Routes.productUpload);
-          }
+            context.go(Routes.sellerProfile, extra: widget.currentUser);
+          } else if (index == 0) {}
         },
         items: const [
           BottomNavigationBarItem(

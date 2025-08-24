@@ -44,8 +44,8 @@ class _SignInPageState extends State<SignInPage> {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text("Sign In successful!")),
               );
-              if (state.role == UserRole.seller) {
-                context.go(Routes.products);
+              if (state.appUser.role == UserRole.seller) {
+                context.go(Routes.sellerProfile, extra: state.appUser);
               }
             } else if (state is SignInFailure) {
               ScaffoldMessenger.of(context).showSnackBar(
