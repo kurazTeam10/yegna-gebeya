@@ -3,31 +3,31 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 enum ProductCategory { clothes, furniture, jewellery, technology, others }
 
 class Product {
-  final String? productId;
-  final String productName;
-  final String productImageUrl;
-  final String productDescription;
+  final String? id;
+  final String name;
+  final String? imgUrl;
+  final String description;
   final double price;
   final String sellerId;
   final ProductCategory category;
 
   Product({
-    this.productId,
-    required this.productImageUrl,
-    required this.productName,
+    this.id,
+    this.imgUrl,
+    required this.name,
     required this.sellerId,
-    required this.productDescription,
+    required this.description,
     required this.category,
     required this.price,
   });
 
   Map<String, dynamic> toMap() {
     return {
-      'productId': productId,
-      'productImageUrl': productImageUrl,
-      'productName': productName,
+      'id': id,
+      'productImageUrl': imgUrl,
+      'productName': name,
       'sellerId': sellerId,
-      'productDescription': productDescription,
+      'productDescription': description,
       'category': category.name,
       'price': price,
     };
@@ -40,16 +40,35 @@ class Product {
 
   factory Product.fromMap(Map<String, dynamic> map) {
     return Product(
-      productId: map['productId'],
-      productImageUrl: map['productImageUrl'],
-      productName: map['productName'],
+      id: map['id'],
+      imgUrl: map['productImageUrl'],
+      name: map['productName'],
       sellerId: map['sellerId'],
-      productDescription: map['productDescription'],
+      description: map['productDescription'],
       category: ProductCategory.values.firstWhere(
         (e) => e.name == map['category'],
         orElse: () => ProductCategory.others,
       ),
       price: map['price'],
+    );
+  }
+  Product copyWith({
+    String? id,
+    String? imgUrl,
+    String? name,
+    String? sellerId,
+    String? description,
+    ProductCategory? category,
+    double? price,
+  }) {
+    return Product(
+      id: id ?? this.id,
+      imgUrl: imgUrl ?? this.imgUrl,
+      name: name ?? this.name,
+      sellerId: sellerId ?? this.sellerId,
+      description: description ?? this.description,
+      category: category ?? this.category,
+      price: price ?? this.price,
     );
   }
 }

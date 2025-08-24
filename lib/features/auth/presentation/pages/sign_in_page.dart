@@ -5,6 +5,7 @@ import 'package:yegna_gebeya/core/router/routes.dart';
 import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_in/sign_in_cubit.dart';
 import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_in/sign_in_state.dart';
 import 'package:yegna_gebeya/features/auth/presentation/widgets/text_form_widget.dart';
+import 'package:yegna_gebeya/shared/domain/models/user.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -43,6 +44,9 @@ class _SignInPageState extends State<SignInPage> {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text("Sign In successful!")),
               );
+              if (state.appUser.role == UserRole.seller) {
+                context.go(Routes.sellerProfile, extra: state.appUser);
+              }
             } else if (state is SignInFailure) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(state.errorMessage ?? "Error")),

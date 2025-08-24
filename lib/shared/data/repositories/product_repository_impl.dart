@@ -3,7 +3,7 @@ import 'package:yegna_gebeya/shared/domain/models/product.dart';
 import 'package:yegna_gebeya/shared/domain/repositories/product_repository.dart';
 
 class ProductRepositoryImpl extends ProductRepository {
-  FirebaseFirestore firestore;
+  final FirebaseFirestore firestore;
   ProductRepositoryImpl({required this.firestore});
   @override
   Future<List<Product>> getAllProducts() {
@@ -41,16 +41,22 @@ class ProductRepositoryImpl extends ProductRepository {
   Future<void> updateProductInfo({
     required String productId,
     required Product newProduct,
-  }) {
-    return firestore
-        .collection('products')
-        .doc(productId)
-        .update(newProduct.toMap());
+  }) async {
+    try {
+      await firestore
+          .collection('products')
+          .doc(productId.trim())
+          .update(newProduct.toMap());
+    } on FirebaseException catch (e) {
+      throw Exception(e.toString());
+    }
   }
 
   @override
-  Future<void> uploadProduct({required Product product}) {
-    // TODO: implement uploadProduct
-    throw UnimplementedError();
+  Future<Product> uploadProduct({required Product product}) async {
+    final docRef = firestore.collection('products').doc();
+    final productWithId = product.copyWith(id: docRef.id);
+    await docRef.set(productWithId.toMap());
+    return productWithId;
   }
 }
