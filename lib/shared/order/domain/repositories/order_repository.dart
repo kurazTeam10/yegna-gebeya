@@ -1,4 +1,4 @@
-import 'package:yegna_gebeya/features/seller/order/domain/models/order.dart';
+import 'package:yegna_gebeya/shared/order/domain/models/order.dart';
 
 abstract class OrderRepository {
   Future<List<Order>> getOrders(String userId);

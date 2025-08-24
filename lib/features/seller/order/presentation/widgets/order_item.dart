@@ -1,9 +1,7 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../domain/models/order.dart';
-import '../cubit/orders_cubit.dart';
+import 'package:yegna_gebeya/features/seller/order/presentation/cubit/orders_cubit.dart';
+import 'package:yegna_gebeya/shared/order/domain/models/order.dart';
 
 class OrderItem extends StatelessWidget {
   final Order order;
@@ -50,7 +48,7 @@ class OrderItem extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
                 child: Image.network(
                   order.product.imgUrl!,
-                  width: width * 0.25,
+                  height: height * 0.1,
                   fit: BoxFit.cover,
                 ),
               ),

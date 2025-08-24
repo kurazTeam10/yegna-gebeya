@@ -1,19 +1,24 @@
-import 'package:yegna_gebeya/features/seller/order/domain/models/order.dart';
+import 'package:yegna_gebeya/shared/order/domain/models/order.dart';
 
-abstract class OrderState {}
+abstract class OrderLoadingState {}
 
-class OrderInitial extends OrderState {}
+class OrderLoadingInitial extends OrderLoadingState {}
 
-class OrderLoading extends OrderState {}
+class OrderLoading extends OrderLoadingState {}
 
-class OrderLoaded extends OrderState {
+class OrderLoadingSuccess extends OrderLoadingState {
   final List<Order> orders;
-  final String selectedFilter;
+  final String activeFilter;
+  final List<Order> filteredOrders;
 
-  OrderLoaded(this.orders, {this.selectedFilter = "all"});
+  OrderLoadingSuccess({
+    required this.orders,
+    required this.filteredOrders,
+    required this.activeFilter,
+  });
 }
 
-class OrderError extends OrderState {
+class OrderLoadingFailure extends OrderLoadingState {
   final String message;
-  OrderError(this.message);
+  OrderLoadingFailure(this.message);
 }

@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:yegna_gebeya/features/seller/order/domain/models/order.dart'
-    as model;
-import 'package:yegna_gebeya/features/seller/order/domain/repositories/order_repository.dart';
 import 'package:yegna_gebeya/shared/domain/repositories/product_repository.dart';
+import 'package:yegna_gebeya/shared/order/domain/models/order.dart' as model;
+import 'package:yegna_gebeya/shared/order/domain/repositories/order_repository.dart';
 
 class OrderRepositoryImpl extends OrderRepository {
   final FirebaseFirestore firestore;
