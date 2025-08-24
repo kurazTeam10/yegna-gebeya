@@ -8,7 +8,6 @@ import 'package:yegna_gebeya/shared/profile/presentation/pages/profile_page.dart
 import 'package:yegna_gebeya/features/seller/order/presentation/pages/orders_page.dart';
 import 'package:yegna_gebeya/features/seller/product/presentation/pages/product_page.dart';
 import 'package:yegna_gebeya/features/seller/product/presentation/pages/product_upload_page.dart';
-import 'package:yegna_gebeya/shared/domain/models/product.dart';
 
 final goRouter = GoRouter(
   routes: [

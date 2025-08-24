@@ -49,7 +49,10 @@ void setupLocator() {
   );
 
   getIt.registerLazySingleton<OrderRepository>(
-    () => OrderRepositoryImpl(firestore: getIt<FirebaseFirestore>()),
+    () => OrderRepositoryImpl(
+      firestore: getIt<FirebaseFirestore>(),
+      productRepository: getIt<ProductRepository>(),
+    ),
   );
 
   getIt.registerFactory<SignUpCubit>(
@@ -68,10 +71,6 @@ void setupLocator() {
       imageRepository: getIt<ImageRepository>(),
     ),
   );
-  getIt.registerFactory<OrderCubit>(
-    () => OrderCubit(orderRepository: getIt<OrderRepository>()),
-  );
-
   getIt.registerFactory<ProductCubit>(
     () => ProductCubit(repository: getIt<ProductRepository>()),
   );

@@ -1,50 +1,51 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:yegna_gebeya/features/seller/order/domain/models/order.dart';
 import 'package:yegna_gebeya/features/seller/order/domain/repositories/order_repository.dart';
 
-import '../../domain/models/order.dart';
 import 'orders_state.dart';
 
 class OrderCubit extends Cubit<OrderState> {
   final OrderRepository orderRepository;
-  List<OrderModel> _allOrders = [];
 
   OrderCubit({required this.orderRepository}) : super(OrderInitial());
 
-  Future<void> fetchOrders() async {
+  Future<void> fetchOrders(String sellerId) async {
     emit(OrderLoading());
     try {
-      _allOrders = await orderRepository.getOrders();
-      emit(OrderLoaded(_allOrders));
+      List<Order> myOrders = await orderRepository.getOrders("seller1");
+      emit(OrderLoaded(myOrders));
     } catch (e) {
       emit(OrderError(e.toString()));
     }
   }
 
-  Future<void> updateOrderStatus(String orderId, String newStatus) async {
+  Future<void> updateOrderStatus(String orderId, OrderStatus newStatus) async {
     try {
       await orderRepository.updateOrderStatus(orderId, newStatus);
-
-      // also update locally
-      final index = _allOrders.indexWhere((o) => o.id == orderId);
-      if (index != -1) {
-        _allOrders[index] = _allOrders[index].copyWith(status: newStatus);
-      }
-
-      if (state is OrderLoaded) {
-        final currentFilter = (state as OrderLoaded).selectedFilter;
-        filterOrders(currentFilter);
-      }
+      final orders = (state as OrderLoaded).orders.map((order) {
+        if (order.id == orderId) {
+          return order.copyWith(status: newStatus);
+        }
+        return order;
+      }).toList();
+      emit(
+        OrderLoaded(
+          orders,
+          selectedFilter: (state as OrderLoaded).selectedFilter,
+        ),
+      );
     } catch (e) {
-      emit(OrderError("Failed to update status: $e"));
+      emit(OrderError(e.toString()));
     }
   }
 
   void filterOrders(String filter) {
     if (state is OrderLoaded) {
+      final allOrders = (state as OrderLoaded).orders;
       if (filter == "all") {
-        emit(OrderLoaded(_allOrders, selectedFilter: "all"));
+        emit(OrderLoaded(allOrders, selectedFilter: "all"));
       } else {
-        final filtered = _allOrders.where((o) => o.status == filter).toList();
+        final filtered = allOrders.where((o) => o.status == filter).toList();
         emit(OrderLoaded(filtered, selectedFilter: filter));
       }
     }
