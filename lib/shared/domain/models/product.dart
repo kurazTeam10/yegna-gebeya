@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 enum ProductCategory { clothes, furniture, jewellery, technology, others }

@@ -6,6 +6,9 @@ import 'package:yegna_gebeya/features/auth/data/repositories/auth_repository.dar
 import 'package:yegna_gebeya/features/auth/domain/repositories/auth_repository.dart';
 import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_in/sign_in_cubit.dart';
 import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_up/sign_up_cubit.dart';
+import 'package:yegna_gebeya/features/buyer/presentation/cubit/product_cubit.dart';
+import 'package:yegna_gebeya/shared/data/repositories/product_repository_impl.dart'; // Add this import
+import 'package:yegna_gebeya/shared/domain/repositories/product_repository.dart';
 import 'package:yegna_gebeya/features/seller/product/presentation/cubits/product_cubit/product_cubit.dart';
 import 'package:yegna_gebeya/features/seller/product/presentation/cubits/product_upload/product_upload_cubit.dart';
 import 'package:yegna_gebeya/shared/data/repositories/image_repository_impl.dart';
@@ -54,9 +57,15 @@ void setupLocator() {
     ),
   );
 
+  // Register ProductRepository
+  getIt.registerLazySingleton<ProductRepository>(
+    () => ProductRepositoryImpl(firestore: getIt<FirebaseFirestore>()),
+  );
+
   getIt.registerFactory<SignUpCubit>(
     () => SignUpCubit(authRepo: getIt<AuthRepository>()),
   );
+  
   getIt.registerFactory<SignInCubit>(
     () => SignInCubit(
       authRepo: getIt<AuthRepository>(),
@@ -72,5 +81,9 @@ void setupLocator() {
   );
   getIt.registerFactory<ProductCubit>(
     () => ProductCubit(repository: getIt<ProductRepository>()),
+  );
+  
+  getIt.registerFactory<ProductCubit>(
+    () => ProductCubit(productRepository: getIt<ProductRepository>()),
   );
 }
