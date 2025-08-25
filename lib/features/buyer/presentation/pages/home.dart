@@ -68,8 +68,18 @@ class _HomeState extends State<Home> {
                         : null,
                   ),
                   SizedBox(width: size.width * 0.024),
-                  const Expanded(child: SearchBarWidget()),
-                ],
+                    Expanded(
+          child: SearchBarWidget(
+            onChanged: (query) {
+              if (query.isEmpty) {
+                context.read<ProductCubit>().fetchAllProducts();
+              } else {
+                context.read<ProductCubit>().searchProducts(query);
+              }
+            },
+          ),
+        ),
+                      ],
               ),
             ),
 

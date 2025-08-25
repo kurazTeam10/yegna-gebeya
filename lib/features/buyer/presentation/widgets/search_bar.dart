@@ -4,12 +4,14 @@ class SearchBarWidget extends StatelessWidget {
   final double height;
   final Color borderColor;
   final Color iconColor;
+  final Function(String)? onChanged; // <-- add this
 
   const SearchBarWidget({
     super.key,
     this.height = 50,
     this.borderColor = Colors.grey,
     this.iconColor = const Color(0xFF8D00DE),
+    this.onChanged,
   });
 
   @override
@@ -26,11 +28,12 @@ class SearchBarWidget extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(30),
       ),
-      child: const TextField(
+      child: TextField(
+        onChanged: onChanged, // <-- call the function
         decoration: InputDecoration(
           hintText: 'Search products',
           border: InputBorder.none,
-          icon: Icon(Icons.search, color: Color(0xFF8D00DE)),
+          icon: Icon(Icons.search, color: iconColor),
         ),
       ),
     );
