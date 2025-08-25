@@ -4,14 +4,16 @@ class SearchBarWidget extends StatelessWidget {
   final double height;
   final Color borderColor;
   final Color iconColor;
-  final Function(String)? onChanged; // <-- add this
+  final Function(String)? onChanged;
+  final TextEditingController? controller; // <-- store controller
 
   const SearchBarWidget({
     super.key,
     this.height = 50,
     this.borderColor = Colors.grey,
     this.iconColor = const Color(0xFF8D00DE),
-    this.onChanged, required TextEditingController textController,
+    this.onChanged,
+    this.controller, // <-- assign here
   });
 
   @override
@@ -29,7 +31,8 @@ class SearchBarWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(30),
       ),
       child: TextField(
-        onChanged: onChanged, // <-- call the function
+        controller: controller, // <-- use it
+        onChanged: onChanged,
         decoration: InputDecoration(
           hintText: 'Search products',
           border: InputBorder.none,

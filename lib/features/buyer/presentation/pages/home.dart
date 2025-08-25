@@ -1,3 +1,4 @@
+// home.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -22,14 +23,11 @@ class _HomeState extends State<Home> {
   int _selectedIndex = 0;
   String selectedCategory = 'All';
   List<String> categories = ['All'];
-
-  final TextEditingController searchController = TextEditingController();
-
+final TextEditingController searchController = TextEditingController();
   @override
   void initState() {
     super.initState();
     user = widget.user;
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ProductCubit>().fetchCategories().then((_) {
         if (!mounted) return;
@@ -37,13 +35,11 @@ class _HomeState extends State<Home> {
       });
     });
   }
-
-  @override
-  void dispose() {
-    searchController.dispose();
-    super.dispose();
-  }
-
+@override
+void dispose() {
+  searchController.dispose();
+  super.dispose();
+}
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -53,7 +49,6 @@ class _HomeState extends State<Home> {
       body: SafeArea(
         child: Column(
           children: [
-            // --- Top Row: Avatar + Search ---
             Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: size.width * 0.04,
@@ -64,30 +59,34 @@ class _HomeState extends State<Home> {
                   CircleAvatar(
                     radius: size.width * 0.06,
                     backgroundColor: Colors.grey[200],
-                    backgroundImage: (user.imgUrl != null && user.imgUrl!.isNotEmpty)
+                    backgroundImage:
+                        (user.imgUrl != null && user.imgUrl!.isNotEmpty)
                         ? NetworkImage(user.imgUrl!)
                         : null,
                     child: (user.imgUrl == null || user.imgUrl!.isEmpty)
-                        ? const Icon(Icons.person, color: Colors.black, size: 32)
+                        ? const Icon(
+                            Icons.person,
+                            color: Colors.black,
+                            size: 32,
+                          )
                         : null,
                   ),
                   SizedBox(width: size.width * 0.024),
-                  Expanded(
-                    child: SearchBarWidget(
-                      textController: searchController,
-                      onChanged: (query) {
-                        context.read<ProductCubit>().filterProducts(
-                          query: query,
-                          category: selectedCategory,
-                        );
-                      },
-                    ),
-                  ),
+                Expanded(
+  child: SearchBarWidget(
+    controller: searchController,
+    onChanged: (query) {
+      context.read<ProductCubit>().filterProducts(
+        query: query,
+        category: selectedCategory,
+      );
+    },
+  ),
+)
                 ],
               ),
             ),
 
-            // --- Banner Section ---
             Container(
               width: double.infinity,
               height: size.height * 0.2,
@@ -99,20 +98,108 @@ class _HomeState extends State<Home> {
                 color: purpleColor,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Center(
-                child: Text(
-                  "Explore new\nCollections",
-                  style: GoogleFonts.sarpanch(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  if (constraints.maxWidth > 600) {
+                    return Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Explore new\nCollections",
+                                  style: GoogleFonts.sarpanch(
+                                    fontSize: constraints.maxWidth * 0.03,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                SizedBox(height: constraints.maxHeight * 0.05),
+                                Container(
+                                  width: constraints.maxWidth * 0.3,
+                                  height: constraints.maxHeight * 0.25,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    'Explore Now',
+                                    style: GoogleFonts.sail(
+                                      fontWeight: FontWeight.bold,
+                                      color: purpleColor,
+                                      fontSize: constraints.maxWidth * 0.015,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  } else {
+                    return Stack(
+                      children: [
+                        Positioned(
+                          right: 0,
+                          top: 0,
+                          bottom: 0,
+                          child: SizedBox(
+                            width: MediaQuery.sizeOf(context).width * 0.4,
+                            child: Image.asset(
+                              'assets/images/product_hero.png',
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Explore new\nCollections",
+                                style: GoogleFonts.sarpanch(
+                                  fontSize: constraints.maxWidth * 0.06,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const Spacer(),
+                              Container(
+                                width: constraints.maxWidth * 0.4,
+                                height: constraints.maxHeight * 0.2,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  'Explore Now',
+                                  style: GoogleFonts.sail(
+                                    fontWeight: FontWeight.bold,
+                                    color: purpleColor,
+                                    fontSize: constraints.maxWidth * 0.035,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: constraints.maxHeight * 0.05),
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                },
               ),
             ),
 
-            // --- Categories ---
             BlocConsumer<ProductCubit, ProductState>(
               listener: (context, state) {
                 if (state is CategoriesLoaded) {
@@ -132,13 +219,12 @@ class _HomeState extends State<Home> {
                         child: CategoryButton(
                           label: label,
                           isSelected: selectedCategory == label,
-                          onPressed: () {
+                         onPressed: () {
                             setState(() {
                               selectedCategory = label;
                             });
-                            // Apply combined filter
                             context.read<ProductCubit>().filterProducts(
-                              query: searchController.text,
+                              query: searchController.text, // keep current search
                               category: label,
                             );
                           },
@@ -152,7 +238,6 @@ class _HomeState extends State<Home> {
 
             SizedBox(height: size.height * 0.02),
 
-            // --- Product Grid ---
             Expanded(
               child: BlocBuilder<ProductCubit, ProductState>(
                 builder: (context, state) {
@@ -167,25 +252,34 @@ class _HomeState extends State<Home> {
                       return Center(
                         child: Text(
                           'No products found in $selectedCategory category',
-                          style: const TextStyle(fontSize: 16),
+                          style: TextStyle(fontSize: 16),
                         ),
                       );
                     }
 
-                    final crossAxisCount = size.width > 600 ? 3 : 2;
+                    return LayoutBuilder(
+                      builder: (context, constraints) {
+                        final crossAxisCount = constraints.maxWidth > 600
+                            ? 3
+                            : 2;
 
-                    return GridView.builder(
-                      padding: EdgeInsets.symmetric(horizontal: size.width * 0.04),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: crossAxisCount,
-                        crossAxisSpacing: 12,
-                        mainAxisSpacing: 12,
-                        childAspectRatio: 160 / 250,
-                      ),
-                      itemCount: products.length,
-                      itemBuilder: (context, index) {
-                        final product = products[index];
-                        return ProductCard(product: product, onTap: () {});
+                        return GridView.builder(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: size.width * 0.04,
+                          ),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: crossAxisCount,
+                                crossAxisSpacing: 12,
+                                mainAxisSpacing: 12,
+                                childAspectRatio: 160 / 250,
+                              ),
+                          itemCount: products.length,
+                          itemBuilder: (context, index) {
+                            final product = products[index];
+                            return ProductCard(product: product, onTap: () {});
+                          },
+                        );
                       },
                     );
                   } else {
@@ -204,8 +298,14 @@ class _HomeState extends State<Home> {
           setState(() {
             _selectedIndex = index;
           });
-          if (index == 1) {
+          if (index == 3) {
+            // TODO: Implement navigation for Sellers
+          } else if (index == 2) {
+            // TODO: Implement navigation for Orders
+          } else if (index == 1) {
             context.go(Routes.profile, extra: user);
+          } else if (index == 0) {
+            // TODO: Implement navigation for Home
           }
         },
         items: const [
