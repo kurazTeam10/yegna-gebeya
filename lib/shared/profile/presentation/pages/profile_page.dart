@@ -67,17 +67,17 @@ class _ProfilePageState extends State<ProfilePage> {
                       backgroundColor: Colors.grey[200],
                       backgroundImage: _profileImageFile != null
                           ? FileImage(_profileImageFile!) as ImageProvider
-                          : state.user.imgUrl.isNotEmpty
-                          ? NetworkImage(state.user.imgUrl)
+                          : state.user.imgUrl!.isNotEmpty
+                          ? NetworkImage(state.user.imgUrl!)
                           : null,
                       child: _profileImageFile != null
                           ? null
-                          : state.user.imgUrl.isNotEmpty
+                          : state.user.imgUrl!.isNotEmpty
                           ? null
                           : const Icon(
                               Icons.person,
                               size: 60,
-                              color: Colors.grey,
+                              color: Colors.black,
                             ),
                     ),
                     Positioned(
@@ -213,34 +213,72 @@ class _ProfilePageState extends State<ProfilePage> {
                   },
                 ),
             floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-            bottomNavigationBar: BottomNavigationBar(
-              currentIndex: _selectedIndex,
-              onTap: (index) {
-                setState(() {
-                  _selectedIndex = index;
-                });
-                if (index == 2) {
-                  context.go(Routes.orders, extra: state.user);
-                } else if (index == 1) {
-                } else if (index == 0) {
-                  context.go(Routes.products, extra: state.user);
-                }
-              },
-              items: const [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.shopping_bag),
-                  label: 'Products',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person),
-                  label: 'Profile',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.list_alt),
-                  label: 'Orders',
-                ),
-              ],
-            ),
+            bottomNavigationBar: state.user.role == UserRole.buyer
+                ? BottomNavigationBar(
+                    type: BottomNavigationBarType.fixed,
+                    currentIndex: _selectedIndex,
+                    onTap: (index) {
+                      setState(() {
+                        _selectedIndex = index;
+                      });
+                      if (index == 3) {
+                        // TODO: Implement navigation for Sellers
+                      } else if (index == 2) {
+                        // TODO: Implement navigation for Orders
+                      } else if (index == 1) {
+                        context.go(Routes.profile, extra: state.user);
+                      } else if (index == 0) {
+                        context.go(Routes.buyerHome, extra: state.user);
+                      }
+                    },
+                    items: const [
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.home),
+                        label: 'Home',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.person),
+                        label: 'Profile',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.store),
+                        label: 'Sellers',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.list_alt),
+                        label: 'Orders',
+                      ),
+                    ],
+                  )
+                : BottomNavigationBar(
+                    currentIndex: _selectedIndex,
+                    onTap: (index) {
+                      setState(() {
+                        _selectedIndex = index;
+                      });
+                      if (index == 2) {
+                        context.go(Routes.orders, extra: state.user);
+                      } else if (index == 1) {
+                        // Profile tab, already here
+                      } else if (index == 0) {
+                        context.go(Routes.products, extra: state.user);
+                      }
+                    },
+                    items: const [
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.shopping_bag),
+                        label: 'Products',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.person),
+                        label: 'Profile',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.list_alt),
+                        label: 'Orders',
+                      ),
+                    ],
+                  ),
           );
         },
       ),

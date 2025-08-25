@@ -5,9 +5,9 @@ import 'package:yegna_gebeya/shared/domain/repositories/product_repository.dart'
 
 part 'product_state.dart';
 
-class ProductCubit extends Cubit<ProductState> {
+class SellerProductCubit extends Cubit<ProductState> {
   final ProductRepository repository;
-  ProductCubit({required this.repository}) : super(ProductInitial());
+  SellerProductCubit({required this.repository}) : super(ProductInitial());
 
   Future<void> loadSellerProducts({required String sellerId}) async {
     emit(ProductLoading());

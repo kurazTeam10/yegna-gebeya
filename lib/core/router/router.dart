@@ -12,21 +12,23 @@ import 'package:yegna_gebeya/features/seller/product/presentation/pages/product_
 
 final goRouter = GoRouter(
   routes: [
+    //common
     GoRoute(
       path: Routes.landigPage,
-      builder: (context, state) => Home(),
+      builder: (context, state) => LandingPage(),
     ),
     GoRoute(path: Routes.signUp, builder: (context, state) => SignUpPage()),
     GoRoute(path: Routes.signIn, builder: (context, state) => SignInPage()),
+    GoRoute(
+      path: Routes.profile,
+      builder: ((context, state) =>
+          ProfilePage(currentUser: state.extra! as User)),
+    ),
 
+    //seller
     GoRoute(
       path: Routes.orders,
       builder: (context, state) => OrderPage(currentUser: state.extra as User),
-    ),
-    GoRoute(
-      path: Routes.sellerProfile,
-      builder: ((context, state) =>
-          ProfilePage(currentUser: state.extra! as User)),
     ),
     GoRoute(
       path: Routes.products,
@@ -37,6 +39,14 @@ final goRouter = GoRouter(
       path: Routes.productUpload,
       builder: (context, state) {
         return ProductUploadPage(params: state.extra as Map<String, dynamic>);
+      },
+    ),
+
+    //buyer
+    GoRoute(
+      path: Routes.buyerHome,
+      builder: (context, state) {
+        return Home(user: state.extra as User);
       },
     ),
   ],

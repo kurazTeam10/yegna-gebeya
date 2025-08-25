@@ -1,4 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_model;
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 enum UserRole {
@@ -16,7 +16,7 @@ class User {
   final String id;
   final String email;
   final String fullName;
-  final String imgUrl;
+  final String? imgUrl;
   final UserRole role;
   final DateTime createdAt;
   final String phoneNo;
@@ -32,7 +32,7 @@ class User {
   });
 
   factory User.fromFirebaseAuthUser({
-    required firebaseAuth.User user,
+    required firebase_model.User user,
     required UserRole role,
     DateTime? createdAt,
   }) {

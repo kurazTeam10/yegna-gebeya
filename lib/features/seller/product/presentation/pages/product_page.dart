@@ -27,12 +27,12 @@ class _ProductPageState extends State<ProductPage> {
     return Scaffold(
       backgroundColor: const Color(0xFFFCF8FF),
       appBar: AppBar(title: Text("My Product"), centerTitle: true),
-      body: BlocBuilder<ProductCubit, ProductState>(
+      body: BlocBuilder<SellerProductCubit, ProductState>(
         builder: (context, state) {
           if (state is ProductLoadingSuccess) {
             return RefreshIndicator(
               onRefresh: () async {
-                await context.read<ProductCubit>().loadSellerProducts(
+                await context.read<SellerProductCubit>().loadSellerProducts(
                   sellerId: getIt<FirebaseAuth>().currentUser!.uid,
                 );
               },
@@ -61,7 +61,7 @@ class _ProductPageState extends State<ProductPage> {
           } else if (state is ProductLoadingFailure) {
             return Center(child: Text('Error!'));
           } else {
-            context.read<ProductCubit>().loadSellerProducts(
+            context.read<SellerProductCubit>().loadSellerProducts(
               sellerId: getIt<FirebaseAuth>().currentUser!.uid,
             );
             return SizedBox.shrink();
@@ -88,7 +88,7 @@ class _ProductPageState extends State<ProductPage> {
           if (index == 2) {
             context.go(Routes.orders, extra: widget.currentUser);
           } else if (index == 1) {
-            context.go(Routes.sellerProfile, extra: widget.currentUser);
+            context.go(Routes.profile, extra: widget.currentUser);
           } else if (index == 0) {}
         },
         items: const [

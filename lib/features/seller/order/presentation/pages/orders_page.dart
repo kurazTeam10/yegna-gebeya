@@ -132,7 +132,7 @@ class _OrderPageState extends State<OrderPage> {
             });
             if (index == 2) {
             } else if (index == 1) {
-              context.go(Routes.sellerProfile, extra: widget.currentUser);
+              context.go(Routes.profile, extra: widget.currentUser);
             } else if (index == 0) {
               context.go(Routes.products, extra: widget.currentUser);
             }
