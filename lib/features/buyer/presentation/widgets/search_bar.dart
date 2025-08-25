@@ -11,7 +11,7 @@ class SearchBarWidget extends StatelessWidget {
     this.height = 50,
     this.borderColor = Colors.grey,
     this.iconColor = const Color(0xFF8D00DE),
-    this.onChanged,
+    this.onChanged, required TextEditingController textController,
   });
 
   @override
