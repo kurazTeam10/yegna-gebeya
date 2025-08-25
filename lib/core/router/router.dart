@@ -5,6 +5,11 @@ import 'package:yegna_gebeya/features/auth/presentation/pages/sign_up_page.dart'
 import 'package:yegna_gebeya/features/buyer/presentation/pages/seller_list_page.dart';
 import 'package:yegna_gebeya/features/buyer/presentation/pages/seller_profile_page.dart';
 import 'package:yegna_gebeya/features/landing/presentation/pages/landing_page.dart';
+import 'package:yegna_gebeya/shared/domain/models/user.dart';
+import 'package:yegna_gebeya/shared/profile/presentation/pages/profile_page.dart';
+import 'package:yegna_gebeya/features/seller/order/presentation/pages/orders_page.dart';
+import 'package:yegna_gebeya/features/seller/product/presentation/pages/product_page.dart';
+import 'package:yegna_gebeya/features/seller/product/presentation/pages/product_upload_page.dart';
 
 final goRouter = GoRouter(
   initialLocation: Routes.landingPage,

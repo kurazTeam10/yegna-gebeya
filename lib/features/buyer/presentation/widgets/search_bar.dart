@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SearchBarWidget extends StatelessWidget {
+<<<<<<< HEAD
   final TextEditingController controller;
   final void Function(String) onChanged;
   final String hintText;
@@ -12,10 +13,22 @@ class SearchBarWidget extends StatelessWidget {
     required this.onChanged,
     this.hintText = 'Search...',
     this.margin,
+=======
+  final double height;
+  final Color borderColor;
+  final Color iconColor;
+
+  const SearchBarWidget({
+    super.key,
+    this.height = 50,
+    this.borderColor = Colors.grey,
+    this.iconColor = const Color(0xFF8D00DE),
+>>>>>>> origin
   });
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
     final screenSize = MediaQuery.of(context).size;
     final screenWidth = screenSize.width;
 
@@ -60,6 +73,26 @@ class SearchBarWidget extends StatelessWidget {
           ),
         ),
         onChanged: onChanged,
+=======
+    final size = MediaQuery.of(context).size;
+
+    return Container(
+      height: height,
+      padding: EdgeInsets.symmetric(horizontal: size.width * 0.03),
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: borderColor,
+          width: size.width * 0.003,
+        ),
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: const TextField(
+        decoration: InputDecoration(
+          hintText: 'Search products',
+          border: InputBorder.none,
+          icon: Icon(Icons.search, color: Color(0xFF8D00DE)),
+        ),
+>>>>>>> origin
       ),
     );
   }
