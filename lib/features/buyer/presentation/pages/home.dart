@@ -23,7 +23,7 @@ class _HomeState extends State<Home> {
   int _selectedIndex = 0;
   String selectedCategory = 'All';
   List<String> categories = ['All'];
-
+final TextEditingController searchController = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -35,7 +35,11 @@ class _HomeState extends State<Home> {
       });
     });
   }
-
+@override
+void dispose() {
+  searchController.dispose();
+  super.dispose();
+}
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -68,7 +72,17 @@ class _HomeState extends State<Home> {
                         : null,
                   ),
                   SizedBox(width: size.width * 0.024),
-                  const Expanded(child: SearchBarWidget()),
+                Expanded(
+  child: SearchBarWidget(
+    controller: searchController,
+    onChanged: (query) {
+      context.read<ProductCubit>().filterProducts(
+        query: query,
+        category: selectedCategory,
+      );
+    },
+  ),
+)
                 ],
               ),
             ),
@@ -205,17 +219,14 @@ class _HomeState extends State<Home> {
                         child: CategoryButton(
                           label: label,
                           isSelected: selectedCategory == label,
-                          onPressed: () {
+                         onPressed: () {
                             setState(() {
                               selectedCategory = label;
                             });
-                            if (label == 'All') {
-                              context.read<ProductCubit>().fetchAllProducts();
-                            } else {
-                              context
-                                  .read<ProductCubit>()
-                                  .fetchProductsByCategory(label);
-                            }
+                            context.read<ProductCubit>().filterProducts(
+                              query: searchController.text, // keep current search
+                              category: label,
+                            );
                           },
                         ),
                       );

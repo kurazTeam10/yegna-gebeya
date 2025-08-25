@@ -57,4 +57,24 @@ Future<void> fetchProductsByCategory(String category) async {
       emit(ProductError(message: 'Failed to search products: $e'));
     }
   }
+    Future<void> filterProducts({String query = '', String category = 'All'}) async {
+    emit(ProductLoading());
+    try {
+      
+      List<Product> products = category == 'All'
+          ? await productRepository.getAllProducts()
+          : await productRepository.getProductsByCategory(category);
+
+      if (query.isNotEmpty) {
+        products = products
+            .where((p) => p.name.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+      }
+
+      emit(ProductLoaded(products: products));
+    } catch (e) {
+      emit(ProductError(message: 'Failed to filter products: $e'));
+    }
+  }
 }
+  
