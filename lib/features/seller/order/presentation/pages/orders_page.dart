@@ -23,134 +23,137 @@ class _OrderPageState extends State<OrderPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          OrderCubit(orderRepository: getIt<OrderRepository>())
-            ..fetchOrders(widget.currentUser.id),
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            "Orders",
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-          ),
-          backgroundColor: Colors.white,
-          elevation: 1,
-        ),
-        body: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-              child: BlocBuilder<OrderCubit, OrderLoadingState>(
-                builder: (context, state) {
-                  String activeFilter = "all"; // Default value
-                  List allOrders = [];
-                  List pendingOrders = [];
-                  List deliveredOrders = [];
-                  if (state is OrderLoadingSuccess) {
-                    activeFilter = state.activeFilter; // Use state.activeFilter
-                    allOrders = state.orders;
-                    pendingOrders = state.orders
-                        .where((o) => o.status.name == 'pending')
-                        .toList();
-                    deliveredOrders = state.orders
-                        .where((o) => o.status.name == 'delivered')
-                        .toList();
-                  }
-
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      buildFilterButton(
-                        context,
-                        "all",
-                        allOrders,
-                        activeFilter,
-                      ),
-                      buildFilterButton(
-                        context,
-                        "pending",
-                        pendingOrders,
-                        activeFilter,
-                      ),
-                      buildFilterButton(
-                        context,
-                        "delivered",
-                        deliveredOrders,
-                        activeFilter,
-                      ),
-                    ],
-                  );
-                },
-              ),
+        create: (context) =>
+            OrderCubit(orderRepository: getIt<OrderRepository>())
+              ..fetchOrders(widget.currentUser.id),
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text(
+              "Orders",
+              style:
+                  TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
             ),
-            Expanded(
-              child: BlocBuilder<OrderCubit, OrderLoadingState>(
-                builder: (context, state) {
-                  if (state is OrderLoading) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (state is OrderLoadingSuccess) {
-                    final filteredOrders = state.filteredOrders;
-                    if (filteredOrders.isEmpty) {
-                      return const Center(
+            backgroundColor: Colors.white,
+            elevation: 1,
+          ),
+          body: Column(
+            children: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+                child: BlocBuilder<OrderCubit, OrderLoadingState>(
+                  builder: (context, state) {
+                    String activeFilter = "all"; // Default value
+                    List allOrders = [];
+                    List pendingOrders = [];
+                    List deliveredOrders = [];
+                    if (state is OrderLoadingSuccess) {
+                      activeFilter =
+                          state.activeFilter; // Use state.activeFilter
+                      allOrders = state.orders;
+                      pendingOrders = state.orders
+                          .where((o) => o.status.name == 'pending')
+                          .toList();
+                      deliveredOrders = state.orders
+                          .where((o) => o.status.name == 'delivered')
+                          .toList();
+                    }
+
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        buildFilterButton(
+                          context,
+                          "all",
+                          allOrders,
+                          activeFilter,
+                        ),
+                        buildFilterButton(
+                          context,
+                          "pending",
+                          pendingOrders,
+                          activeFilter,
+                        ),
+                        buildFilterButton(
+                          context,
+                          "delivered",
+                          deliveredOrders,
+                          activeFilter,
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+              Expanded(
+                child: BlocBuilder<OrderCubit, OrderLoadingState>(
+                  builder: (context, state) {
+                    if (state is OrderLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (state is OrderLoadingSuccess) {
+                      final filteredOrders = state.filteredOrders;
+                      if (filteredOrders.isEmpty) {
+                        return const Center(
+                          child: Text(
+                            "No orders yet",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        );
+                      }
+                      return ListView.builder(
+                        itemCount: filteredOrders.length,
+                        itemBuilder: (context, index) {
+                          return OrderItem(order: filteredOrders[index]);
+                        },
+                      );
+                    } else if (state is OrderLoadingFailure) {
+                      return Center(
                         child: Text(
-                          "No orders yet",
-                          style: TextStyle(
+                          "Error: ${state.message}",
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            color: Colors.black87,
+                            color: Colors.red,
                           ),
                         ),
                       );
                     }
-                    return ListView.builder(
-                      itemCount: filteredOrders.length,
-                      itemBuilder: (context, index) {
-                        return OrderItem(order: filteredOrders[index]);
-                      },
-                    );
-                  } else if (state is OrderLoadingFailure) {
-                    return Center(
-                      child: Text(
-                        "Error: ${state.message}",
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.red,
-                        ),
-                      ),
-                    );
-                  }
-                  return const SizedBox.shrink();
-                },
+                    return const SizedBox.shrink();
+                  },
+                ),
               ),
-            ),
-          ],
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _selectedIndex,
-          onTap: (index) {
-            setState(() {
-              _selectedIndex = index;
-            });
-            if (index == 2) {
-            } else if (index == 1) {
-              context.go(Routes.profile, extra: widget.currentUser);
-            } else if (index == 0) {
-              context.go(Routes.products, extra: widget.currentUser);
-            }
-          },
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_bag),
-              label: 'Products',
-            ),
-            BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.list_alt),
-              label: 'Orders',
-            ),
-          ],
-        ),
-      ),
-    );
+            ],
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            currentIndex: _selectedIndex,
+            onTap: (index) {
+              setState(() {
+                _selectedIndex = index;
+              });
+              if (index == 2) {
+              } else if (index == 1) {
+                context.go(Routes.profile, extra: widget.currentUser);
+              } else if (index == 0) {
+                context.go(Routes.products, extra: widget.currentUser);
+              }
+            },
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.shopping_bag),
+                label: 'Products',
+              ),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.person), label: 'Profile'),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.list_alt),
+                label: 'Orders',
+              ),
+            ],
+          ),
+        ));
   }
 
   Widget buildFilterButton(

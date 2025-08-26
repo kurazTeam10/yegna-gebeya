@@ -1,23 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:yegna_gebeya/core/locator.dart';
+import 'package:yegna_gebeya/core/router/routes.dart';
 import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_in/sign_in_cubit.dart';
+import 'package:yegna_gebeya/features/buyer/order/presentation/bloc/order_bloc.dart';
 import 'package:yegna_gebeya/shared/models/product.dart';
 import 'package:yegna_gebeya/features/buyer/cart/presentation/bloc/cart_bloc.dart';
-
-import '../../../order/presentation/bloc/order_bloc.dart';
+import 'package:yegna_gebeya/shared/domain/models/user.dart' as domain;
 
 class CheckoutPage extends StatefulWidget {
-  const CheckoutPage({super.key});
+  final Map<String, dynamic> params;
+  const CheckoutPage({super.key, required this.params});
 
   @override
   State<CheckoutPage> createState() => _CheckoutPageState();
 }
 
 class _CheckoutPageState extends State<CheckoutPage> {
+  late domain.User user;
+  late String sellerId;
+
   @override
   void initState() {
+    user = widget.params["user"];
+    sellerId = widget.params["sellerId"];
     super.initState();
 
     final cartBloc = context.read<CartBloc>();
@@ -32,7 +38,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Cart')),
+      appBar: AppBar(
+          title: IconButton(
+              onPressed: () {
+                context.go(Routes.sellerProfile,
+                    extra: {"user": user, "sellerId": sellerId});
+              },
+              icon: Icon(Icons.arrow_back))),
       body: BlocConsumer<CartBloc, CartState>(
         listener: (context, state) {
           if (state is CartError) {
@@ -64,20 +76,17 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
             return Column(
               mainAxisAlignment: MainAxisAlignment.start,
-
               children: [
                 SizedBox(
                   width: deviceWidth / 2,
                   height: deviceHeight / 3,
                   child: Image.asset('assets/images/buyer.png'),
                 ),
-
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: deviceWidth / 10),
                   child: Column(
                     children: [
                       Divider(),
-
                       SizedBox(
                         width: deviceWidth,
                         height: deviceHeight / 4,
@@ -100,7 +109,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                     fit: BoxFit.contain,
                                   ),
                                 ),
-
                                 Expanded(
                                   child: Text(
                                     product.productName,
@@ -117,7 +125,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                   alignment: AlignmentDirectional.center,
                                   children: [
                                     Text(quantity.toString()),
-
                                     Column(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
@@ -127,16 +134,16 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                             iconSize: deviceWidth * 0.045,
                                             onPressed: () =>
                                                 context.read<CartBloc>().add(
-                                                  AddToCartEvent(
-                                                    id: context
-                                                        .read<SignInCubit>()
-                                                        .state
-                                                        .cred!
-                                                        .user!
-                                                        .uid,
-                                                    product: product,
-                                                  ),
-                                                ),
+                                                      AddToCartEvent(
+                                                        id: context
+                                                            .read<SignInCubit>()
+                                                            .state
+                                                            .cred!
+                                                            .user!
+                                                            .uid,
+                                                        product: product,
+                                                      ),
+                                                    ),
                                             icon: const Icon(
                                               Icons.arrow_upward,
                                             ),
@@ -148,16 +155,16 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                             iconSize: deviceWidth * 0.045,
                                             onPressed: () =>
                                                 context.read<CartBloc>().add(
-                                                  RemoveFromCartEvent(
-                                                    id: context
-                                                        .read<SignInCubit>()
-                                                        .state
-                                                        .cred!
-                                                        .user!
-                                                        .uid,
-                                                    product: product,
-                                                  ),
-                                                ),
+                                                      RemoveFromCartEvent(
+                                                        id: context
+                                                            .read<SignInCubit>()
+                                                            .state
+                                                            .cred!
+                                                            .user!
+                                                            .uid,
+                                                        product: product,
+                                                      ),
+                                                    ),
                                             icon: const Icon(
                                               Icons.arrow_downward,
                                             ),
@@ -172,18 +179,15 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           },
                         ),
                       ),
-
                       Divider(),
                     ],
                   ),
                 ),
-
                 Padding(
                   padding: EdgeInsets.symmetric(
                     horizontal: deviceWidth / 10,
                     vertical: deviceHeight * 0.03,
                   ),
-
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -198,7 +202,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     ],
                   ),
                 ),
-
                 OutlinedButton(
                   style: ButtonStyle(
                     backgroundColor: WidgetStateColor.resolveWith(
@@ -207,10 +210,15 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   ),
                   onPressed: () {
                     context.read<OrderBloc>().add(
-                      PurchaseProducts(
-                        id: context.read<SignInCubit>().state.cred!.user!.uid,
-                      ),
-                    );
+                          PurchaseProducts(
+                            id: context
+                                .read<SignInCubit>()
+                                .state
+                                .cred!
+                                .user!
+                                .uid,
+                          ),
+                        );
                     showDialog(
                       context: context,
                       builder: (context) {
@@ -239,7 +247,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                           icon: Icon(Icons.close_sharp),
                                         ),
                                       ),
-
                                       Stack(
                                         alignment: AlignmentDirectional.center,
                                         children: [
@@ -261,7 +268,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                         ),
                                         textAlign: TextAlign.center,
                                       ),
-
                                       SizedBox(height: 30),
                                       Text(
                                         'We’re on our way with your items',

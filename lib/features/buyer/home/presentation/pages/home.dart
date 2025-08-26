@@ -24,7 +24,7 @@ class _HomeState extends State<Home> {
   int _selectedIndex = 0;
   String selectedCategory = 'All';
   List<String> categories = ['All'];
-final TextEditingController searchController = TextEditingController();
+  final TextEditingController searchController = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -36,11 +36,12 @@ final TextEditingController searchController = TextEditingController();
       });
     });
   }
-@override
-void dispose() {
-  searchController.dispose();
-  super.dispose();
-}
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,8 +64,8 @@ void dispose() {
                     backgroundColor: Colors.grey[200],
                     backgroundImage:
                         (user.imgUrl != null && user.imgUrl!.isNotEmpty)
-                        ? NetworkImage(user.imgUrl!)
-                        : null,
+                            ? NetworkImage(user.imgUrl!)
+                            : null,
                     child: (user.imgUrl == null || user.imgUrl!.isEmpty)
                         ? const Icon(
                             Icons.person,
@@ -74,21 +75,17 @@ void dispose() {
                         : null,
                   ),
                   SizedBox(width: size.width * 0.024),
-                Expanded(
-  child: SearchBarWidget(
-    controller: searchController,
-    onChanged: (query) {
-      context.read<ProductCubit>().filterProducts(
-        query: query,
-        category: selectedCategory,
-      );
-    },
-  ),
-)
-                ],
-              ),
-            ),
-                  Expanded(child: custom_widgets.SearchBar()),
+                  Expanded(
+                    child: custom_widgets.SearchBarWidget(
+                      controller: searchController,
+                      onChanged: (query) {
+                        context.read<ProductCubit>().filterProducts(
+                              query: query,
+                              category: selectedCategory,
+                            );
+                      },
+                    ),
+                  )
                 ],
               ),
             ),
@@ -135,11 +132,10 @@ void dispose() {
                                   alignment: Alignment.center,
                                   child: Text(
                                     'Explore Now',
-                                    style: GoogleFonts.sail(
-                                      fontWeight: FontWeight.bold,
-                                      color: purpleColor,
-                                      fontSize: constraints.maxWidth * 0.015,
-                                    ),
+                                    // style: GoogleFonts.sarpanch(
+                                    //   color: purpleColor,
+                                    //   fontSize: constraints.maxWidth * 0.015,
+                                    // ),
                                   ),
                                 ),
                               ],
@@ -187,7 +183,7 @@ void dispose() {
                                 alignment: Alignment.center,
                                 child: Text(
                                   'Explore Now',
-                                  style: GoogleFonts.sail(
+                                  style: GoogleFonts.sarpanch(
                                     fontWeight: FontWeight.bold,
                                     color: purpleColor,
                                     fontSize: constraints.maxWidth * 0.035,
@@ -223,15 +219,15 @@ void dispose() {
                         child: CategoryButton(
                           label: label,
                           isSelected: selectedCategory == label,
-                         onPressed: () {
+                          onPressed: () {
                             setState(() {
                               selectedCategory = label;
                             });
                             context.read<ProductCubit>().filterProducts(
-                              query: searchController.text, // keep current search
-                              category: label,
-                            );
-
+                                  query: searchController
+                                      .text, // keep current search
+                                  category: label,
+                                );
                           },
                         ),
                       );
@@ -240,7 +236,6 @@ void dispose() {
                 );
               },
             ),
-
             SizedBox(height: size.height * 0.02),
             Expanded(
               child: BlocBuilder<ProductCubit, ProductState>(
@@ -263,9 +258,8 @@ void dispose() {
 
                     return LayoutBuilder(
                       builder: (context, constraints) {
-                        final crossAxisCount = constraints.maxWidth > 600
-                            ? 3
-                            : 2;
+                        final crossAxisCount =
+                            constraints.maxWidth > 600 ? 3 : 2;
 
                         return GridView.builder(
                           padding: EdgeInsets.symmetric(
@@ -273,16 +267,15 @@ void dispose() {
                           ),
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: crossAxisCount,
-                                crossAxisSpacing: 12,
-                                mainAxisSpacing: 12,
-                                childAspectRatio: 160 / 250,
-                              ),
+                            crossAxisCount: crossAxisCount,
+                            crossAxisSpacing: 12,
+                            mainAxisSpacing: 12,
+                            childAspectRatio: 160 / 250,
+                          ),
                           itemCount: products.length,
                           itemBuilder: (context, index) {
                             final product = products[index];
                             return ProductCard(product: product, onTap: () {});
-
                           },
                         );
                       },
@@ -304,14 +297,12 @@ void dispose() {
             _selectedIndex = index;
           });
           if (index == 3) {
-            // TODO: Implement navigation for Sellers
+            context.go(Routes.orderHistory, extra: user);
           } else if (index == 2) {
             context.go(Routes.sellerList, extra: user);
           } else if (index == 1) {
             context.go(Routes.profile, extra: user);
-          } else if (index == 0) {
-            // TODO: Implement navigation for Home
-          }
+          } else if (index == 0) {}
         },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),

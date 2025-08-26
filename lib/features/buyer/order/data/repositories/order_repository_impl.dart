@@ -3,22 +3,18 @@ import 'package:yegna_gebeya/features/buyer/order/domain/models/order.dart';
 
 import '../../domain/repositories/order_repository.dart';
 
-
-
 class OrderRepositoryImpl extends OrderRepository {
   final FirebaseFirestore _firestore;
 
   OrderRepositoryImpl({required FirebaseFirestore firestore})
-    : _firestore = firestore;
-
+      : _firestore = firestore;
 
   @override
   Future<List<Order>> getOrders(String id) async {
-    final querySnapshot =
-        await _firestore
-            .collection('orders')
-            .where('buyerId', isEqualTo: id)
-            .get();
+    final querySnapshot = await _firestore
+        .collection('orders')
+        .where('buyerId', isEqualTo: id)
+        .get();
 
     return querySnapshot.docs.map((doc) => Order.fromFirestore(doc)).toList();
   }
@@ -33,12 +29,11 @@ class OrderRepositoryImpl extends OrderRepository {
     try {
       final batch = _firestore.batch();
 
-      final querySnapshot =
-          await _firestore
-              .collection('buyers')
-              .doc(id)
-              .collection('cart')
-              .get();
+      final querySnapshot = await _firestore
+          .collection('buyers')
+          .doc(id)
+          .collection('cart')
+          .get();
 
       final orderRef = _firestore.collection('orders').doc();
       final order = Order.fromProducts(id, querySnapshot, orderRef.id);
@@ -53,5 +48,4 @@ class OrderRepositoryImpl extends OrderRepository {
       throw (Exception('Failed to purchase product ${e.message}'));
     }
   }
-  
 }

@@ -1,24 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:yegna_gebeya/core/router/routes.dart';
 import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_in/sign_in_cubit.dart';
 import 'package:yegna_gebeya/features/buyer/order/presentation/bloc/order_bloc.dart';
+import 'package:yegna_gebeya/shared/domain/models/user.dart';
 
 import '../widgets/single_order_widget.dart';
 
 class OrderHistoryPage extends StatefulWidget {
-  const OrderHistoryPage({super.key});
+  final User user;
+  const OrderHistoryPage({super.key, required this.user});
 
   @override
   State<OrderHistoryPage> createState() => _OrderHistoryPageState();
 }
 
 class _OrderHistoryPageState extends State<OrderHistoryPage> {
+  int _selectedIndex = 3;
+
   @override
   void initState() {
     super.initState();
     context.read<OrderBloc>().add(
-      GetOrderHistory(id: context.read<SignInCubit>().state.cred!.user!.uid),
-    );
+          GetOrderHistory(
+              id: context.read<SignInCubit>().state.cred!.user!.uid),
+        );
   }
 
   @override
@@ -26,81 +33,107 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
     return DefaultTabController(
       length: 4,
       child: Scaffold(
-        appBar: AppBar(
-          bottom: TabBar(
-            overlayColor: WidgetStateProperty.all(Colors.transparent),
-            tabs: [
-              Tab(
-                child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: Color(0xFF8D00DE), width: 1),
-                  ),
-                  child: Align(alignment: Alignment.center, child: Text('all')),
-                ),
-              ),
-              Tab(
-                child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: Color(0xFF8D00DE), width: 1),
-                  ),
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Text('pending'),
+          appBar: AppBar(
+            bottom: TabBar(
+              overlayColor: WidgetStateProperty.all(Colors.transparent),
+              tabs: [
+                Tab(
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Color(0xFF8D00DE), width: 1),
+                    ),
+                    child:
+                        Align(alignment: Alignment.center, child: Text('all')),
                   ),
                 ),
-              ),
-              Tab(
-                child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: Color(0xFF8D00DE), width: 1),
-                  ),
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Text('delivered'),
-                  ),
-                ),
-              ),
-              Tab(
-                child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: Color(0xFF8D00DE), width: 1),
-                  ),
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Text('canceled'),
+                Tab(
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Color(0xFF8D00DE), width: 1),
+                    ),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text('pending'),
+                    ),
                   ),
                 ),
+                Tab(
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Color(0xFF8D00DE), width: 1),
+                    ),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text('delivered'),
+                    ),
+                  ),
+                ),
+                Tab(
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Color(0xFF8D00DE), width: 1),
+                    ),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text('canceled'),
+                    ),
+                  ),
+                ),
+              ],
+              indicator: BoxDecoration(
+                border: Border.all(width: 2, color: Color(0xFF8D00DE)),
+                color: Color(0xFF8D00DE),
+                borderRadius: BorderRadius.circular(10),
               ),
-            ],
-            indicator: BoxDecoration(
-              border: Border.all(width: 2, color: Color(0xFF8D00DE)),
-              color: Color(0xFF8D00DE),
-              borderRadius: BorderRadius.circular(10),
+              dividerHeight: 0,
+              labelColor: Colors.white,
+              unselectedLabelColor: Color(0xFF8D00DE),
+              labelPadding: EdgeInsets.zero,
+              indicatorSize: TabBarIndicatorSize.label,
             ),
-            dividerHeight: 0,
-            labelColor: Colors.white,
-            unselectedLabelColor: Color(0xFF8D00DE),
-            labelPadding: EdgeInsets.zero,
-            indicatorSize: TabBarIndicatorSize.label,
           ),
-        ),
-        body: TabBarView(
-          children: [
-            _buildTabContent(context, 'all'),
-            _buildTabContent(context, false),
-            _buildTabContent(context, true),
-            _buildTabContent(context, null),
-          ],
-        ),
-      ),
+          body: TabBarView(
+            children: [
+              _buildTabContent(context, 'all'),
+              _buildTabContent(context, false),
+              _buildTabContent(context, true),
+              _buildTabContent(context, null),
+            ],
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            currentIndex: _selectedIndex,
+            onTap: (index) {
+              setState(() {
+                _selectedIndex = index;
+              });
+              if (index == 3) {
+              } else if (index == 2) {
+                context.go(Routes.sellerList, extra: widget.user);
+              } else if (index == 1) {
+                context.go(Routes.profile, extra: widget.user);
+              } else if (index == 0) {
+                context.go(Routes.buyerHome, extra: widget.user);
+              }
+            },
+            items: const [
+              BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.person), label: 'Profile'),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.store), label: 'Sellers'),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.list_alt), label: 'Orders'),
+            ],
+          )),
     );
   }
 
@@ -133,10 +166,15 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                 ElevatedButton(
                   onPressed: () {
                     context.read<OrderBloc>().add(
-                      GetOrderHistory(
-                        id: context.read<SignInCubit>().state.cred!.user!.uid,
-                      ),
-                    );
+                          GetOrderHistory(
+                            id: context
+                                .read<SignInCubit>()
+                                .state
+                                .cred!
+                                .user!
+                                .uid,
+                          ),
+                        );
                   },
                   child: const Text('Retry'),
                 ),

@@ -41,30 +41,6 @@ class _SellerListPageState extends State<SellerListPage> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _selectedIndex,
-        onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-          if (index == 3) {
-            // TODO: Implement navigation for Sellers
-          } else if (index == 2) {
-            context.go(Routes.sellerList);
-          } else if (index == 1) {
-            // context.go(Routes.profile, extra: user);
-          } else if (index == 0) {
-            context.go(Routes.buyerHome, extra: widget.user);
-          }
-        },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-          BottomNavigationBarItem(icon: Icon(Icons.store), label: 'Sellers'),
-          BottomNavigationBarItem(icon: Icon(Icons.list_alt), label: 'Orders'),
-        ],
-      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -205,6 +181,29 @@ class _SellerListPageState extends State<SellerListPage> {
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: _selectedIndex,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+          if (index == 3) {
+            context.go(Routes.orderHistory);
+          } else if (index == 2) {
+          } else if (index == 1) {
+            context.go(Routes.profile, extra: widget.user);
+          } else if (index == 0) {
+            context.go(Routes.buyerHome, extra: widget.user);
+          }
+        },
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+          BottomNavigationBarItem(icon: Icon(Icons.store), label: 'Sellers'),
+          BottomNavigationBarItem(icon: Icon(Icons.list_alt), label: 'Orders'),
+        ],
       ),
     );
   }

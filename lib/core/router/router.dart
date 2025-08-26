@@ -5,7 +5,6 @@ import 'package:yegna_gebeya/features/auth/presentation/pages/sign_up_page.dart'
 import 'package:yegna_gebeya/features/buyer/home/presentation/pages/home.dart';
 import 'package:yegna_gebeya/features/buyer/cart/presentation/pages/checkout_page.dart';
 import 'package:yegna_gebeya/features/buyer/order/presentation/pages/order_history_page.dart';
-import 'package:yegna_gebeya/features/buyer/home/presentation/pages/home.dart';
 import 'package:yegna_gebeya/features/buyer/seller_profile/presentation/pages/seller_list_page.dart';
 import 'package:yegna_gebeya/features/buyer/seller_profile/presentation/pages/seller_profile_page.dart';
 import 'package:yegna_gebeya/features/landing/presentation/pages/landing_page.dart';
@@ -16,7 +15,6 @@ import 'package:yegna_gebeya/shared/domain/models/user.dart';
 import 'package:yegna_gebeya/shared/profile/presentation/pages/profile_page.dart';
 
 final goRouter = GoRouter(
-  initialLocation: Routes.landigPage,
   routes: [
     //common
     GoRoute(
@@ -25,10 +23,12 @@ final goRouter = GoRouter(
     ),
     GoRoute(path: Routes.signUp, builder: (context, state) => SignUpPage()),
     GoRoute(path: Routes.signIn, builder: (context, state) => SignInPage()),
-    GoRoute(path: Routes.checkOut, builder: (context, state) => CheckoutPage()),
     GoRoute(
       path: Routes.orderHistory,
-      builder: (context, state) => OrderHistoryPage(),
+      builder: (context, state) => OrderHistoryPage(
+        user: state.extra as User,
+      ),
+    ),
     GoRoute(
       path: Routes.profile,
       builder: ((context, state) =>
@@ -53,6 +53,10 @@ final goRouter = GoRouter(
     ),
 
     //buyer
+    GoRoute(
+        path: Routes.checkOut,
+        builder: (context, state) =>
+            CheckoutPage(params: state.extra as Map<String, dynamic>)),
     GoRoute(
       path: Routes.buyerHome,
       builder: (context, state) {

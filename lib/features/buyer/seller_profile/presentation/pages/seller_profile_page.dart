@@ -25,7 +25,6 @@ class _SellerProfilePageState extends State<SellerProfilePage> {
   ProductCategory? _selectedCategory;
   late String sellerId;
   late User user;
-
   @override
   void initState() {
     sellerId = widget.params["sellerId"];
@@ -189,7 +188,7 @@ class _SellerProfilePageState extends State<SellerProfilePage> {
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.grey.withOpacity(0.1),
+                              color: Colors.grey,
                               spreadRadius: 1,
                               blurRadius: 3,
                               offset: const Offset(0, 1),
@@ -341,8 +340,14 @@ class _SellerProfilePageState extends State<SellerProfilePage> {
                           alignment: Alignment.center,
                           clipBehavior: Clip.none,
                           children: [
-                            const Icon(Icons.shopping_cart_checkout_outlined,
-                                color: Colors.white, size: 32),
+                            IconButton(
+                              icon: Icon(Icons.shopping_cart_checkout_outlined,
+                                  color: Colors.white, size: 32),
+                              onPressed: () {
+                                context.go(Routes.checkOut,
+                                    extra: widget.params);
+                              },
+                            ),
                             Positioned(
                               top: -4,
                               right: -4,

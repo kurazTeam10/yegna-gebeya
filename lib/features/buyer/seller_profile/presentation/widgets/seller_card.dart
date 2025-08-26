@@ -17,7 +17,7 @@ class SellerCard extends StatelessWidget {
       height: 99,
       margin: EdgeInsets.only(bottom: screenSize.height * 0.015),
       decoration: BoxDecoration(
-        color: const Color(0x128D00DE),
+        color: Theme.of(context).colorScheme.secondaryFixedDim,
         borderRadius: BorderRadius.circular(20.0),
         boxShadow: [
           BoxShadow(

@@ -4,7 +4,6 @@ import 'package:meta/meta.dart';
 import 'package:yegna_gebeya/features/buyer/order/domain/models/order.dart';
 import 'package:yegna_gebeya/features/buyer/order/domain/repositories/order_repository.dart';
 
-
 part 'order_event.dart';
 part 'order_state.dart';
 

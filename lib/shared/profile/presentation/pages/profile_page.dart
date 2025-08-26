@@ -68,17 +68,17 @@ class _ProfilePageState extends State<ProfilePage> {
                       backgroundImage: _profileImageFile != null
                           ? FileImage(_profileImageFile!) as ImageProvider
                           : state.user.imgUrl!.isNotEmpty
-                          ? NetworkImage(state.user.imgUrl!)
-                          : null,
+                              ? NetworkImage(state.user.imgUrl!)
+                              : null,
                       child: _profileImageFile != null
                           ? null
                           : state.user.imgUrl!.isNotEmpty
-                          ? null
-                          : const Icon(
-                              Icons.person,
-                              size: 60,
-                              color: Colors.black,
-                            ),
+                              ? null
+                              : const Icon(
+                                  Icons.person,
+                                  size: 60,
+                                  color: Colors.black,
+                                ),
                     ),
                     Positioned(
                       bottom: 8,
@@ -177,41 +177,41 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             floatingActionButton:
                 BlocBuilder<ProfileInfoUpdateCubit, ProfileInfoUpdateState>(
-                  builder: (context, state) {
-                    if (state is ProfileInfoUpdateLoading) {
-                      return const CircularProgressIndicator();
-                    } else if (state is ProfileInfoUpdateFailure) {
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        ScaffoldMessenger.of(
-                          context,
-                        ).showSnackBar(const SnackBar(content: Text("failed")));
-                      });
-                    }
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 70, right: 8),
-                      child: FloatingActionButton.extended(
-                        onPressed: () {
-                          final cubit = context.read<ProfileInfoUpdateCubit>();
-                          final oldUser = cubit.currentUser;
-                          final newUser = oldUser.copyWith(
-                            fullName: editedName,
-                            phoneNo: editedPhone,
-                          );
-                          cubit.updateProfile(
-                            image: _profileImageFile,
-                            oldUser: oldUser,
-                            newUser: newUser,
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Profile saved!')),
-                          );
-                        },
-                        icon: const Icon(Icons.save),
-                        label: const Text('Save'),
-                      ),
-                    );
-                  },
-                ),
+              builder: (context, state) {
+                if (state is ProfileInfoUpdateLoading) {
+                  return const CircularProgressIndicator();
+                } else if (state is ProfileInfoUpdateFailure) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(const SnackBar(content: Text("failed")));
+                  });
+                }
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 70, right: 8),
+                  child: FloatingActionButton.extended(
+                    onPressed: () {
+                      final cubit = context.read<ProfileInfoUpdateCubit>();
+                      final oldUser = cubit.currentUser;
+                      final newUser = oldUser.copyWith(
+                        fullName: editedName,
+                        phoneNo: editedPhone,
+                      );
+                      cubit.updateProfile(
+                        image: _profileImageFile,
+                        oldUser: oldUser,
+                        newUser: newUser,
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Profile saved!')),
+                      );
+                    },
+                    icon: const Icon(Icons.save),
+                    label: const Text('Save'),
+                  ),
+                );
+              },
+            ),
             floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
             bottomNavigationBar: state.user.role == UserRole.buyer
                 ? BottomNavigationBar(
@@ -222,9 +222,9 @@ class _ProfilePageState extends State<ProfilePage> {
                         _selectedIndex = index;
                       });
                       if (index == 3) {
-                        // TODO: Implement navigation for Sellers
-                      } else if (index == 2) {
                         // TODO: Implement navigation for Orders
+                      } else if (index == 2) {
+                        context.go(Routes.sellerList, extra: state.user);
                       } else if (index == 1) {
                         context.go(Routes.profile, extra: state.user);
                       } else if (index == 0) {
@@ -233,21 +233,13 @@ class _ProfilePageState extends State<ProfilePage> {
                     },
                     items: const [
                       BottomNavigationBarItem(
-                        icon: Icon(Icons.home),
-                        label: 'Home',
-                      ),
+                          icon: Icon(Icons.home), label: 'Home'),
                       BottomNavigationBarItem(
-                        icon: Icon(Icons.person),
-                        label: 'Profile',
-                      ),
+                          icon: Icon(Icons.person), label: 'Profile'),
                       BottomNavigationBarItem(
-                        icon: Icon(Icons.store),
-                        label: 'Sellers',
-                      ),
+                          icon: Icon(Icons.store), label: 'Sellers'),
                       BottomNavigationBarItem(
-                        icon: Icon(Icons.list_alt),
-                        label: 'Orders',
-                      ),
+                          icon: Icon(Icons.list_alt), label: 'Orders'),
                     ],
                   )
                 : BottomNavigationBar(

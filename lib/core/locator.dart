@@ -8,14 +8,17 @@ import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_in/sign_in_c
 import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_up/sign_up_cubit.dart';
 import 'package:yegna_gebeya/features/buyer/cart/data/repositories/cart_repository_impl.dart';
 import 'package:yegna_gebeya/features/buyer/cart/domain/repositories/cart_repository.dart';
-import 'package:yegna_gebeya/features/buyer/data/repositories/buyer_repository_impl.dart';
-import 'package:yegna_gebeya/features/buyer/domain/repositories/buyer_repository.dart';
 import 'package:yegna_gebeya/features/buyer/cart/presentation/bloc/cart_bloc.dart';
-import 'package:yegna_gebeya/features/buyer/order/data/repositories/order_repository_impl.dart';
-import 'package:yegna_gebeya/features/buyer/order/domain/repositories/order_repository.dart';
-import 'package:yegna_gebeya/features/buyer/order/presentation/bloc/order_bloc.dart';
-import 'package:yegna_gebeya/features/buyer/seller_profile/data/repositories/buyer_repository_impl.dart';
+import 'package:yegna_gebeya/features/buyer/order/data/repositories/order_repository_impl.dart'
+    as buyer_impl;
 import 'package:yegna_gebeya/features/buyer/seller_profile/domain/repositories/buyer_repository.dart';
+import 'package:yegna_gebeya/features/buyer/order/domain/repositories/order_repository.dart'
+    as buyer;
+import 'package:yegna_gebeya/features/buyer/order/presentation/bloc/order_bloc.dart';
+import 'package:yegna_gebeya/features/buyer/seller_profile/data/repositories/buyer_repository_impl.dart'
+    as seller_profile;
+import 'package:yegna_gebeya/features/buyer/seller_profile/domain/repositories/buyer_repository.dart'
+    as seller_profile;
 import 'package:yegna_gebeya/features/buyer/seller_profile/presentation/bloc/sellerList/seller_list_bloc.dart';
 import 'package:yegna_gebeya/features/buyer/seller_profile/presentation/bloc/sellerProfile/seller_profile_bloc.dart';
 import 'package:yegna_gebeya/features/buyer/home/presentation/cubit/product_cubit.dart';
@@ -45,9 +48,6 @@ void setupLocator() {
   getIt.registerLazySingleton<ProductRepository>(
     () => ProductRepositoryImpl(firestore: getIt<FirebaseFirestore>()),
   );
-  // getIt.registerLazySingleton<ProductRepository>(
-  //   () => ProductRepositoryImpl(firestore: getIt<FirebaseFirestore>()),
-  // );
 
   getIt.registerLazySingleton<UserRepository>(
     () => UserRepositoryImpl(
@@ -74,15 +74,20 @@ void setupLocator() {
     () => SignUpCubit(authRepo: getIt<AuthRepository>()),
   );
 
-  getIt.registerLazySingleton<FirebaseFirestore>(() => FirebaseFirestore.instance);
+  getIt.registerLazySingleton<BuyerRepository>(
+      () => seller_profile.BuyerRepositoryImpl());
 
-  getIt.registerLazySingleton<BuyerRepository>(() => BuyerRepositoryImpl(firestore: getIt<FirebaseFirestore>()));
-  
-  getIt.registerLazySingleton<CartRepository>(() => CartRepositoryImpl(firestore: getIt<FirebaseFirestore>()),);
-  getIt.registerFactory<CartBloc>(() => CartBloc(repository: getIt<CartRepository>()));
+  getIt.registerLazySingleton<CartRepository>(
+    () => CartRepositoryImpl(firestore: getIt<FirebaseFirestore>()),
+  );
+  getIt.registerFactory<CartBloc>(
+      () => CartBloc(repository: getIt<CartRepository>()));
 
-  getIt.registerLazySingleton<OrderRepository>(() => OrderRepositoryImpl(firestore: getIt<FirebaseFirestore>()));
-  getIt.registerFactory<OrderBloc>(()=>OrderBloc(getIt<OrderRepository>()));
+  getIt.registerLazySingleton<buyer.OrderRepository>(() =>
+      buyer_impl.OrderRepositoryImpl(firestore: getIt<FirebaseFirestore>()));
+
+  getIt.registerFactory<OrderBloc>(
+      () => OrderBloc(getIt<buyer.OrderRepository>()));
 
   getIt.registerFactory<SignInCubit>(
     () => SignInCubit(
@@ -94,16 +99,14 @@ void setupLocator() {
     () => ProductCubit(productRepository: getIt<ProductRepository>()),
   );
 
-  getIt.registerLazySingleton<BuyerRepository>(
-    () => BuyerRepositoryImpl(),
-  );
-
   getIt.registerFactory<SellerListBloc>(
-    () => SellerListBloc(buyerRepository: getIt<BuyerRepository>()),
+    () => SellerListBloc(
+        buyerRepository: getIt<seller_profile.BuyerRepository>()),
   );
 
   getIt.registerFactory<SellerProfileBloc>(
-    () => SellerProfileBloc(buyerRepository: getIt<BuyerRepository>()),
+    () => SellerProfileBloc(
+        buyerRepository: getIt<seller_profile.BuyerRepository>()),
   );
 
   getIt.registerFactory<SellerProductCubit>(
