@@ -8,19 +8,6 @@ class SellerCard extends StatelessWidget {
 
   const SellerCard({super.key, required this.seller});
 
-  int _parseRating(String rating) {
-    int starCount = '⭐'.allMatches(rating).length;
-    if (starCount > 0) return starCount.clamp(0, 5);
-
-    final numMatch = RegExp(r'(\d+(?:\.\d+)?)').firstMatch(rating);
-    if (numMatch != null) {
-      double ratingValue = double.tryParse(numMatch.group(1)!) ?? 0;
-      return ratingValue.round().clamp(0, 5);
-    }
-
-    return 0;
-  }
-
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
@@ -34,7 +21,7 @@ class SellerCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20.0),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey,
             spreadRadius: 1,
             blurRadius: 3,
             offset: const Offset(0, 1),

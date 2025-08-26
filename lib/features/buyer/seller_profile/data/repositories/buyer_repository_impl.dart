@@ -15,16 +15,14 @@ class BuyerRepositoryImpl extends BuyerRepository {
   Stream<List<Seller>> getSellers() {
     try {
       return _firestore.collection('sellers').snapshots().map((querySnapshot) {
-        for (var doc in querySnapshot.docs) {}
+        for (var _ in querySnapshot.docs) {}
         return querySnapshot.docs
             .map((doc) => Seller.fromFirestore(doc))
             .toList();
       });
     } on FirebaseException catch (e) {
-      print('Firebase error: ${e.message}');
       throw Exception('Failed to get sellers ${e.message}');
     } catch (e) {
-      print('General error: $e');
       throw Exception('Failed to get sellers: $e');
     }
   }
