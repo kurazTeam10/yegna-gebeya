@@ -4,8 +4,8 @@ import 'package:yegna_gebeya/core/router/router.dart';
 import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_in/sign_in_cubit.dart';
 import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_up/sign_up_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:yegna_gebeya/features/buyer/presentation/bloc/cart_bloc/cart_bloc.dart';
-import 'package:yegna_gebeya/features/buyer/presentation/bloc/order_bloc/order_bloc.dart';
+import 'package:yegna_gebeya/features/buyer/cart/presentation/bloc/cart_bloc.dart';
+import 'package:yegna_gebeya/features/buyer/order/presentation/bloc/order_bloc/order_bloc.dart';
 
 class App extends StatelessWidget {
   const App({super.key});

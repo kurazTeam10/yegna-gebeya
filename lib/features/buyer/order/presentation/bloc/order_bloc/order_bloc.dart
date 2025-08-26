@@ -1,14 +1,15 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
-import 'package:yegna_gebeya/features/buyer/domain/models/order.dart';
-import 'package:yegna_gebeya/features/buyer/domain/repositories/buyer_repository.dart';
+import 'package:yegna_gebeya/features/buyer/order/domain/models/order.dart';
+import 'package:yegna_gebeya/features/buyer/order/domain/repositories/order_repository.dart';
+
 
 part 'order_event.dart';
 part 'order_state.dart';
 
 class OrderBloc extends Bloc<OrderEvent, OrderState> {
-  final BuyerRepository repository;
+  final OrderRepository repository;
 
   OrderBloc(this.repository) : super(OrderInitial()) {
     on<GetOrderHistory>((event, emit) async {

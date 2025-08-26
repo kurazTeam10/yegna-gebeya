@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yegna_gebeya/core/locator.dart';
 import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_in/sign_in_cubit.dart';
-import 'package:yegna_gebeya/features/buyer/presentation/bloc/cart_bloc/cart_bloc.dart';
+import 'package:yegna_gebeya/features/buyer/cart/presentation/bloc/cart_bloc.dart';
 
 
 class CartIconWidget extends StatefulWidget {
