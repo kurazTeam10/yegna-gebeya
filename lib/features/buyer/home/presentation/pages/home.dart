@@ -4,10 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:yegna_gebeya/core/router/routes.dart';
-import 'package:yegna_gebeya/features/buyer/presentation/cubit/product_cubit.dart';
-import 'package:yegna_gebeya/features/buyer/presentation/widgets/category_button.dart';
-import 'package:yegna_gebeya/features/buyer/presentation/widgets/product_card.dart';
-import 'package:yegna_gebeya/features/buyer/presentation/widgets/search_bar.dart';
+import 'package:yegna_gebeya/features/buyer/home/presentation/cubit/product_cubit.dart';
+import 'package:yegna_gebeya/features/buyer/home/presentation/widgets/category_button.dart';
+import 'package:yegna_gebeya/features/buyer/home/presentation/widgets/product_card.dart';
+import 'package:yegna_gebeya/features/buyer/home/presentation/widgets/search_bar.dart';
 import 'package:yegna_gebeya/shared/domain/models/user.dart';
 
 class Home extends StatefulWidget {
