@@ -6,7 +6,7 @@ import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_in/sign_in_c
 import 'package:yegna_gebeya/shared/models/product.dart';
 import 'package:yegna_gebeya/features/buyer/cart/presentation/bloc/cart_bloc.dart';
 
-import '../../../order/presentation/bloc/order_bloc/order_bloc.dart';
+import '../../../order/presentation/bloc/order_bloc.dart';
 
 class CheckoutPage extends StatefulWidget {
   const CheckoutPage({super.key});

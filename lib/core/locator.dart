@@ -12,7 +12,7 @@ import 'package:yegna_gebeya/features/buyer/domain/repositories/buyer_repository
 import 'package:yegna_gebeya/features/buyer/cart/presentation/bloc/cart_bloc.dart';
 import 'package:yegna_gebeya/features/buyer/order/data/repositories/order_repository_impl.dart';
 import 'package:yegna_gebeya/features/buyer/order/domain/repositories/order_repository.dart';
-import 'package:yegna_gebeya/features/buyer/order/presentation/bloc/order_bloc/order_bloc.dart';
+import 'package:yegna_gebeya/features/buyer/order/presentation/bloc/order_bloc.dart';
 
 final GetIt getIt = GetIt.instance;
 
