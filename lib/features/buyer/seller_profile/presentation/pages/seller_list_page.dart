@@ -190,7 +190,7 @@ class _SellerListPageState extends State<SellerListPage> {
             _selectedIndex = index;
           });
           if (index == 3) {
-            context.go(Routes.orderHistory);
+            context.go(Routes.orderHistory, extra: widget.user);
           } else if (index == 2) {
           } else if (index == 1) {
             context.go(Routes.profile, extra: widget.user);
