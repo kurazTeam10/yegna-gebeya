@@ -14,6 +14,7 @@ class SearchBarWidget extends StatelessWidget {
     this.iconColor = const Color(0xFF8D00DE),
     this.onChanged,
     this.controller, // <-- assign here
+
   });
 
   @override
@@ -37,6 +38,7 @@ class SearchBarWidget extends StatelessWidget {
           hintText: 'Search products',
           border: InputBorder.none,
           icon: Icon(Icons.search, color: iconColor),
+
         ),
       ),
     );

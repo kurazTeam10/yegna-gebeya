@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 enum ProductCategory { clothes, furniture, jewellery, technology, others }
@@ -50,7 +49,7 @@ class Product {
         (e) => e.name == map['category'],
         orElse: () => ProductCategory.others,
       ),
-      price: map['price'],
+      price: (map['price'] as num?)?.toDouble() ?? 0.0,
     );
   }
   Product copyWith({

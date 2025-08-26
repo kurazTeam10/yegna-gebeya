@@ -7,7 +7,8 @@ import 'package:yegna_gebeya/core/router/routes.dart';
 import 'package:yegna_gebeya/features/buyer/home/presentation/cubit/product_cubit.dart';
 import 'package:yegna_gebeya/features/buyer/home/presentation/widgets/category_button.dart';
 import 'package:yegna_gebeya/features/buyer/home/presentation/widgets/product_card.dart';
-import 'package:yegna_gebeya/features/buyer/home/presentation/widgets/search_bar.dart';
+import 'package:yegna_gebeya/features/buyer/home/presentation/widgets/search_bar.dart'
+    as custom_widgets;
 import 'package:yegna_gebeya/shared/domain/models/user.dart';
 
 class Home extends StatefulWidget {
@@ -40,6 +41,7 @@ void dispose() {
   searchController.dispose();
   super.dispose();
 }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -86,7 +88,10 @@ void dispose() {
                 ],
               ),
             ),
-
+                  Expanded(child: custom_widgets.SearchBar()),
+                ],
+              ),
+            ),
             Container(
               width: double.infinity,
               height: size.height * 0.2,
@@ -199,7 +204,6 @@ void dispose() {
                 },
               ),
             ),
-
             BlocConsumer<ProductCubit, ProductState>(
               listener: (context, state) {
                 if (state is CategoriesLoaded) {
@@ -227,6 +231,7 @@ void dispose() {
                               query: searchController.text, // keep current search
                               category: label,
                             );
+
                           },
                         ),
                       );
@@ -237,7 +242,6 @@ void dispose() {
             ),
 
             SizedBox(height: size.height * 0.02),
-
             Expanded(
               child: BlocBuilder<ProductCubit, ProductState>(
                 builder: (context, state) {
@@ -278,6 +282,7 @@ void dispose() {
                           itemBuilder: (context, index) {
                             final product = products[index];
                             return ProductCard(product: product, onTap: () {});
+
                           },
                         );
                       },
@@ -301,7 +306,7 @@ void dispose() {
           if (index == 3) {
             // TODO: Implement navigation for Sellers
           } else if (index == 2) {
-            // TODO: Implement navigation for Orders
+            context.go(Routes.sellerList, extra: user);
           } else if (index == 1) {
             context.go(Routes.profile, extra: user);
           } else if (index == 0) {

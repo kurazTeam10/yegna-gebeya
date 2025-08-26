@@ -6,8 +6,19 @@ import 'package:yegna_gebeya/features/auth/data/repositories/auth_repository.dar
 import 'package:yegna_gebeya/features/auth/domain/repositories/auth_repository.dart';
 import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_in/sign_in_cubit.dart';
 import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_up/sign_up_cubit.dart';
-import 'package:yegna_gebeya/features/buyer/home/presentation/cubit/product_cubit.dart'
-    as buyer;
+import 'package:yegna_gebeya/features/buyer/cart/data/repositories/cart_repository_impl.dart';
+import 'package:yegna_gebeya/features/buyer/cart/domain/repositories/cart_repository.dart';
+import 'package:yegna_gebeya/features/buyer/data/repositories/buyer_repository_impl.dart';
+import 'package:yegna_gebeya/features/buyer/domain/repositories/buyer_repository.dart';
+import 'package:yegna_gebeya/features/buyer/cart/presentation/bloc/cart_bloc.dart';
+import 'package:yegna_gebeya/features/buyer/order/data/repositories/order_repository_impl.dart';
+import 'package:yegna_gebeya/features/buyer/order/domain/repositories/order_repository.dart';
+import 'package:yegna_gebeya/features/buyer/order/presentation/bloc/order_bloc.dart';
+import 'package:yegna_gebeya/features/buyer/seller_profile/data/repositories/buyer_repository_impl.dart';
+import 'package:yegna_gebeya/features/buyer/seller_profile/domain/repositories/buyer_repository.dart';
+import 'package:yegna_gebeya/features/buyer/seller_profile/presentation/bloc/sellerList/seller_list_bloc.dart';
+import 'package:yegna_gebeya/features/buyer/seller_profile/presentation/bloc/sellerProfile/seller_profile_bloc.dart';
+import 'package:yegna_gebeya/features/buyer/home/presentation/cubit/product_cubit.dart';
 import 'package:yegna_gebeya/shared/data/repositories/product_repository_impl.dart'; // Add this import
 import 'package:yegna_gebeya/shared/domain/repositories/product_repository.dart';
 import 'package:yegna_gebeya/features/seller/product/presentation/cubits/product_cubit/product_cubit.dart';
@@ -63,20 +74,41 @@ void setupLocator() {
     () => SignUpCubit(authRepo: getIt<AuthRepository>()),
   );
 
+  getIt.registerLazySingleton<FirebaseFirestore>(() => FirebaseFirestore.instance);
+
+  getIt.registerLazySingleton<BuyerRepository>(() => BuyerRepositoryImpl(firestore: getIt<FirebaseFirestore>()));
+  
+  getIt.registerLazySingleton<CartRepository>(() => CartRepositoryImpl(firestore: getIt<FirebaseFirestore>()),);
+  getIt.registerFactory<CartBloc>(() => CartBloc(repository: getIt<CartRepository>()));
+
+  getIt.registerLazySingleton<OrderRepository>(() => OrderRepositoryImpl(firestore: getIt<FirebaseFirestore>()));
+  getIt.registerFactory<OrderBloc>(()=>OrderBloc(getIt<OrderRepository>()));
+
   getIt.registerFactory<SignInCubit>(
     () => SignInCubit(
       authRepo: getIt<AuthRepository>(),
       userRepo: getIt<UserRepository>(),
     ),
   );
+  getIt.registerFactory<ProductCubit>(
+    () => ProductCubit(productRepository: getIt<ProductRepository>()),
+  );
 
-  getIt.registerFactory<ProductUploadCubit>(
-    () => ProductUploadCubit(
+  getIt.registerLazySingleton<BuyerRepository>(
+    () => BuyerRepositoryImpl(),
+  );
+
+  getIt.registerFactory<SellerListBloc>(
+    () => SellerListBloc(buyerRepository: getIt<BuyerRepository>()),
+  );
+
+  getIt.registerFactory<SellerProfileBloc>(
+    () => SellerProfileBloc(buyerRepository: getIt<BuyerRepository>()),
+  );
+
+  getIt.registerFactory<SellerProductCubit>(
+      () => SellerProductCubit(repository: getIt<ProductRepository>()));
+  getIt.registerFactory<ProductUploadCubit>(() => ProductUploadCubit(
       repository: getIt<ProductRepository>(),
-      imageRepository: getIt<ImageRepository>(),
-    ),
-  );
-  getIt.registerFactory<buyer.ProductCubit>(
-    () => buyer.ProductCubit(productRepository: getIt<ProductRepository>()),
-  );
+      imageRepository: getIt<ImageRepository>()));
 }

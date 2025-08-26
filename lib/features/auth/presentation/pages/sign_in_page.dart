@@ -117,9 +117,9 @@ class _SignInPageState extends State<SignInPage> {
                                   onPressed: () {
                                     if (_formKey.currentState!.validate()) {
                                       context.read<SignInCubit>().signIn(
-                                        _emailController.text.trim(),
-                                        _passwordController.text.trim(),
-                                      );
+                                            _emailController.text.trim(),
+                                            _passwordController.text.trim(),
+                                          );
                                     }
                                   },
                                   child: Row(
