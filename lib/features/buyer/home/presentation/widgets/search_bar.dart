@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class SearchBarWidget extends StatelessWidget {
+class SearchBar extends StatelessWidget {
   final double height;
   final Color borderColor;
   final Color iconColor;
 
-  const SearchBarWidget({
+  const SearchBar({
     super.key,
     this.height = 50,
     this.borderColor = Colors.grey,

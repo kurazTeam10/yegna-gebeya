@@ -3,9 +3,10 @@ import 'package:yegna_gebeya/core/locator.dart';
 import 'package:yegna_gebeya/core/router/router.dart';
 import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_in/sign_in_cubit.dart';
 import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_up/sign_up_cubit.dart';
+import 'package:yegna_gebeya/features/buyer/seller_profile/presentation/bloc/sellerList/seller_list_bloc.dart';
+import 'package:yegna_gebeya/features/buyer/seller_profile/presentation/bloc/sellerProfile/seller_profile_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:yegna_gebeya/features/buyer/presentation/cubit/product_cubit.dart'
-    as buyer;
+import 'package:yegna_gebeya/features/buyer/home/presentation/cubit/product_cubit.dart';
 import 'package:yegna_gebeya/features/seller/product/presentation/cubits/product_cubit/product_cubit.dart';
 import 'package:yegna_gebeya/features/seller/product/presentation/cubits/product_upload/product_upload_cubit.dart';
 
@@ -18,11 +19,14 @@ class App extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => getIt<SignUpCubit>()),
         BlocProvider(create: (context) => getIt<SignInCubit>()),
-        BlocProvider(create: (context) => getIt<buyer.ProductCubit>()),
-        BlocProvider(create: (context) => getIt<ProductUploadCubit>()),
+        BlocProvider(create: (context) => getIt<SellerListBloc>()),
+        BlocProvider(create: (context) => getIt<SellerProfileBloc>()),
+        BlocProvider(create: (context) => getIt<ProductCubit>()),
         BlocProvider(create: (context) => getIt<SellerProductCubit>()),
+        BlocProvider(create: (context) => getIt<ProductUploadCubit>()),
       ],
       child: MaterialApp.router(
+        debugShowCheckedModeBanner: false,
         routerConfig: goRouter,
         theme: ThemeData(
           scaffoldBackgroundColor: const Color(0xFFFFFFFF),
@@ -32,13 +36,13 @@ class App extends StatelessWidget {
           ),
           useMaterial3: true,
           textTheme: ThemeData.light().textTheme.copyWith(
-            displaySmall: const TextStyle(
-              color: Color(0xFF000000),
-              fontFamily: 'Roboto',
-              fontWeight: FontWeight.bold,
-              fontSize: 25,
-            ),
-          ),
+                displaySmall: const TextStyle(
+                  color: Color(0xFF000000),
+                  fontFamily: 'Roboto',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 25,
+                ),
+              ),
         ),
       ),
     );

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:yegna_gebeya/shared/domain/models/product.dart';
 
-class ProductCard extends StatelessWidget {
+class HomeProductCard extends StatelessWidget {
   final Product product;
   final VoidCallback? onTap;
 
-  const ProductCard({super.key, required this.product, this.onTap});
+  const HomeProductCard({super.key, required this.product, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,6 @@ class ProductCard extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
-
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

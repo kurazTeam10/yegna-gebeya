@@ -4,10 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:yegna_gebeya/core/router/routes.dart';
-import 'package:yegna_gebeya/features/buyer/presentation/cubit/product_cubit.dart';
-import 'package:yegna_gebeya/features/buyer/presentation/widgets/category_button.dart';
-import 'package:yegna_gebeya/features/buyer/presentation/widgets/product_card.dart';
-import 'package:yegna_gebeya/features/buyer/presentation/widgets/search_bar.dart';
+import 'package:yegna_gebeya/features/buyer/home/presentation/cubit/product_cubit.dart';
+import 'package:yegna_gebeya/features/buyer/home/presentation/widgets/category_button.dart';
+import 'package:yegna_gebeya/features/buyer/home/presentation/widgets/product_card.dart';
+import 'package:yegna_gebeya/features/buyer/home/presentation/widgets/search_bar.dart'
+    as custom_widgets;
 import 'package:yegna_gebeya/shared/domain/models/user.dart';
 
 class Home extends StatefulWidget {
@@ -57,8 +58,8 @@ class _HomeState extends State<Home> {
                     backgroundColor: Colors.grey[200],
                     backgroundImage:
                         (user.imgUrl != null && user.imgUrl!.isNotEmpty)
-                        ? NetworkImage(user.imgUrl!)
-                        : null,
+                            ? NetworkImage(user.imgUrl!)
+                            : null,
                     child: (user.imgUrl == null || user.imgUrl!.isEmpty)
                         ? const Icon(
                             Icons.person,
@@ -68,11 +69,10 @@ class _HomeState extends State<Home> {
                         : null,
                   ),
                   SizedBox(width: size.width * 0.024),
-                  const Expanded(child: SearchBarWidget()),
+                  Expanded(child: custom_widgets.SearchBar()),
                 ],
               ),
             ),
-
             Container(
               width: double.infinity,
               height: size.height * 0.2,
@@ -185,7 +185,6 @@ class _HomeState extends State<Home> {
                 },
               ),
             ),
-
             BlocConsumer<ProductCubit, ProductState>(
               listener: (context, state) {
                 if (state is CategoriesLoaded) {
@@ -224,9 +223,7 @@ class _HomeState extends State<Home> {
                 );
               },
             ),
-
             SizedBox(height: size.height * 0.02),
-
             Expanded(
               child: BlocBuilder<ProductCubit, ProductState>(
                 builder: (context, state) {
@@ -248,9 +245,8 @@ class _HomeState extends State<Home> {
 
                     return LayoutBuilder(
                       builder: (context, constraints) {
-                        final crossAxisCount = constraints.maxWidth > 600
-                            ? 3
-                            : 2;
+                        final crossAxisCount =
+                            constraints.maxWidth > 600 ? 3 : 2;
 
                         return GridView.builder(
                           padding: EdgeInsets.symmetric(
@@ -258,15 +254,17 @@ class _HomeState extends State<Home> {
                           ),
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: crossAxisCount,
-                                crossAxisSpacing: 12,
-                                mainAxisSpacing: 12,
-                                childAspectRatio: 160 / 250,
-                              ),
+                            crossAxisCount: crossAxisCount,
+                            crossAxisSpacing: 12,
+                            mainAxisSpacing: 12,
+                            childAspectRatio: 160 / 250,
+                          ),
                           itemCount: products.length,
                           itemBuilder: (context, index) {
                             final product = products[index];
-                            return ProductCard(product: product, onTap: () {});
+                            return HomeProductCard(
+                              product: product,
+                            );
                           },
                         );
                       },
@@ -290,7 +288,7 @@ class _HomeState extends State<Home> {
           if (index == 3) {
             // TODO: Implement navigation for Sellers
           } else if (index == 2) {
-            // TODO: Implement navigation for Orders
+            context.go(Routes.sellerList, extra: user);
           } else if (index == 1) {
             context.go(Routes.profile, extra: user);
           } else if (index == 0) {

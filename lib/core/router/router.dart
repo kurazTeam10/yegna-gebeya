@@ -2,19 +2,21 @@ import 'package:go_router/go_router.dart';
 import 'package:yegna_gebeya/core/router/routes.dart';
 import 'package:yegna_gebeya/features/auth/presentation/pages/sign_in_page.dart';
 import 'package:yegna_gebeya/features/auth/presentation/pages/sign_up_page.dart';
-import 'package:yegna_gebeya/features/buyer/presentation/pages/home.dart';
+import 'package:yegna_gebeya/features/buyer/home/presentation/pages/home.dart';
+import 'package:yegna_gebeya/features/buyer/seller_profile/presentation/pages/seller_list_page.dart';
+import 'package:yegna_gebeya/features/buyer/seller_profile/presentation/pages/seller_profile_page.dart';
 import 'package:yegna_gebeya/features/landing/presentation/pages/landing_page.dart';
-import 'package:yegna_gebeya/shared/domain/models/user.dart';
-import 'package:yegna_gebeya/shared/profile/presentation/pages/profile_page.dart';
 import 'package:yegna_gebeya/features/seller/order/presentation/pages/orders_page.dart';
 import 'package:yegna_gebeya/features/seller/product/presentation/pages/product_page.dart';
 import 'package:yegna_gebeya/features/seller/product/presentation/pages/product_upload_page.dart';
+import 'package:yegna_gebeya/shared/domain/models/user.dart';
+import 'package:yegna_gebeya/shared/profile/presentation/pages/profile_page.dart';
 
 final goRouter = GoRouter(
   routes: [
     //common
     GoRoute(
-      path: Routes.landigPage,
+      path: Routes.landingPage,
       builder: (context, state) => LandingPage(),
     ),
     GoRoute(path: Routes.signUp, builder: (context, state) => SignUpPage()),
@@ -47,6 +49,18 @@ final goRouter = GoRouter(
       path: Routes.buyerHome,
       builder: (context, state) {
         return Home(user: state.extra as User);
+      },
+    ),
+    GoRoute(
+      path: Routes.sellerList,
+      builder: (context, state) => SellerListPage(
+        user: state.extra as User,
+      ),
+    ),
+    GoRoute(
+      path: Routes.sellerProfile,
+      builder: (context, state) {
+        return SellerProfilePage(params: state.extra as Map<String, dynamic>);
       },
     ),
   ],

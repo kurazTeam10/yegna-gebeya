@@ -121,7 +121,6 @@ class _SignUpPageState extends State<SignUpPage> {
                           icon: Icon(Icons.key),
                           focusNode: _confirmPasswordFocusNode,
                         ),
-
                         DropdownButtonFormField<String>(
                           value: _sellectedRole,
                           decoration: InputDecoration(
