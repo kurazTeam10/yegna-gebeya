@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_in/sign_in_cubit.dart';
-import 'package:yegna_gebeya/features/buyer/presentation/bloc/order_bloc/order_bloc.dart';
-import 'package:yegna_gebeya/features/buyer/presentation/widgets/cart_icon_widget.dart';
+import 'package:yegna_gebeya/features/buyer/order/presentation/bloc/order_bloc.dart';
 
-import '../../domain/models/order.dart';
 import '../widgets/single_order_widget.dart';
 
 class OrderHistoryPage extends StatefulWidget {
