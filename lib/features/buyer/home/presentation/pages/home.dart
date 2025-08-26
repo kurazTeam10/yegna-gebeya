@@ -24,7 +24,7 @@ class _HomeState extends State<Home> {
   int _selectedIndex = 0;
   String selectedCategory = 'All';
   List<String> categories = ['All'];
-
+final TextEditingController searchController = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -36,6 +36,11 @@ class _HomeState extends State<Home> {
       });
     });
   }
+@override
+void dispose() {
+  searchController.dispose();
+  super.dispose();
+}
 
   @override
   Widget build(BuildContext context) {
@@ -58,8 +63,8 @@ class _HomeState extends State<Home> {
                     backgroundColor: Colors.grey[200],
                     backgroundImage:
                         (user.imgUrl != null && user.imgUrl!.isNotEmpty)
-                            ? NetworkImage(user.imgUrl!)
-                            : null,
+                        ? NetworkImage(user.imgUrl!)
+                        : null,
                     child: (user.imgUrl == null || user.imgUrl!.isEmpty)
                         ? const Icon(
                             Icons.person,
@@ -69,6 +74,20 @@ class _HomeState extends State<Home> {
                         : null,
                   ),
                   SizedBox(width: size.width * 0.024),
+                Expanded(
+  child: SearchBarWidget(
+    controller: searchController,
+    onChanged: (query) {
+      context.read<ProductCubit>().filterProducts(
+        query: query,
+        category: selectedCategory,
+      );
+    },
+  ),
+)
+                ],
+              ),
+            ),
                   Expanded(child: custom_widgets.SearchBar()),
                 ],
               ),
@@ -204,17 +223,15 @@ class _HomeState extends State<Home> {
                         child: CategoryButton(
                           label: label,
                           isSelected: selectedCategory == label,
-                          onPressed: () {
+                         onPressed: () {
                             setState(() {
                               selectedCategory = label;
                             });
-                            if (label == 'All') {
-                              context.read<ProductCubit>().fetchAllProducts();
-                            } else {
-                              context
-                                  .read<ProductCubit>()
-                                  .fetchProductsByCategory(label);
-                            }
+                            context.read<ProductCubit>().filterProducts(
+                              query: searchController.text, // keep current search
+                              category: label,
+                            );
+
                           },
                         ),
                       );
@@ -223,6 +240,7 @@ class _HomeState extends State<Home> {
                 );
               },
             ),
+
             SizedBox(height: size.height * 0.02),
             Expanded(
               child: BlocBuilder<ProductCubit, ProductState>(
@@ -245,8 +263,9 @@ class _HomeState extends State<Home> {
 
                     return LayoutBuilder(
                       builder: (context, constraints) {
-                        final crossAxisCount =
-                            constraints.maxWidth > 600 ? 3 : 2;
+                        final crossAxisCount = constraints.maxWidth > 600
+                            ? 3
+                            : 2;
 
                         return GridView.builder(
                           padding: EdgeInsets.symmetric(
@@ -254,17 +273,16 @@ class _HomeState extends State<Home> {
                           ),
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: crossAxisCount,
-                            crossAxisSpacing: 12,
-                            mainAxisSpacing: 12,
-                            childAspectRatio: 160 / 250,
-                          ),
+                                crossAxisCount: crossAxisCount,
+                                crossAxisSpacing: 12,
+                                mainAxisSpacing: 12,
+                                childAspectRatio: 160 / 250,
+                              ),
                           itemCount: products.length,
                           itemBuilder: (context, index) {
                             final product = products[index];
-                            return HomeProductCard(
-                              product: product,
-                            );
+                            return ProductCard(product: product, onTap: () {});
+
                           },
                         );
                       },

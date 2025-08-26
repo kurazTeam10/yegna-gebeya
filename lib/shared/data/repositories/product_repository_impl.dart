@@ -54,19 +54,12 @@ class ProductRepositoryImpl extends ProductRepository {
   }
 
   @override
-  Future<List<Product>> searchProducts(String query) async {
-    try {
-      // Your implementation for product search
-      final snapshot = await firestore
-          .collection('products')
-          .where('name', isGreaterThanOrEqualTo: query)
-          .where('name', isLessThan: '${query}z')
-          .get();
-      return snapshot.docs.map((doc) => Product.fromMap(doc.data())).toList();
-    } catch (e) {
-      throw Exception('Failed to search products: $e');
-    }
-  }
+ Future<List<Product>> searchProducts(String query) async {
+  final allProducts = await getAllProducts();
+  return allProducts
+      .where((p) => p.name.toLowerCase().contains(query.toLowerCase()))
+      .toList();
+}
 
   @override
   Future<Product> getProductById({required String id}) async {
