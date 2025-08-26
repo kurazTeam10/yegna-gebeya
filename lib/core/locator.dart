@@ -1,11 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+<<<<<<< HEAD
+=======
 import 'package:dio/dio.dart';
+>>>>>>> main
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:yegna_gebeya/features/auth/data/repositories/auth_repository.dart';
 import 'package:yegna_gebeya/features/auth/domain/repositories/auth_repository.dart';
 import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_in/sign_in_cubit.dart';
 import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_up/sign_up_cubit.dart';
+<<<<<<< HEAD
+import 'package:yegna_gebeya/features/buyer/cart/data/repositories/cart_repository_impl.dart';
+import 'package:yegna_gebeya/features/buyer/cart/domain/repositories/cart_repository.dart';
+import 'package:yegna_gebeya/features/buyer/data/repositories/buyer_repository_impl.dart';
+import 'package:yegna_gebeya/features/buyer/domain/repositories/buyer_repository.dart';
+import 'package:yegna_gebeya/features/buyer/cart/presentation/bloc/cart_bloc.dart';
+import 'package:yegna_gebeya/features/buyer/order/data/repositories/order_repository_impl.dart';
+import 'package:yegna_gebeya/features/buyer/order/domain/repositories/order_repository.dart';
+import 'package:yegna_gebeya/features/buyer/order/presentation/bloc/order_bloc.dart';
+=======
 import 'package:yegna_gebeya/features/buyer/seller_profile/data/repositories/buyer_repository_impl.dart';
 import 'package:yegna_gebeya/features/buyer/seller_profile/domain/repositories/buyer_repository.dart';
 import 'package:yegna_gebeya/features/buyer/seller_profile/presentation/bloc/sellerList/seller_list_bloc.dart';
@@ -21,6 +34,7 @@ import 'package:yegna_gebeya/shared/domain/repositories/image_repository.dart';
 import 'package:yegna_gebeya/shared/domain/repositories/user_repository.dart';
 import 'package:yegna_gebeya/shared/order/data/repositories/order_repository_impl.dart';
 import 'package:yegna_gebeya/shared/order/domain/repositories/order_repository.dart';
+>>>>>>> main
 
 final GetIt getIt = GetIt.instance;
 
@@ -66,6 +80,19 @@ void setupLocator() {
     () => SignUpCubit(authRepo: getIt<AuthRepository>()),
   );
 
+<<<<<<< HEAD
+  getIt.registerLazySingleton<FirebaseFirestore>(() => FirebaseFirestore.instance);
+
+  getIt.registerLazySingleton<BuyerRepository>(() => BuyerRepositoryImpl(firestore: getIt<FirebaseFirestore>()));
+  
+  getIt.registerLazySingleton<CartRepository>(() => CartRepositoryImpl(firestore: getIt<FirebaseFirestore>()),);
+  getIt.registerFactory<CartBloc>(() => CartBloc(repository: getIt<CartRepository>()));
+
+  getIt.registerLazySingleton<OrderRepository>(() => OrderRepositoryImpl(firestore: getIt<FirebaseFirestore>()));
+  getIt.registerFactory<OrderBloc>(()=>OrderBloc(getIt<OrderRepository>()));
+
+=======
+>>>>>>> main
   getIt.registerFactory<SignInCubit>(
     () => SignInCubit(
       authRepo: getIt<AuthRepository>(),

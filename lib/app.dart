@@ -6,9 +6,14 @@ import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_up/sign_up_c
 import 'package:yegna_gebeya/features/buyer/seller_profile/presentation/bloc/sellerList/seller_list_bloc.dart';
 import 'package:yegna_gebeya/features/buyer/seller_profile/presentation/bloc/sellerProfile/seller_profile_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+<<<<<<< HEAD
+import 'package:yegna_gebeya/features/buyer/cart/presentation/bloc/cart_bloc.dart';
+import 'package:yegna_gebeya/features/buyer/order/presentation/bloc/order_bloc.dart';
+=======
 import 'package:yegna_gebeya/features/buyer/home/presentation/cubit/product_cubit.dart';
 import 'package:yegna_gebeya/features/seller/product/presentation/cubits/product_cubit/product_cubit.dart';
 import 'package:yegna_gebeya/features/seller/product/presentation/cubits/product_upload/product_upload_cubit.dart';
+>>>>>>> main
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -19,11 +24,16 @@ class App extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => getIt<SignUpCubit>()),
         BlocProvider(create: (context) => getIt<SignInCubit>()),
+<<<<<<< HEAD
+        BlocProvider(create: (context) => getIt<CartBloc>(),),
+        BlocProvider(create: (context) => getIt<OrderBloc>()),
+=======
         BlocProvider(create: (context) => getIt<SellerListBloc>()),
         BlocProvider(create: (context) => getIt<SellerProfileBloc>()),
         BlocProvider(create: (context) => getIt<ProductCubit>()),
         BlocProvider(create: (context) => getIt<SellerProductCubit>()),
         BlocProvider(create: (context) => getIt<ProductUploadCubit>()),
+>>>>>>> main
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,

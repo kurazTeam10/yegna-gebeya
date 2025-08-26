@@ -3,6 +3,10 @@ class Routes {
   static const String landingPage = '/';
   static const String signUp = '/signUp';
   static const String signIn = '/signIn';
+<<<<<<< HEAD
+  static const String checkOut = '/checkout';
+  static const String orderHistory = '/orders';
+=======
   static const String profile = '/profile';
 
   //seller
@@ -14,4 +18,5 @@ class Routes {
   static const String buyerHome = '/home';
   static const String sellerProfile = '/sellerProfile';
   static const String sellerList = '/sellers';
+>>>>>>> main
 }

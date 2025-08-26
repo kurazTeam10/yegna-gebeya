@@ -2,9 +2,14 @@ import 'package:go_router/go_router.dart';
 import 'package:yegna_gebeya/core/router/routes.dart';
 import 'package:yegna_gebeya/features/auth/presentation/pages/sign_in_page.dart';
 import 'package:yegna_gebeya/features/auth/presentation/pages/sign_up_page.dart';
+<<<<<<< HEAD
+import 'package:yegna_gebeya/features/buyer/cart/presentation/pages/checkout_page.dart';
+import 'package:yegna_gebeya/features/buyer/order/presentation/pages/order_history_page.dart';
+=======
 import 'package:yegna_gebeya/features/buyer/home/presentation/pages/home.dart';
 import 'package:yegna_gebeya/features/buyer/seller_profile/presentation/pages/seller_list_page.dart';
 import 'package:yegna_gebeya/features/buyer/seller_profile/presentation/pages/seller_profile_page.dart';
+>>>>>>> main
 import 'package:yegna_gebeya/features/landing/presentation/pages/landing_page.dart';
 import 'package:yegna_gebeya/features/seller/order/presentation/pages/orders_page.dart';
 import 'package:yegna_gebeya/features/seller/product/presentation/pages/product_page.dart';
@@ -13,6 +18,7 @@ import 'package:yegna_gebeya/shared/domain/models/user.dart';
 import 'package:yegna_gebeya/shared/profile/presentation/pages/profile_page.dart';
 
 final goRouter = GoRouter(
+  initialLocation: Routes.landigPage,
   routes: [
     //common
     GoRoute(
@@ -21,6 +27,12 @@ final goRouter = GoRouter(
     ),
     GoRoute(path: Routes.signUp, builder: (context, state) => SignUpPage()),
     GoRoute(path: Routes.signIn, builder: (context, state) => SignInPage()),
+<<<<<<< HEAD
+    GoRoute(path: Routes.checkOut, builder: (context, state) => CheckoutPage()),
+    GoRoute(
+      path: Routes.orderHistory,
+      builder: (context, state) => OrderHistoryPage(),
+=======
     GoRoute(
       path: Routes.profile,
       builder: ((context, state) =>
@@ -62,6 +74,7 @@ final goRouter = GoRouter(
       builder: (context, state) {
         return SellerProfilePage(params: state.extra as Map<String, dynamic>);
       },
+>>>>>>> main
     ),
   ],
 );

@@ -97,6 +97,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.0.0"
+<<<<<<< HEAD
+=======
   cloudinary_flutter:
     dependency: "direct main"
     description:
@@ -113,6 +115,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.8.0"
+>>>>>>> main
   collection:
     dependency: transitive
     description:
@@ -121,6 +124,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.19.1"
+<<<<<<< HEAD
+=======
   convert:
     dependency: transitive
     description:
@@ -177,6 +182,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.0"
+>>>>>>> main
   equatable:
     dependency: "direct main"
     description:
@@ -392,6 +398,16 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.2"
+<<<<<<< HEAD
+  intl:
+    dependency: "direct main"
+    description:
+      name: intl
+      sha256: "3df61194eb431efc39c4ceba583b95633a403f46c9fd341e550ce0bfa50e9aa5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.20.2"
+=======
   image_picker:
     dependency: "direct main"
     description:
@@ -456,6 +472,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.2"
+>>>>>>> main
   leak_tracker:
     dependency: transitive
     description:
