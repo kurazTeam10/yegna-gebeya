@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:yegna_gebeya/shared/domain/models/product.dart';
 
-class ProductCard extends StatelessWidget {
+class SellerProductCard extends StatelessWidget {
   final Product product;
-<<<<<<< HEAD
   final VoidCallback onAddToCart;
 
-  const ProductCard(
+  const SellerProductCard(
       {super.key, required this.product, required this.onAddToCart});
 
   @override
@@ -47,7 +46,7 @@ class ProductCard extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8.0),
                   child: Image.network(
-                    product.productImageUrl,
+                    product.imgUrl!,
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
                       return Icon(
@@ -69,7 +68,7 @@ class ProductCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Text(
-                        product.productName,
+                        product.name,
                         style: TextStyle(
                           fontSize: screenWidth * 0.04,
                           fontWeight: FontWeight.bold,
@@ -124,79 +123,6 @@ class ProductCard extends StatelessWidget {
             ),
           ),
         ],
-=======
-  final VoidCallback? onTap;
-
-  const ProductCard({super.key, required this.product, this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(
-          color: Theme.of(context).colorScheme.primary,
-          width: 2,
-        ),
-      ),
-      elevation: 3,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(12),
-                ),
-                child: (product.imgUrl ?? '').startsWith('http')
-                    ? Image.network(
-                        product.imgUrl ?? '',
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            color: Colors.grey[200],
-                            child: const Icon(Icons.error),
-                          );
-                        },
-                      )
-                    : Image.asset(
-                        product.imgUrl ?? '',
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            color: Colors.grey[200],
-                            child: const Icon(Icons.error),
-                          );
-                        },
-                      ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: Text(
-                product.name,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Text(
-                "ETB ${product.price}",
-                style: const TextStyle(color: Colors.grey),
-              ),
-            ),
-            const SizedBox(height: 8),
-          ],
-        ),
->>>>>>> origin
       ),
     );
   }

@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 enum ProductCategory { clothes, furniture, jewellery, technology, others }
@@ -41,19 +40,11 @@ class Product {
 
   factory Product.fromMap(Map<String, dynamic> map) {
     return Product(
-<<<<<<< HEAD
-      productId: map['productId'],
-      productImageUrl: map['productImageUrl'] ?? '',
-      productName: map['productName'] ?? '',
-      sellerId: map['sellerId'] ?? '',
-      productDescription: map['productDescription'] ?? '',
-=======
       id: map['id'],
       imgUrl: map['productImageUrl'],
       name: map['productName'],
       sellerId: map['sellerId'],
       description: map['productDescription'],
->>>>>>> origin
       category: ProductCategory.values.firstWhere(
         (e) => e.name == map['category'],
         orElse: () => ProductCategory.others,

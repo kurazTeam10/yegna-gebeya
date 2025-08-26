@@ -2,18 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:yegna_gebeya/core/router/routes.dart';
-import 'package:yegna_gebeya/features/buyer/presentation/bloc/sellerProfile/seller_profile_bloc.dart';
-import 'package:yegna_gebeya/features/buyer/presentation/bloc/sellerProfile/seller_profile_event.dart';
-import 'package:yegna_gebeya/features/buyer/presentation/bloc/sellerProfile/seller_profile_state.dart';
+import 'package:yegna_gebeya/features/buyer/seller_profile/presentation/bloc/sellerProfile/seller_profile_bloc.dart';
+import 'package:yegna_gebeya/features/buyer/seller_profile/presentation/bloc/sellerProfile/seller_profile_event.dart';
+import 'package:yegna_gebeya/features/buyer/seller_profile/presentation/bloc/sellerProfile/seller_profile_state.dart';
 import 'package:yegna_gebeya/shared/domain/models/product.dart';
-import 'package:yegna_gebeya/features/buyer/presentation/widgets/product_card.dart';
-import 'package:yegna_gebeya/features/buyer/presentation/widgets/category_chip.dart';
+import 'package:yegna_gebeya/features/buyer/seller_profile/presentation/widgets/seller_product_card.dart';
+import 'package:yegna_gebeya/features/buyer/home/presentation/widgets/category_chip.dart';
+import 'package:yegna_gebeya/shared/domain/models/user.dart';
 import 'package:yegna_gebeya/shared/presentation/widgets/custom_snackbar.dart';
 
 class SellerProfilePage extends StatefulWidget {
-  final String sellerId;
+  final Map<String, dynamic> params;
 
-  const SellerProfilePage({super.key, required this.sellerId});
+  const SellerProfilePage({super.key, required this.params});
 
   @override
   State<SellerProfilePage> createState() => _SellerProfilePageState();
@@ -22,13 +23,15 @@ class SellerProfilePage extends StatefulWidget {
 class _SellerProfilePageState extends State<SellerProfilePage> {
   final TextEditingController _searchController = TextEditingController();
   ProductCategory? _selectedCategory;
+  late String sellerId;
+  late User user;
 
   @override
   void initState() {
+    sellerId = widget.params["sellerId"];
+    user = widget.params["user"];
     super.initState();
-    context
-        .read<SellerProfileBloc>()
-        .add(FetchSellerProfileEvent(widget.sellerId));
+    context.read<SellerProfileBloc>().add(FetchSellerProfileEvent(sellerId));
   }
 
   @override
@@ -49,8 +52,7 @@ class _SellerProfilePageState extends State<SellerProfilePage> {
     final searchQuery = _searchController.text.toLowerCase();
     if (searchQuery.isNotEmpty) {
       filtered = filtered
-          .where((product) =>
-              product.productName.toLowerCase().contains(searchQuery))
+          .where((product) => product.name.toLowerCase().contains(searchQuery))
           .toList();
     }
 
@@ -82,7 +84,7 @@ class _SellerProfilePageState extends State<SellerProfilePage> {
                       onPressed: () {
                         context
                             .read<SellerProfileBloc>()
-                            .add(FetchSellerProfileEvent(widget.sellerId));
+                            .add(FetchSellerProfileEvent(sellerId));
                       },
                       child: const Text('Retry'),
                     )
@@ -107,11 +109,7 @@ class _SellerProfilePageState extends State<SellerProfilePage> {
                           children: [
                             IconButton(
                               onPressed: () {
-                                if (Navigator.of(context).canPop()) {
-                                  Navigator.of(context).pop();
-                                } else {
-                                  context.go(Routes.sellerList);
-                                }
+                                context.go(Routes.sellerList, extra: user);
                               },
                               icon: const Icon(
                                 Icons.arrow_back,
@@ -134,10 +132,10 @@ class _SellerProfilePageState extends State<SellerProfilePage> {
                               radius: screenWidth * 0.08,
                               backgroundColor:
                                   const Color.fromARGB(255, 173, 171, 177),
-                              backgroundImage: seller.imgUrl.isNotEmpty
-                                  ? NetworkImage(seller.imgUrl)
+                              backgroundImage: seller.imgUrl!.isNotEmpty
+                                  ? NetworkImage(seller.imgUrl!)
                                   : null,
-                              child: seller.imgUrl.isEmpty
+                              child: seller.imgUrl!.isEmpty
                                   ? Icon(
                                       Icons.person,
                                       size: screenWidth * 0.08,
@@ -161,7 +159,7 @@ class _SellerProfilePageState extends State<SellerProfilePage> {
                                   ),
                                   SizedBox(height: screenHeight * 0.005),
                                   Text(
-                                    seller.phone,
+                                    seller.phoneNo,
                                     style: TextStyle(
                                       fontSize: screenWidth * 0.035,
                                       color:
@@ -316,11 +314,11 @@ class _SellerProfilePageState extends State<SellerProfilePage> {
                           itemBuilder: (context, index) {
                             final product =
                                 _getFilteredProducts(products)[index];
-                            return ProductCard(
+                            return SellerProductCard(
                               product: product,
                               onAddToCart: () {
-                                showCustomSnackBar(context,
-                                    '${product.productName} added to cart');
+                                showCustomSnackBar(
+                                    context, '${product.name} added to cart');
                               },
                             );
                           },
@@ -372,7 +370,6 @@ class _SellerProfilePageState extends State<SellerProfilePage> {
                             )
                           ],
                         ),
-
                       ),
                     ),
                   ),

@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:yegna_gebeya/features/buyer/domain/models/seller.dart';
+import 'package:yegna_gebeya/features/buyer/seller_profile/domain/models/seller.dart';
 
 abstract class SellerListState extends Equatable {
   const SellerListState();

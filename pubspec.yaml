@@ -25,6 +25,7 @@ dependencies:
   cloudinary_url_gen: ^1.8.0
   http: ^1.5.0
   meta: ^1.16.0
+  equatable: ^2.0.7
 
 dev_dependencies:
   flutter_test:

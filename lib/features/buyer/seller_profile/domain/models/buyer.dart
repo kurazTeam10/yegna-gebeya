@@ -7,5 +7,6 @@ class Buyer extends User {
     required super.fullName,
     required super.imgUrl,
     required super.createdAt,
+    required super.phoneNo,
   }) : super(role: UserRole.buyer);
 }

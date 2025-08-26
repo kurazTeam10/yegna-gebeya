@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:yegna_gebeya/features/buyer/domain/models/seller.dart';
+import 'package:yegna_gebeya/core/router/routes.dart';
+import 'package:yegna_gebeya/features/buyer/seller_profile/domain/models/seller.dart';
 
 class SellerCard extends StatelessWidget {
   final Seller seller;
@@ -43,21 +44,31 @@ class SellerCard extends StatelessWidget {
       child: ListTile(
         contentPadding: EdgeInsets.all(screenWidth * 0.04),
         onTap: () {
-          GoRouter.of(context).go('/sellerProfile/${seller.id}');
+          context.go(Routes.sellerProfile,
+              extra: {"sellerId": seller.id, "user": seller});
         },
         leading: CircleAvatar(
           radius: screenWidth * 0.075,
           backgroundColor: Colors.grey[300],
-          backgroundImage:
-              seller.imgUrl.isNotEmpty ? NetworkImage(seller.imgUrl) : null,
-          child: seller.imgUrl.isEmpty
-              ? Icon(
+          child: (seller.imgUrl != null && seller.imgUrl!.isNotEmpty)
+              ? ClipOval(
+                  child: Image.network(
+                    seller.imgUrl!,
+                    width: screenWidth * 0.15,
+                    height: screenWidth * 0.15,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Icon(
+                      Icons.person,
+                      size: screenWidth * 0.075,
+                      color: Colors.grey,
+                    ),
+                  ),
+                )
+              : Icon(
                   Icons.person,
                   size: screenWidth * 0.075,
                   color: Colors.grey,
-                )
-              : null,
-          onBackgroundImageError: (exception, stackTrace) {},
+                ),
         ),
         title: Text(
           seller.fullName,

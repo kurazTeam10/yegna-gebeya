@@ -6,12 +6,11 @@ import 'package:yegna_gebeya/features/auth/data/repositories/auth_repository.dar
 import 'package:yegna_gebeya/features/auth/domain/repositories/auth_repository.dart';
 import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_in/sign_in_cubit.dart';
 import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_up/sign_up_cubit.dart';
-import 'package:yegna_gebeya/features/buyer/data/repositories/buyer_repository_impl.dart';
-import 'package:yegna_gebeya/features/buyer/domain/repositories/buyer_repository.dart';
-import 'package:yegna_gebeya/features/buyer/presentation/bloc/sellerList/seller_list_bloc.dart';
-import 'package:yegna_gebeya/features/buyer/presentation/bloc/sellerProfile/seller_profile_bloc.dart';
-import 'package:yegna_gebeya/features/buyer/presentation/cubit/product_cubit.dart'
-    as buyer;
+import 'package:yegna_gebeya/features/buyer/seller_profile/data/repositories/buyer_repository_impl.dart';
+import 'package:yegna_gebeya/features/buyer/seller_profile/domain/repositories/buyer_repository.dart';
+import 'package:yegna_gebeya/features/buyer/seller_profile/presentation/bloc/sellerList/seller_list_bloc.dart';
+import 'package:yegna_gebeya/features/buyer/seller_profile/presentation/bloc/sellerProfile/seller_profile_bloc.dart';
+import 'package:yegna_gebeya/features/buyer/home/presentation/cubit/product_cubit.dart';
 import 'package:yegna_gebeya/shared/data/repositories/product_repository_impl.dart'; // Add this import
 import 'package:yegna_gebeya/shared/domain/repositories/product_repository.dart';
 import 'package:yegna_gebeya/features/seller/product/presentation/cubits/product_cubit/product_cubit.dart';
@@ -73,15 +72,8 @@ void setupLocator() {
       userRepo: getIt<UserRepository>(),
     ),
   );
-
-  getIt.registerFactory<ProductUploadCubit>(
-    () => ProductUploadCubit(
-      repository: getIt<ProductRepository>(),
-      imageRepository: getIt<ImageRepository>(),
-    ),
-  );
-  getIt.registerFactory<buyer.ProductCubit>(
-    () => buyer.ProductCubit(productRepository: getIt<ProductRepository>()),
+  getIt.registerFactory<ProductCubit>(
+    () => ProductCubit(productRepository: getIt<ProductRepository>()),
   );
 
   getIt.registerLazySingleton<BuyerRepository>(
@@ -95,4 +87,10 @@ void setupLocator() {
   getIt.registerFactory<SellerProfileBloc>(
     () => SellerProfileBloc(buyerRepository: getIt<BuyerRepository>()),
   );
+
+  getIt.registerFactory<SellerProductCubit>(
+      () => SellerProductCubit(repository: getIt<ProductRepository>()));
+  getIt.registerFactory<ProductUploadCubit>(() => ProductUploadCubit(
+      repository: getIt<ProductRepository>(),
+      imageRepository: getIt<ImageRepository>()));
 }

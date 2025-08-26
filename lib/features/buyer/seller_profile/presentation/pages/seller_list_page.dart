@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yegna_gebeya/core/router/routes.dart';
-import 'package:yegna_gebeya/features/buyer/presentation/bloc/sellerList/seller_list_bloc.dart';
-import 'package:yegna_gebeya/features/buyer/presentation/bloc/sellerList/seller_list_event.dart';
-import 'package:yegna_gebeya/features/buyer/presentation/bloc/sellerList/seller_list_state.dart';
-import 'package:yegna_gebeya/features/buyer/presentation/widgets/search_bar.dart';
-import 'package:yegna_gebeya/features/buyer/presentation/widgets/seller_card.dart';
+import 'package:yegna_gebeya/features/buyer/seller_profile/presentation/bloc/sellerList/seller_list_bloc.dart';
+import 'package:yegna_gebeya/features/buyer/seller_profile/presentation/bloc/sellerList/seller_list_event.dart';
+import 'package:yegna_gebeya/features/buyer/seller_profile/presentation/bloc/sellerList/seller_list_state.dart';
+import 'package:yegna_gebeya/features/buyer/seller_profile/presentation/widgets/seller_card.dart';
+import 'package:yegna_gebeya/features/buyer/seller_profile/presentation/widgets/search_bar_widget.dart';
+import 'package:yegna_gebeya/shared/domain/models/user.dart';
 
 class SellerListPage extends StatefulWidget {
-  const SellerListPage({super.key});
+  final User user;
+  const SellerListPage({super.key, required this.user});
 
   @override
   State<SellerListPage> createState() => _SellerListPageState();
@@ -17,6 +19,7 @@ class SellerListPage extends StatefulWidget {
 
 class _SellerListPageState extends State<SellerListPage> {
   final TextEditingController _searchController = TextEditingController();
+  int _selectedIndex = 2; // Default to "Sellers" tab
 
   @override
   void initState() {
@@ -40,44 +43,27 @@ class _SellerListPageState extends State<SellerListPage> {
       backgroundColor: const Color(0xFFF5F5F5),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
-        selectedItemColor: const Color(0xFF8D00DE),
-        unselectedItemColor: Colors.grey,
-        currentIndex: 2, // Sellers tab is active
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.people),
-            label: 'Sellers',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.receipt_long),
-            label: 'Orders',
-          ),
-        ],
+        currentIndex: _selectedIndex,
         onTap: (index) {
-          switch (index) {
-            case 0:
-              // TODO: Navigate to Home page
-              break;
-            case 1:
-              // TODO: Navigate to Profile page
-              break;
-            case 2:
-              GoRouter.of(context).go(Routes.sellerList);
-              break;
-            case 3:
-              // TODO: Navigate to Orders page
-              break;
+          setState(() {
+            _selectedIndex = index;
+          });
+          if (index == 3) {
+            // TODO: Implement navigation for Sellers
+          } else if (index == 2) {
+            context.go(Routes.sellerList);
+          } else if (index == 1) {
+            // context.go(Routes.profile, extra: user);
+          } else if (index == 0) {
+            context.go(Routes.buyerHome, extra: widget.user);
           }
         },
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+          BottomNavigationBarItem(icon: Icon(Icons.store), label: 'Sellers'),
+          BottomNavigationBarItem(icon: Icon(Icons.list_alt), label: 'Orders'),
+        ],
       ),
       body: SafeArea(
         child: Column(

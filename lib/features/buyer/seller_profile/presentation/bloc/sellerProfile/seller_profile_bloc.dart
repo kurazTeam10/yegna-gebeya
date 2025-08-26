@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:yegna_gebeya/features/buyer/domain/repositories/buyer_repository.dart';
+import 'package:yegna_gebeya/features/buyer/seller_profile/domain/repositories/buyer_repository.dart';
 import 'seller_profile_event.dart';
 import 'seller_profile_state.dart';
 

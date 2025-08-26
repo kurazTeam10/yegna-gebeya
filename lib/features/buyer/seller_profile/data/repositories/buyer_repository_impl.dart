@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart' hide Order;
-import 'package:yegna_gebeya/features/buyer/domain/models/cart.dart';
+import 'package:yegna_gebeya/features/buyer/seller_profile/domain/models/cart.dart';
 
 import 'package:yegna_gebeya/shared/domain/models/product.dart';
-import 'package:yegna_gebeya/features/buyer/domain/models/order.dart';
+import 'package:yegna_gebeya/features/buyer/seller_profile/domain/models/order.dart';
 
-import 'package:yegna_gebeya/features/buyer/domain/models/seller.dart';
+import 'package:yegna_gebeya/features/buyer/seller_profile/domain/models/seller.dart';
 
-import 'package:yegna_gebeya/features/buyer/domain/repositories/buyer_repository.dart';
+import 'package:yegna_gebeya/features/buyer/seller_profile/domain/repositories/buyer_repository.dart';
 
 class BuyerRepositoryImpl extends BuyerRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -15,10 +15,7 @@ class BuyerRepositoryImpl extends BuyerRepository {
   Stream<List<Seller>> getSellers() {
     try {
       return _firestore.collection('sellers').snapshots().map((querySnapshot) {
-        print('Firebase query returned ${querySnapshot.docs.length} documents');
-        for (var doc in querySnapshot.docs) {
-          print('Document data: ${doc.data()}');
-        }
+        for (var doc in querySnapshot.docs) {}
         return querySnapshot.docs
             .map((doc) => Seller.fromFirestore(doc))
             .toList();
@@ -73,7 +70,7 @@ class BuyerRepositoryImpl extends BuyerRepository {
         }
 
         // Check seller phone
-        if (seller.phone.contains(query)) {
+        if (seller.phoneNo.contains(query)) {
           matchingSellers.add(seller);
           continue;
         }
@@ -81,7 +78,7 @@ class BuyerRepositoryImpl extends BuyerRepository {
         // Check seller's products
         final productsOfSeller = sellerProductsMap[seller.id] ?? [];
         for (var product in productsOfSeller) {
-          if (product.productName.toLowerCase().contains(lowerCaseQuery)) {
+          if (product.name.toLowerCase().contains(lowerCaseQuery)) {
             matchingSellers.add(seller);
             break; // Move to the next seller once a match is found
           }
@@ -155,7 +152,7 @@ class BuyerRepositoryImpl extends BuyerRepository {
           .collection('buyers')
           .doc(id)
           .collection('cart')
-          .where('id', isEqualTo: product.productId)
+          .where('id', isEqualTo: product.id)
           .limit(1)
           .get();
 
