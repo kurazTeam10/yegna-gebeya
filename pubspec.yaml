@@ -4,7 +4,7 @@ publish_to: "none"
 version: 0.1.0
 
 environment:
-  sdk: ^3.8.1
+  sdk: ^3.5.4
 
 dependencies:
   flutter:
@@ -14,9 +14,22 @@ dependencies:
   flutter_bloc: ^9.1.1
   bloc: ^9.0.0
   firebase_core: ^4.0.0
+<<<<<<< HEAD
   go_router: ^16.1.0
   cloud_firestore: ^6.0.0
   intl: ^0.20.2
+=======
+  go_router: ^14.6.0
+  cloud_firestore: ^6.0.0
+  google_fonts: ^6.3.0
+  dio: ^5.9.0
+  image_picker: ^1.2.0
+  dotted_border: ^3.1.0
+  cloudinary_flutter: ^1.3.0
+  cross_file: ^0.3.4+2
+  cloudinary_url_gen: ^1.8.0
+  http: ^1.5.0
+>>>>>>> main
   meta: ^1.16.0
   equatable: ^2.0.7
 
@@ -33,5 +46,10 @@ flutter:
   fonts:
     - family: Roboto
       fonts:
+<<<<<<< HEAD
         - asset: assets/fonts/roboto.ttf
         - asset: assets/fonts/roboto_italic.ttf
+=======
+      - asset: assets/fonts/roboto.ttf
+      - asset: assets/fonts/roboto_italic.ttf     
+>>>>>>> main
