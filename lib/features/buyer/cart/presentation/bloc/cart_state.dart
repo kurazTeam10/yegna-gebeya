@@ -1,5 +1,6 @@
 part of 'cart_bloc.dart';
 
+
 @immutable
 sealed class CartState extends Equatable {}
 
@@ -14,13 +15,13 @@ class CartLoading extends CartState {
 }
 
 class CartLoaded extends CartState {
-  final List<Product> products;
+  final List<Order> orders;
   final double totalPrice;
 
-  CartLoaded({required this.products, required this.totalPrice});
+  CartLoaded({required this.orders, required this.totalPrice});
 
   @override
-  List<Object?> get props => [...products, totalPrice];
+  List<Object?> get props => [orders, totalPrice];
 }
 
 class CartError extends CartState {

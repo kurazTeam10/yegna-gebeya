@@ -36,11 +36,7 @@ class _CartIconWidgetState extends State<CartIconWidget> {
       },
       child: BlocBuilder<CartBloc, CartState>(
         builder: (context, state) {
-          int itemCount = 0;
-
-          if (state is CartLoaded) {
-            itemCount = state.products.length;
-          }
+          int itemCount = (state is CartLoaded) ? state.orders.length : 0;
 
           return Stack(
             clipBehavior: Clip.none,

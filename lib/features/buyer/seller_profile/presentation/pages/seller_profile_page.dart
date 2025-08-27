@@ -7,6 +7,9 @@ import 'package:yegna_gebeya/features/buyer/seller_profile/presentation/bloc/sel
 import 'package:yegna_gebeya/features/buyer/seller_profile/presentation/bloc/sellerProfile/seller_profile_state.dart';
 import 'package:yegna_gebeya/shared/domain/models/product.dart';
 import 'package:yegna_gebeya/features/buyer/seller_profile/presentation/widgets/seller_product_card.dart';
+import 'package:yegna_gebeya/shared/order/domain/models/order.dart';
+import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_in/sign_in_cubit.dart';
+import 'package:yegna_gebeya/features/buyer/cart/presentation/bloc/cart_bloc.dart';
 import 'package:yegna_gebeya/features/buyer/home/presentation/widgets/category_chip.dart';
 import 'package:yegna_gebeya/shared/domain/models/user.dart';
 import 'package:yegna_gebeya/shared/presentation/widgets/custom_snackbar.dart';
@@ -316,6 +319,16 @@ class _SellerProfilePageState extends State<SellerProfilePage> {
                             return SellerProductCard(
                               product: product,
                               onAddToCart: () {
+                                final user = context.read<SignInCubit>().state.cred!.user!;
+                                final order = Order(
+                                  id: '', // Firestore will generate this
+                                  buyerId: user.uid,
+                                  product: product,
+                                  orderDate: DateTime.now(),
+                                  status: OrderStatus.pending,
+                                  sellerId: product.sellerId,
+                                );
+                                context.read<CartBloc>().add(AddToCartEvent(id: user.uid, order: order));
                                 showCustomSnackBar(
                                     context, '${product.name} added to cart');
                               },
@@ -348,30 +361,38 @@ class _SellerProfilePageState extends State<SellerProfilePage> {
                                     extra: widget.params);
                               },
                             ),
-                            Positioned(
-                              top: -4,
-                              right: -4,
-                              child: Container(
-                                padding: const EdgeInsets.all(4),
-                                decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    shape: BoxShape.circle,
-                                    boxShadow: [
-                                      BoxShadow(
+                            BlocBuilder<CartBloc, CartState>(
+                              builder: (context, state) {
+                                if (state is CartLoaded && state.orders.isNotEmpty) {
+                                  return Positioned(
+                                    top: -4,
+                                    right: -4,
+                                    child: Container(
+                                      padding: const EdgeInsets.all(4),
+                                      decoration: const BoxDecoration(
                                         color: Colors.white,
-                                        spreadRadius: 2,
-                                        blurRadius: 5,
-                                      )
-                                    ]),
-                                child: const Text(
-                                  '2',
-                                  style: TextStyle(
-                                    color: Color(0xFF8D00DE),
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
+                                        shape: BoxShape.circle,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.white,
+                                            spreadRadius: 2,
+                                            blurRadius: 5,
+                                          )
+                                        ],
+                                      ),
+                                      child: Text(
+                                        state.orders.length.toString(),
+                                        style: const TextStyle(
+                                          color: Color(0xFF8D00DE),
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }
+                                return const SizedBox.shrink();
+                              },
                             )
                           ],
                         ),
