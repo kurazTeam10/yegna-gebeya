@@ -45,17 +45,23 @@ class SellerProductCard extends StatelessWidget {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8.0),
-                  child: Image.network(
-                    product.imgUrl!,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Icon(
-                        Icons.image,
-                        color: Colors.grey[400],
-                        size: screenWidth * 0.08,
-                      );
-                    },
-                  ),
+                  child: (product.imgUrl != null && product.imgUrl!.isNotEmpty)
+                      ? Image.network(
+                          product.imgUrl!,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Icon(
+                              Icons.image,
+                              color: Colors.grey[400],
+                              size: screenWidth * 0.08,
+                            );
+                          },
+                        )
+                      : Icon(
+                          Icons.image,
+                          color: Colors.grey[400],
+                          size: screenWidth * 0.08,
+                        ),
                 ),
               ),
               SizedBox(width: screenWidth * 0.04),
