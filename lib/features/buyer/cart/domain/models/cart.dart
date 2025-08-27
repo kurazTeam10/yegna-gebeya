@@ -1,15 +1,17 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
-import 'package:yegna_gebeya/shared/models/product.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' hide Order;
+// import 'package:flutter/foundation.dart';
+import 'package:yegna_gebeya/shared/order/domain/models/order.dart';
 
 class Cart {
-  List<Product> products;
+  List<Order> orders;
 
-  Cart({List<Product>? products}) : products = products ?? <Product>[];
+  Cart({List<Order>? orders}) : orders = orders ?? <Order>[];
 
   factory Cart.fromFirestore(QuerySnapshot snapshot) {
     return Cart(
-      products: snapshot.docs.map((doc) => Product.fromFirestore(doc)).toList(),
+      orders: snapshot.docs
+            .map((doc) => Order.fromMap(doc.data() as Map<String, dynamic>, doc.id))
+            .toList(),
     );
   }
 }

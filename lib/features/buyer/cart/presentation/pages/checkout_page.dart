@@ -4,8 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:yegna_gebeya/core/router/routes.dart';
 import 'package:yegna_gebeya/features/auth/presentation/cubits/sign_in/sign_in_cubit.dart';
 import 'package:yegna_gebeya/features/buyer/order/presentation/bloc/order_bloc.dart';
-import 'package:yegna_gebeya/shared/models/product.dart';
 import 'package:yegna_gebeya/features/buyer/cart/presentation/bloc/cart_bloc.dart';
+import 'package:yegna_gebeya/shared/order/domain/models/order.dart';
+import 'package:yegna_gebeya/shared/domain/models/product.dart';
 import 'package:yegna_gebeya/shared/domain/models/user.dart' as domain;
 
 class CheckoutPage extends StatefulWidget {
@@ -65,10 +66,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
             final productQuantities = <String, int>{};
             final productIdToProduct = <String, Product>{};
 
-            for (final product in state.products) {
-              productQuantities[product.productId!] =
-                  (productQuantities[product.productId!] ?? 0) + 1;
-              productIdToProduct[product.productId!] = product;
+            for (final order in state.orders) {
+              final product = order.product;
+              productQuantities[product.id!] =
+                  (productQuantities[product.id!] ?? 0) + 1;
+              productIdToProduct[product.id!] = product;
             }
 
             final entries = productQuantities.keys.toList();
@@ -104,14 +106,16 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                 SizedBox(
                                   width: deviceWidth * 0.15,
                                   height: deviceHeight * 0.25 * 0.25,
-                                  child: Image.network(
-                                    product!.productImageUrl,
-                                    fit: BoxFit.contain,
-                                  ),
+                                  child: product!.imgUrl != null
+                                      ? Image.network(
+                                          product.imgUrl!,
+                                          fit: BoxFit.contain,
+                                        )
+                                      : Image.asset('assets/images/placeholder.png'),
                                 ),
                                 Expanded(
                                   child: Text(
-                                    product.productName,
+                                    product.name,
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 2,
                                   ),
@@ -135,14 +139,25 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                             onPressed: () =>
                                                 context.read<CartBloc>().add(
                                                       AddToCartEvent(
-                                                        id: context
-                                                            .read<SignInCubit>()
-                                                            .state
-                                                            .cred!
-                                                            .user!
-                                                            .uid,
-                                                        product: product,
-                                                      ),
+                                                          id: context
+                                                              .read<SignInCubit>()
+                                                              .state
+                                                              .cred!
+                                                              .user!
+                                                              .uid,
+                                                          order: Order(
+                                                            id: '', // Firestore will generate this
+                                                            buyerId: context
+                                                                .read<SignInCubit>()
+                                                                .state
+                                                                .cred!
+                                                                .user!
+                                                                .uid,
+                                                            product: product,
+                                                            orderDate: DateTime.now(),
+                                                            status: OrderStatus.pending,
+                                                            sellerId: product.sellerId,
+                                                          )),
                                                     ),
                                             icon: const Icon(
                                               Icons.arrow_upward,
@@ -153,18 +168,20 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                           height: deviceHeight * 0.04,
                                           child: IconButton(
                                             iconSize: deviceWidth * 0.045,
-                                            onPressed: () =>
-                                                context.read<CartBloc>().add(
-                                                      RemoveFromCartEvent(
+                                            onPressed: () {
+                                              final orderToRemove = state.orders
+                                                  .firstWhere((order) => order.product.id == product.id);
+                                              context.read<CartBloc>().add(
+                                                    RemoveFromCartEvent(
                                                         id: context
                                                             .read<SignInCubit>()
                                                             .state
                                                             .cred!
                                                             .user!
                                                             .uid,
-                                                        product: product,
-                                                      ),
-                                                    ),
+                                                        order: orderToRemove),
+                                                  );
+                                            },
                                             icon: const Icon(
                                               Icons.arrow_downward,
                                             ),
