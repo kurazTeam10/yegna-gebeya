@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 enum ProductCategory {
-  clothesForMen,
-  clothesForWomen,
+  clothes,
   furniture,
   jewellery,
   technology,
@@ -10,53 +9,84 @@ enum ProductCategory {
 }
 
 class Product {
-  final String? productId;
-  final String productName;
-  final String productImageUrl;
-  final String productDescription;
+  final String? id;
+  final String name;
+  final String? imgUrl;
+  final String description;
   final double price;
   final String sellerId;
   final ProductCategory category;
 
   Product({
-    this.productId,
-    required this.productImageUrl,
-    required this.productName,
-    required this.sellerId,
-    required this.productDescription,
-    required this.category,
+    this.id,
+    required this.name,
+    this.imgUrl,
+    required this.description,
     required this.price,
+    required this.sellerId,
+    required this.category,
   });
+
+  Product copyWith({
+    String? id,
+    String? name,
+    String? imgUrl,
+    String? description,
+    double? price,
+    String? sellerId,
+    ProductCategory? category,
+  }) {
+    return Product(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      imgUrl: imgUrl ?? this.imgUrl,
+      description: description ?? this.description,
+      price: price ?? this.price,
+      sellerId: sellerId ?? this.sellerId,
+      category: category ?? this.category,
+    );
+  }
 
   Map<String, dynamic> toMap() {
     return {
-      'productId': productId,
-      'productImageUrl': productImageUrl,
-      'productName': productName,
-      'sellerId': sellerId,
-      'productDescription': productDescription,
-      'category': category.name,
+      'id': id,
+      'name': name,
+      'imgUrl': imgUrl,
+      'description': description,
       'price': price,
+      'sellerId': sellerId,
+      'category': category.name,
     };
   }
 
   factory Product.fromFirestore(DocumentSnapshot doc) {
-    final Map<String, dynamic> docMap = doc.data() as Map<String, dynamic>;
-    return Product.fromMap(docMap);
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    return Product(
+      id: doc.id,
+      name: data['name'] ?? '',
+      imgUrl: data['imgUrl'],
+      description: data['description'] ?? '',
+      price: (data['price'] as num?)?.toDouble() ?? 0.0,
+      sellerId: data['sellerId'] ?? '',
+      category: ProductCategory.values.firstWhere(
+        (e) => e.name == data['category'],
+        orElse: () => ProductCategory.others,
+      ),
+    );
   }
 
   factory Product.fromMap(Map<String, dynamic> map) {
     return Product(
-      productId: map['id'],
-      productImageUrl: map['productImageUrl'],
-      productName: map['productName'],
-      sellerId: map['sellerId'],
-      productDescription: map['productDescription'],
+      id: map['id'],
+      name: map['name'] ?? '',
+      imgUrl: map['imgUrl'],
+      description: map['description'] ?? '',
+      price: (map['price'] as num?)?.toDouble() ?? 0.0,
+      sellerId: map['sellerId'] ?? '',
       category: ProductCategory.values.firstWhere(
         (e) => e.name == map['category'],
         orElse: () => ProductCategory.others,
       ),
-      price: (map['price'] as num).toDouble(),
     );
   }
 }
